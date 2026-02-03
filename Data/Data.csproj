@@ -10,4 +10,8 @@
     <ProjectReference Include="..\Back-end\Logic.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
+
 </Project>
