@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logic", "Logic.csproj", "{8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data", "..\Data\Data.csproj", "{CCF835BE-80E2-48A4-A457-3894C9F2C7DD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Beer API", "..\Beer API\Beer API.csproj", "{5CDB1BD4-FEA8-42B0-AD46-B53573CC270C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{CCF835BE-80E2-48A4-A457-3894C9F2C7DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CCF835BE-80E2-48A4-A457-3894C9F2C7DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CCF835BE-80E2-48A4-A457-3894C9F2C7DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5CDB1BD4-FEA8-42B0-AD46-B53573CC270C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5CDB1BD4-FEA8-42B0-AD46-B53573CC270C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5CDB1BD4-FEA8-42B0-AD46-B53573CC270C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5CDB1BD4-FEA8-42B0-AD46-B53573CC270C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
