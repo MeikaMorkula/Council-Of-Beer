@@ -1,4 +1,4 @@
-﻿namespace CouncilOfBeer.Logic
+﻿namespace CouncilOfBeer.Logic.Entity
 {
     public class Class1
     {
