@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35222.181
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerAPI", "BeerAPI\BeerAPI.csproj", "{495C6986-AFD1-4427-BACC-E503E478A904}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerData", "BeerData\BeerData.csproj", "{CA04E1CA-9D1E-4736-BBFD-EA593DB16C5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerLogic", "BeerLogic\BeerLogic.csproj", "{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{495C6986-AFD1-4427-BACC-E503E478A904}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{495C6986-AFD1-4427-BACC-E503E478A904}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{495C6986-AFD1-4427-BACC-E503E478A904}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{495C6986-AFD1-4427-BACC-E503E478A904}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA04E1CA-9D1E-4736-BBFD-EA593DB16C5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA04E1CA-9D1E-4736-BBFD-EA593DB16C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA04E1CA-9D1E-4736-BBFD-EA593DB16C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA04E1CA-9D1E-4736-BBFD-EA593DB16C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {289DB555-F8B6-4985-BC29-D4FDEB1C21F0}
+	EndGlobalSection
+EndGlobal

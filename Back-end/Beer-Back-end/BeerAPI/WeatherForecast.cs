@@ -1,4 +1,4 @@
-namespace CouncilOfBeer.Api
+namespace BeerAPI
 {
     public class WeatherForecast
     {

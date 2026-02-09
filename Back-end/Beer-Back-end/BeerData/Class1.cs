@@ -1,4 +1,4 @@
-﻿namespace CouncilOfBeer.Logic.Entity
+﻿namespace BeerData
 {
     public class Class1
     {

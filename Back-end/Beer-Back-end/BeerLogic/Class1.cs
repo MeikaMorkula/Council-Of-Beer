@@ -1,4 +1,4 @@
-﻿namespace Beer_API
+﻿namespace BeerLogic
 {
     public class Class1
     {
