@@ -8,6 +8,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 
+function HomeHeader() {
+  return(
+    <Text>Council of beer</Text>
+  );
+}
+
 export default function App() {
 
   const Tabs = createBottomTabNavigator();
@@ -18,21 +24,24 @@ export default function App() {
         <Tabs.Navigator>
           <Tabs.Screen name="Home" component={Home}
             options={{
-              tabBarIcon: ({color, size}) => (
+              headerTitle: "Council of Beer",
+              tabBarIcon: ({}) => (
                 <Ionicons name="beer-outline" size={24} color="black" />
-              )
+              ),
             }}
           />
           <Tabs.Screen name="New Post" component={NewPost}
             options={{
-              tabBarIcon: ({ color, size }) => (
+              headerTitle: "Council of Beer",
+              tabBarIcon: ({}) => (
                 <Ionicons name="add-circle-outline" size={24} color="black"/>
               )
             }}  
           />
           <Tabs.Screen name="Profile" component={Profile}
             options={{
-              tabBarIcon: ({color, size}) => (
+              headerTitle: "Council of Beer",
+              tabBarIcon: ({}) => (
                 <Ionicons name="person-circle-outline" size={24} color="black" />
               )
             }}
