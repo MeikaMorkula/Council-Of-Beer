@@ -7,10 +7,18 @@ import NewPost from './screens/NewPost';
 import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import Leaderboard from './screens/Leaderboard';
+import Search from './screens/Search';
 
-function HomeHeader() {
+function FeedNav(){
+  const HomeTabs = createMaterialTopTabNavigator();
   return(
-    <Text>Council of beer</Text>
+    <HomeTabs.Navigator>
+      <HomeTabs.Screen name="Home" component={Home}/>
+      <HomeTabs.Screen name="Leaderboard" component={Leaderboard}/>
+      <HomeTabs.Screen name="Search" component={Search}/>
+    </HomeTabs.Navigator>
   );
 }
 
@@ -21,8 +29,8 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tabs.Navigator>
-          <Tabs.Screen name="Home" component={Home}
+        <Tabs.Navigator initialRouteName="FeedNav">
+          <Tabs.Screen name="FeedNav" component={FeedNav}
             options={{
               headerTitle: "Council of Beer",
               tabBarIcon: ({}) => (
@@ -51,12 +59,3 @@ export default function App() {
     </SafeAreaProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

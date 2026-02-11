@@ -1,11 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
+export default function Search(){
 
-export default function Home(){
     return(
         <View style={styles.container}>
-            <Text>Home/Feed screen - main content</Text>
+            <Text>Search screen - main content</Text>
         </View>
     );
 }
