@@ -1,5 +1,6 @@
+import { Button } from '@react-navigation/elements';
 import React from 'react';
-import { Image, StyleSheet, Text, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export default function Profile(){
 
@@ -10,7 +11,12 @@ export default function Profile(){
               <Image style={styles.pfpic} source={require('../assets/beerpf.png')}/>
             </View>
             <View style={styles.pftextcont}>
-              <Text style={styles.username}>@ilovebeer</Text>
+              <View style={styles.usernamebtn}>
+                <Text style={styles.username}>@ilovebeer</Text>
+                <TouchableOpacity style={styles.followbtn}>
+                  <Text>Follow</Text>
+                </TouchableOpacity>
+              </View>
               <View style={styles.pfstatscont}>
                 <Text>Ratings</Text>
                 <Text>Followers</Text>
@@ -51,9 +57,20 @@ const styles = StyleSheet.create({
   pftextcont: {
     flexDirection: 'column'
   },
+  usernamebtn: {
+    flexDirection: 'row',
+    columnGap: 10
+  },
   username: {
     fontSize: 20,
     fontWeight: 'bold'
+  },
+  followbtn: {
+    alignItems: 'center',
+    borderRadius: 4,
+    backgroundColor: 'lightblue',
+    padding: 8,
+    width: 72
   },
   pfstatscont: {
     flexDirection: 'row',
