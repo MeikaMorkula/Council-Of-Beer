@@ -18,9 +18,18 @@ export default function Profile(){
                 </TouchableOpacity>
               </View>
               <View style={styles.pfstatscont}>
-                <Text>Ratings</Text>
-                <Text>Followers</Text>
-                <Text>Following</Text>
+                <View style={styles.stats}>
+                  <Text style={styles.numstat}>69</Text>
+                  <Text>Ratings</Text>
+                </View>
+                <View style={styles.stats}>
+                  <Text style={styles.numstat}>69</Text>
+                  <Text>Followers</Text>
+                </View>
+                <View style={styles.stats}>
+                  <Text style={styles.numstat}>69</Text>
+                  <Text>Following</Text>
+                </View>
               </View>
             </View>
           </View>
@@ -40,6 +49,7 @@ const styles = StyleSheet.create({
   },
   profilecontent: {
     flex: 5,
+    backgroundColor: '#fff'
   },
   pfpic: {
     width: 72,
@@ -73,7 +83,17 @@ const styles = StyleSheet.create({
     width: 72
   },
   pfstatscont: {
+    paddingTop: 10,
     flexDirection: 'row',
     columnGap: 20
   },
+  stats: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    rowGap: 5
+  },
+  numstat:{
+    fontSize: 18,
+    fontWeight: 'bold'
+  }
 });
