@@ -29,29 +29,43 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <Tabs.Navigator initialRouteName="FeedNav">
-          <Tabs.Screen name="FeedNav" component={FeedNav}
+        <Tabs.Navigator 
+          initialRouteName="Feed"
+          screenOptions={({ route }) => ({
+            tabBarIcon: ({ focused }) => {
+              let iconName;
+
+              if(route.name === 'Feed'){
+                iconName = focused
+                  ? 'beer'
+                  : 'beer-outline';
+              } else if(route.name === 'New Post'){
+                iconName = focused 
+                  ? 'add-circle'
+                  : 'add-circle-outline';
+              } else if(route.name === 'Profile'){
+                iconName = focused  
+                  ? 'person-circle'
+                  : 'person-circle-outline';
+              }
+
+              return <Ionicons name={iconName} size={24} color="black"/>
+            },
+          })}  
+        >
+          <Tabs.Screen name="Feed" component={FeedNav}
             options={{
-              headerTitle: "Council of Beer",
-              tabBarIcon: ({}) => (
-                <Ionicons name="beer-outline" size={24} color="black" />
-              ),
+              headerTitle: "Council of Beer"
             }}
           />
           <Tabs.Screen name="New Post" component={NewPost}
             options={{
-              headerTitle: "Council of Beer",
-              tabBarIcon: ({}) => (
-                <Ionicons name="add-circle-outline" size={24} color="black"/>
-              )
+              headerTitle: "Council of Beer"
             }}  
           />
           <Tabs.Screen name="Profile" component={Profile}
             options={{
-              headerTitle: "Council of Beer",
-              tabBarIcon: ({}) => (
-                <Ionicons name="person-circle-outline" size={24} color="black" />
-              )
+              headerTitle: "Council of Beer"
             }}
           />
         </Tabs.Navigator>
