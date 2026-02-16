@@ -1,4 +1,3 @@
-import { Button } from '@react-navigation/elements';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
@@ -33,6 +32,9 @@ export default function Profile(){
               </View>
             </View>
           </View>
+          <View>
+              <Text>Collections here</Text>
+            </View>
           <View style={styles.profilecontent}>
             <Text>Profile screen - main content</Text>
           </View>

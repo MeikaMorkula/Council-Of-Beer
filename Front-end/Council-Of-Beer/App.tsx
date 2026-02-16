@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
+import { StyleSheet, Text, View } from 'react-native';
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
@@ -21,8 +22,15 @@ function FeedNav(){
   );
 }
 
-export default function App() {
+function BeerHeader() {
+  return(
+    <View style={styles.beerHeader}>
+      <Text style={styles.headerText}>Council of Beer</Text>
+    </View>
+  );
+}
 
+export default function App() {
   const Tabs = createBottomTabNavigator();
 
   return (
@@ -50,25 +58,32 @@ export default function App() {
 
               return <Ionicons name={iconName} size={24} color="black"/>
             },
+
+            header: BeerHeader
           })}  
         >
           <Tabs.Screen name="Feed" component={FeedNav}
-            options={{
-              headerTitle: "Council of Beer"
-            }}
           />
           <Tabs.Screen name="New Post" component={NewPost}
-            options={{
-              headerTitle: "Council of Beer"
-            }}  
           />
           <Tabs.Screen name="Profile" component={Profile}
-            options={{
-              headerTitle: "Council of Beer"
-            }}
           />
         </Tabs.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
   );
 }
+
+const styles = StyleSheet.create({
+  beerHeader: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 25,
+    paddingTop: 50,
+    backgroundColor: '#fff'
+  },
+  headerText: {
+    fontSize: 30,
+    fontFamily: "GermaniaOne400_Regular"
+  }
+});

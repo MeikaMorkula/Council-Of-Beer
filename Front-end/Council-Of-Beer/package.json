@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@expo-google-fonts/germania-one": "^0.4.1",
     "@react-navigation/bottom-tabs": "^7.12.0",
     "@react-navigation/elements": "^2.9.5",
     "@react-navigation/material-top-tabs": "^7.4.13",
