@@ -10,28 +10,36 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
 import { StyleSheet, Text, View } from 'react-native';
+import { useTranslation } from "react-i18next";
+import "./i8n.ts";
+
+
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
+   const { t } = useTranslation();
   return(
     <HomeTabs.Navigator>
-      <HomeTabs.Screen name="Home" component={Home}/>
-      <HomeTabs.Screen name="Leaderboard" component={Leaderboard}/>
-      <HomeTabs.Screen name="Search" component={Search}/>
+      <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
+      <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
+      <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
     </HomeTabs.Navigator>
   );
 }
 
 function BeerHeader() {
+    const { t } = useTranslation();
   return(
+    
     <View style={styles.beerHeader}>
-      <Text style={styles.headerText}>Council of Beer</Text>
+      <Text style={styles.headerText}>{t("header.mainHeader")}</Text>
     </View>
   );
 }
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
+   const { t } = useTranslation();
 
   return (
     <SafeAreaProvider>
@@ -62,11 +70,11 @@ export default function App() {
             header: BeerHeader
           })}  
         >
-          <Tabs.Screen name="Feed" component={FeedNav}
+          <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPost}
+          <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
           />
-          <Tabs.Screen name="Profile" component={Profile}
+          <Tabs.Screen name="Profile" component={Profile} options={{ tabBarLabel: t("footer.profile") }}
           />
         </Tabs.Navigator>
       </NavigationContainer>
