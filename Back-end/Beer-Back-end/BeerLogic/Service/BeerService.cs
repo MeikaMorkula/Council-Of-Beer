@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BeerLogic.Entities;
 
 namespace BeerLogic.Service
 {
-    internal class BeerService
+    public class BeerService
     {
+        public List<Beer> GetAllBeer()
+        {
+
+        }
     }
 }
