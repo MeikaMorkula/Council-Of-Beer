@@ -9,9 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerData", "BeerData\BeerDa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BeerLogic", "BeerLogic\BeerLogic.csproj", "{4FA4EC20-C0FD-4341-A2D9-1465C0C2CFC1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA1465DD-8C67-4E0F-8AB7-4E2B3E7D5157}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA781AC7-B872-47BE-BF5B-604093B8D3D8}"
 	ProjectSection(SolutionItems) = preProject
-		DockerFile = DockerFile
+		Dockerfile = Dockerfile
 	EndProjectSection
 EndProject
 Global
