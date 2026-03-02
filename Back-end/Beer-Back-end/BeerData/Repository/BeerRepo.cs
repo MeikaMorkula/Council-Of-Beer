@@ -61,7 +61,7 @@ namespace BeerData.Repository
 
                 return beers;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new ArgumentNullException();
             }
