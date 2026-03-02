@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repository\" />
+    <PackageReference Include="Npgsql" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Npgsql" Version="10.0.1" />
+    <ProjectReference Include="..\BeerLogic\BeerLogic.csproj" />
   </ItemGroup>
 
 </Project>

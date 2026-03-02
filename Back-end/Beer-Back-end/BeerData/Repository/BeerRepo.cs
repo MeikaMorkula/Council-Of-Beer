@@ -1,12 +1,15 @@
-﻿using System;
+﻿using BeerLogic.Interface;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeerLogic.Interface
+namespace BeerData.Repository
 {
-    public interface IBeerRepo
+    public class BeerRepo : IBeerRepo
     {
+
+
     }
 }
