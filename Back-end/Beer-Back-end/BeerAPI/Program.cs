@@ -18,7 +18,8 @@ builder.Services.AddSwaggerGen();
 // ✅ Register DI services BEFORE builder.Build()
 builder.Services.AddScoped<IDbConnection>(_ =>
 {
-    var cs = builder.Configuration.GetConnectionString("Default");
+    var cs = builder.Configuration.GetConnectionString("Default")
+    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
     return new NpgsqlConnection(cs);
 });
 
