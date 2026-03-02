@@ -1,5 +1,7 @@
 using BeerData.Repository;
 using BeerLogic.Interface;
+using BeerLogic.Mapper;
+using BeerLogic.Service;
 using Npgsql;
 using System.Data;
 
@@ -21,8 +23,12 @@ builder.Services.AddScoped<IDbConnection>(_ =>
 });
 
 builder.Services.AddScoped<IBeerRepo, BeerRepo>();
+
+builder.Services.AddScoped<Mapper>();
+builder.Services.AddScoped<BeerService>();
 var app = builder.Build();
 
+app.MapGet("/", () => Results.Ok("BeerAPI is running ✅"));
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
