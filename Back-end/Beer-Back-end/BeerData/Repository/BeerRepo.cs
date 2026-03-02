@@ -1,31 +1,27 @@
 ﻿using BeerLogic.DTOs;
 using BeerLogic.Interface;
-using Microsoft.Extensions.Configuration;
 using Npgsql;
-using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 
 namespace BeerData.Repository
 {
     public class BeerRepo : IBeerRepo
     {
-        private readonly string _connectionString;
+        private readonly IDbConnection _connection;
 
-        public BeerRepo(IConfiguration config)
+        public BeerRepo(IDbConnection connection)
         {
-            _connectionString = config.GetConnectionString("DefaultConnection");
+            _connection = connection;
         }
 
         public List<BeerDTO> GetAllBeer()
         {
-            try
-            {
-                var beers = new List<BeerDTO>();
+            var beers = new List<BeerDTO>();
 
-                using var connection = new NpgsqlConnection(_connectionString);
-                connection.Open();
+            using var connection = (NpgsqlConnection)_connection;
+            connection.Open();
 
-                var query = @"
+            var query = @"
                 SELECT
                     b.id,
                     b.name,
@@ -43,28 +39,23 @@ namespace BeerData.Repository
                 ORDER BY b.id;
             ";
 
-                using var command = new NpgsqlCommand(query, connection);
-                using var reader = command.ExecuteReader();
+            using var command = new NpgsqlCommand(query, connection);
+            using var reader = command.ExecuteReader();
 
-                while (reader.Read())
-                {
-                    beers.Add(new BeerDTO
-                    {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
-                        Name = reader.GetString(reader.GetOrdinal("name")),
-                        AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcoholpercentage")),
-                        Brewery = reader.GetString(reader.GetOrdinal("brewery")),
-                        Country = reader.GetString(reader.GetOrdinal("country")),
-                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
-                    });
-                }
-
-                return beers;
-            }
-            catch (Exception)
+            while (reader.Read())
             {
-                throw new ArgumentNullException();
+                beers.Add(new BeerDTO
+                {
+                    Id = reader.GetInt32(reader.GetOrdinal("id")),
+                    Name = reader.GetString(reader.GetOrdinal("name")),
+                    AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcoholpercentage")),
+                    Brewery = reader.GetString(reader.GetOrdinal("brewery")),
+                    Country = reader.GetString(reader.GetOrdinal("country")),
+                    Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
+                });
             }
+
+            return beers;
         }
     }
 }
