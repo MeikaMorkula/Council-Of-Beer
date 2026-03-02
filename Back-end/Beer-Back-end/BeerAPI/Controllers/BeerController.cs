@@ -15,7 +15,7 @@ namespace BeerAPI.Controllers
             _beerService = beerService;
         }
 
-        [HttpGet(Name = "GetAllBeer")]
+        [HttpGet("GetAllBeer")]
         public List<BeerDTO> GetAllBeer()
         {
            return _beerService.GetAllBeer();
