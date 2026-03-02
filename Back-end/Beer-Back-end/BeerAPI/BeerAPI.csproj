@@ -15,4 +15,9 @@
     <Folder Include="Controllers\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BeerData\BeerData.csproj" />
+    <ProjectReference Include="..\BeerLogic\BeerLogic.csproj" />
+  </ItemGroup>
+
 </Project>

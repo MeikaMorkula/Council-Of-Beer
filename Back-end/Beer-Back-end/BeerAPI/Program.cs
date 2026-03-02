@@ -1,3 +1,5 @@
+using BeerData.Repository;
+using BeerLogic.Interface;
 using Npgsql;
 using System.Data;
 
@@ -18,6 +20,7 @@ builder.Services.AddScoped<IDbConnection>(_ =>
     return new NpgsqlConnection(cs);
 });
 
+builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
