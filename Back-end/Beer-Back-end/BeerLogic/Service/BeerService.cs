@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BeerLogic.DTOs;
+using BeerLogic.Mapper;
 
 namespace BeerLogic.Service
 {
-    internal class BeerService
+    public class BeerService
     {
+        public List<BeerDTO> GetAllBeer()
+        {
+
+        }
+
+        public BeerDTO AddBeer(BeerDTO beer)
+        {
+            DTOToEntity
+        }
     }
 }
