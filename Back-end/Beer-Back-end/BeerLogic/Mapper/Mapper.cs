@@ -87,7 +87,6 @@ namespace BeerLogic.Mapper
             {
                 Id = beerDTO.Id,
                 Name = beerDTO.Name,
-                AvgRating = beerDTO.AvgRating,
                 AlcPrecentage = beerDTO.AlcPrecentage,
                 Label = beerDTO.Label,
                 Brewery = beerDTO.Brewery,
@@ -101,7 +100,6 @@ namespace BeerLogic.Mapper
             {
                 Id = beer.Id,
                 Name = beer.Name,
-                AvgRating = beer.AvgRating,
                 AlcPrecentage = beer.AlcPrecentage,
                 Label = beer.Label,
                 Brewery = beer.Brewery,
