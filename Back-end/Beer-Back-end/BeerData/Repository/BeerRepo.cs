@@ -25,7 +25,7 @@ namespace BeerData.Repository
                 SELECT
                     b.id,
                     b.name,
-                    b.alcoholpercentage,
+                    b.alcohol_percentage,
                     b.brewery,
                     b.country,
                     COALESCE(
@@ -33,9 +33,9 @@ namespace BeerData.Repository
                         ARRAY[]::text[]
                     ) AS labels
                 FROM beer b
-                LEFT JOIN beer_label bl ON bl.beer_id = b.id
-                LEFT JOIN label l ON l.id = bl.label_id
-                GROUP BY b.id, b.name, b.alcoholpercentage, b.brewery, b.country
+                LEFT JOIN beer_label bl ON bl.beerid = b.id
+                LEFT JOIN label l ON l.id = bl.labelid
+                GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country
                 ORDER BY b.id;
             ";
 
@@ -48,7 +48,7 @@ namespace BeerData.Repository
                 {
                     Id = reader.GetInt32(reader.GetOrdinal("id")),
                     Name = reader.GetString(reader.GetOrdinal("name")),
-                    AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcoholpercentage")),
+                    AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                     Brewery = reader.GetString(reader.GetOrdinal("brewery")),
                     Country = reader.GetString(reader.GetOrdinal("country")),
                     Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
