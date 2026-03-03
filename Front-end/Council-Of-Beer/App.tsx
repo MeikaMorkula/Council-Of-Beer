@@ -9,7 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
@@ -22,10 +22,32 @@ function FeedNav(){
   );
 }
 
-function BeerHeader() {
+function MainHeader() {
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
+      <TouchableOpacity style={styles.settingsBtn}>
+        <Ionicons name='log-in' size={32} color='black'/>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function PostHeader() {
+  return(
+    <View style={styles.beerHeader}>
+      <Text style={styles.headerText}>Council of Beer</Text>
+    </View>
+  );
+}
+
+function ProfileHeader() {
+  return(
+    <View style={styles.beerHeader}>
+      <Text style={styles.headerText}>Council of Beer</Text>
+      <TouchableOpacity style={styles.settingsBtn}>
+        <Ionicons name='menu' size={32} color='black'/>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -59,7 +81,15 @@ export default function App() {
               return <Ionicons name={iconName} size={24} color="black"/>
             },
 
-            header: BeerHeader
+            header: ({ route }) => {
+              if(route.name === 'Feed'){
+                return <MainHeader/>
+              } else if (route.name === 'New Post'){
+                return <PostHeader/>
+              } else if(route.name === 'Profile'){
+                return <ProfileHeader/>
+              }
+            }
           })}  
         >
           <Tabs.Screen name="Feed" component={FeedNav}
@@ -85,5 +115,10 @@ const styles = StyleSheet.create({
   headerText: {
     fontSize: 30,
     fontFamily: "GermaniaOne400_Regular"
+  },
+  settingsBtn:{
+    position: 'absolute',
+    right: 15,
+    top: 55
   }
 });
