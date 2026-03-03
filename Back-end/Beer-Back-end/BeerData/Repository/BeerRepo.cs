@@ -1,4 +1,5 @@
 ﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Interface;
 using Npgsql;
 using System.Data;
@@ -61,7 +62,7 @@ namespace BeerData.Repository
             }
             catch (Exception ex)
             {
-                throw new Exception();
+                throw new Exception("GetAllBeer failed", ex);
             }
         }
     public string AddBeer(BeerDTO BeerDTO)
@@ -71,22 +72,42 @@ namespace BeerData.Repository
                 using NpgsqlConnection connection = (NpgsqlConnection)_connection;
                 connection.Open();
 
-                string query = @"
-                INSERT INTO beer (name,alcohol_percentage,brewery,country)
-                VALUES (@name, @alcohol_percentage, @brewery, @country)";
-                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@name", BeerDTO.Name);
-                    command.Parameters.AddWithValue("@alcohol_percentage", BeerDTO.AlcPrecentage);
-                    command.Parameters.AddWithValue("@brewery", BeerDTO.Brewery);
-                    command.Parameters.AddWithValue("@country", BeerDTO.Country);
-                    command.ExecuteNonQuery();
-                }
-                return "Succesfully added";
+                var sql = @"
+                WITH new_beer AS (
+                  INSERT INTO beer (name, alcohol_percentage, brewery, country)
+                  VALUES (@name, @alcohol_percentage, @brewery, @country)
+                  RETURNING id
+                ),
+                ins_labels AS (
+                  INSERT INTO label (name)
+                  SELECT DISTINCT unnest(@labels::text[])
+                  ON CONFLICT (name) DO NOTHING
+                  RETURNING id, name
+                ),
+                all_labels AS (
+                  SELECT id, name FROM ins_labels
+                  UNION
+                  SELECT id, name FROM label WHERE name = ANY(@labels::text[])
+                )
+                INSERT INTO beer_label (beerid, labelid)
+                SELECT nb.id, al.id
+                FROM new_beer nb
+                JOIN all_labels al ON TRUE
+                ";
+
+                using NpgsqlCommand command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@name", BeerDTO.Name);
+                command.Parameters.AddWithValue("@alcohol_percentage", BeerDTO.AlcPrecentage);
+                command.Parameters.AddWithValue("@brewery", BeerDTO.Brewery);
+                command.Parameters.AddWithValue("@country", BeerDTO.Country);
+                command.Parameters.AddWithValue("@labels", BeerDTO.Labels?.ToArray() ?? Array.Empty<string>());
+
+                command.ExecuteNonQuery();
+                return "Ok";
             }
             catch (Exception ex)
             {
-                throw new Exception();
+                throw new Exception("AddBeer failed", ex);
             }
         }
     }
