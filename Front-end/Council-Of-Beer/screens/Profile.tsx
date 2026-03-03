@@ -72,7 +72,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingTop: 20,
-    paddingBottom: 0,
     marginBottom: -50
   },
   profilecontent: {
@@ -80,8 +79,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff'
   },
   pfpic: {
-    width: 72,
-    height: 72,
+    width: 100,
+    height: 100,
     borderRadius: 100,
     borderWidth: 1,
     borderColor: 'black'
@@ -89,11 +88,12 @@ const styles = StyleSheet.create({
   pfpiccont: {
     alignItems: 'center',
     position: 'absolute',
-    top: 25,
-    left: 25
+    top: 15,
+    left: 15
   },
   pftextcont: {
-    flexDirection: 'column'
+    flexDirection: 'column',
+    paddingLeft: 20
   },
   usernamebtn: {
     flexDirection: 'row',
@@ -125,8 +125,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   collectionImg: {
-    width: 50,
-    height: 50,
+    width: 75,
+    height: 75,
     backgroundColor: 'white',
     borderRadius: 100,
     borderWidth: 1,
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
   feed: {
     flex: 0.33,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    width: '101%'
   }
 });
