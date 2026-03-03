@@ -16,12 +16,14 @@ namespace BeerData.Repository
 
         public List<BeerDTO> GetAllBeer()
         {
-            var beers = new List<BeerDTO>();
+            try
+            {
+                List<BeerDTO> beers = new List<BeerDTO>();
 
-            using var connection = (NpgsqlConnection)_connection;
-            connection.Open();
+                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                connection.Open();
 
-            var query = @"
+                string query = @"
                 SELECT
                     b.id,
                     b.name,
@@ -39,23 +41,53 @@ namespace BeerData.Repository
                 ORDER BY b.id;
             ";
 
-            using var command = new NpgsqlCommand(query, connection);
-            using var reader = command.ExecuteReader();
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var reader = command.ExecuteReader();
 
-            while (reader.Read())
-            {
-                beers.Add(new BeerDTO
+                while (reader.Read())
                 {
-                    Id = reader.GetInt32(reader.GetOrdinal("id")),
-                    Name = reader.GetString(reader.GetOrdinal("name")),
-                    AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
-                    Brewery = reader.GetString(reader.GetOrdinal("brewery")),
-                    Country = reader.GetString(reader.GetOrdinal("country")),
-                    Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
-                });
-            }
+                    beers.Add(new BeerDTO
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
+                        Brewery = reader.GetString(reader.GetOrdinal("brewery")),
+                        Country = reader.GetString(reader.GetOrdinal("country")),
+                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
+                    });
+                }
 
-            return beers;
+                return beers;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
+        }
+    public string AddBeer(BeerDTO BeerDTO)
+        {
+            try
+            {
+                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                connection.Open();
+
+                string query = @"
+                INSERT INTO beer (name,alcohol_percentage,brewery,country)
+                VALUES (@name, @alcohol_percentage, @brewery, @country)";
+                using (NpgsqlCommand command = new NpgsqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@name", BeerDTO.Name);
+                    command.Parameters.AddWithValue("@alcohol_percentage", BeerDTO.AlcPrecentage);
+                    command.Parameters.AddWithValue("@brewery", BeerDTO.Brewery);
+                    command.Parameters.AddWithValue("@country", BeerDTO.Country);
+                    command.ExecuteNonQuery();
+                }
+                return "Succesfully added";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception();
+            }
         }
     }
 }

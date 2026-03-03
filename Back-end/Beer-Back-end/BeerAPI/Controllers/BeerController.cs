@@ -20,5 +20,11 @@ namespace BeerAPI.Controllers
         {
            return _beerService.GetAllBeer();
         }
+
+        [HttpPost("AddBeer")]
+        public string AddBeer(BeerDTO BeerDTO)
+        {
+            return _beerService.AddBeer(BeerDTO);
+        }
     }
 }

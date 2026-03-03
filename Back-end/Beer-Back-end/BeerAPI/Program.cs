@@ -10,6 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
 builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
 
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -29,7 +30,7 @@ builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
 var app = builder.Build();
 
-app.MapGet("/", () => Results.Ok("BeerAPI is running ✅"));
+app.MapGet("/", () => Results.Ok("BackEnd is running!"));
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

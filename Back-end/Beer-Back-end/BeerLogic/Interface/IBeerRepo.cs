@@ -4,6 +4,7 @@ namespace BeerLogic.Interface
 {
     public interface IBeerRepo
     {
-        List<BeerDTO> GetAllBeer();
+        public List<BeerDTO> GetAllBeer();
+        public string AddBeer(BeerDTO BeerDTO);
     }
 }
