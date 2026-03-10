@@ -11,6 +11,7 @@ import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from "react-i18next";
+import SignUp from './screens/Signup'
 import "./i8n.ts";
 
 
@@ -23,6 +24,7 @@ function FeedNav(){
       <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
       <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
       <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
+      <HomeTabs.Screen name="Sign Up" component={SignUp} options={{ tabBarLabel: t("tabs.signup")}}/>
     </HomeTabs.Navigator>
   );
 }
