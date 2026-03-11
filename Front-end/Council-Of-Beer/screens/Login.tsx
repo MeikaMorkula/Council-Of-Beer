@@ -1,10 +1,9 @@
 import React, {useState} from 'react'
 import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator } from 'react-native'
 
-export default function SignUp(){
+export default function Login() {
 
     const [username, setUsername] = useState("")
-    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
@@ -15,28 +14,16 @@ export default function SignUp(){
 
         try {
         } catch (err) {
-            setError('Sign up failed')
+            setError('Log in failed')
         } finally {
             setLoading(false)
         }
-    } 
+    }
 
     return(
         <View style={styles.container}>
             <View style={styles.loginContent}>
-                <Text style={styles.title}>Sign Up</Text>
-
-                <View style={styles.field}>
-                    <Text style={styles.label}>Email</Text>
-                    <TextInput
-                        placeholder="example@example.com"
-                        value={email}
-                        onChangeText={setEmail}
-                        style={styles.input}
-                        autoCapitalize="none"
-                        keyboardType="email-address"
-                    />
-                </View>
+                <Text style={styles.title}>Log in</Text>
 
                 <View style={styles.field}>
                     <Text style={styles.label}>Username</Text>
@@ -55,7 +42,7 @@ export default function SignUp(){
                         placeholder="Password"
                         value={password}
                         onChangeText={setPassword}
-                        style= {styles.input}
+                        style={styles.input}
                         secureTextEntry
                     />
                 </View>
@@ -69,8 +56,8 @@ export default function SignUp(){
                 >
                     {loading ? (
                         <ActivityIndicator color="#fff" />
-                    ): (
-                        <Text style={styles.buttonText}>Sign Up</Text>
+                    ) : (
+                        <Text style={styles.buttonText}>Log In</Text>
                     )}
                 </Pressable>
             </View>
