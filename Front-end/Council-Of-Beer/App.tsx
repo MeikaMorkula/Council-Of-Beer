@@ -19,7 +19,7 @@ import "./i8n.ts";
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   return(
     <HomeTabs.Navigator>
       <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
@@ -32,11 +32,9 @@ function FeedNav(){
 }
 
 function BeerHeader() {
-    const { t } = useTranslation();
   return(
-    
     <View style={styles.beerHeader}>
-      <Text style={styles.headerText}>{t("header.mainHeader")}</Text>
+      <Text style={styles.headerText}>Council of Beer</Text>
     </View>
   );
 }
@@ -67,7 +65,7 @@ export default function App() {
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
-
+              // This error is fine, everything works as it should (14.3.2026)
               return <Ionicons name={iconName} size={24} color="black"/>
             },
 
