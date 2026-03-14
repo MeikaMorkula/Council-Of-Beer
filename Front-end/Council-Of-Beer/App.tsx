@@ -11,28 +11,30 @@ import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
 import { StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from "react-i18next";
+import SignUp from './screens/Signup'
+import Login from './screens/Login'
 import "./i8n.ts";
 
 
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
-   const { t } = useTranslation();
+  const { t } = useTranslation();
   return(
     <HomeTabs.Navigator>
       <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
       <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
       <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
+      <HomeTabs.Screen name="Sign Up" component={SignUp} options={{ tabBarLabel: t("tabs.signup")}}/>
+      <HomeTabs.Screen name="Log In" component={Login} options={{ tabBarLabel: t("tabs.login")}}/>
     </HomeTabs.Navigator>
   );
 }
 
 function BeerHeader() {
-    const { t } = useTranslation();
   return(
-    
     <View style={styles.beerHeader}>
-      <Text style={styles.headerText}>{t("header.mainHeader")}</Text>
+      <Text style={styles.headerText}>Council of Beer</Text>
     </View>
   );
 }
@@ -63,7 +65,7 @@ export default function App() {
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
-
+              // This error is fine, everything works as it should (14.3.2026)
               return <Ionicons name={iconName} size={24} color="black"/>
             },
 
