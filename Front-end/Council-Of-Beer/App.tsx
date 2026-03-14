@@ -19,6 +19,7 @@ import "./i8n.ts";
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
+  // But this works fine, no issues with rendering hooks
    const { t } = useTranslation();
   return(
     <HomeTabs.Navigator>
@@ -32,9 +33,10 @@ function FeedNav(){
 }
 
 function BeerHeader() {
-    const { t } = useTranslation();
+  // This causes the app to render more hooks than during the previous render
+  // Header doesn't need to have a changing text, maybe remove translation?
+  const { t } = useTranslation();
   return(
-    
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>{t("header.mainHeader")}</Text>
     </View>
@@ -67,7 +69,7 @@ export default function App() {
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
-
+              // This error is fine, everything works as it should (14.3.2026)
               return <Ionicons name={iconName} size={24} color="black"/>
             },
 
