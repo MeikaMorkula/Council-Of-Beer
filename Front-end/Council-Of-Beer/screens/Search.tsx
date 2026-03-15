@@ -29,15 +29,16 @@ export default function Search(){
             <TextInput
                 style={styles.searchField}
                 placeholder='Search'
+                placeholderTextColor={'#EDE9C7'}
               />
               <TouchableOpacity style={styles.searchIcon}>
-                <Ionicons name='search' size={32} color='black'/>
+                <Ionicons name='search' size={32} color='#EDE9C7'/>
               </TouchableOpacity>
             </View>
         </View>
-        <View style={styles.resultArea}>
+        <ScrollView style={styles.resultArea}>
           <ProductComponent/>
-        </View>
+        </ScrollView>
       </>
     );
 }
@@ -46,16 +47,18 @@ export default function Search(){
 
 const styles = StyleSheet.create({
   searchCont: {
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: '#1D190E'
   },
   searchSection: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 10,
+    backgroundColor: '#1D190E'
   },
   searchField:{
-    backgroundColor: 'white',
+    backgroundColor: '#28200C',
     paddingTop: 20,
     paddingRight: 20,
     paddingBottom: 20,
@@ -65,7 +68,8 @@ const styles = StyleSheet.create({
     width: '87%'
   },
   searchIcon: {
-    backgroundColor: 'white',
+    backgroundColor: '#28200C',
+    color: '#EDE9C7',
     paddingTop: 15,
     paddingRight: 10,
     paddingBottom: 10,
@@ -73,12 +77,13 @@ const styles = StyleSheet.create({
     height: 65,
   },
   resultArea: {
-    position: 'relative'
+    position: 'relative',
+    backgroundColor: '#1D190E'
   },
   productCont:{
     flexDirection: 'row',
     borderWidth: 0.5,
-    borderColor: 'dark gray',
+    borderColor: '#EDE9C7',
     padding: 20
   },
   productIcon: {
@@ -86,7 +91,7 @@ const styles = StyleSheet.create({
     height: 75,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: 'black'
+    borderColor: '#EDE9C7'
   },
   productInfo: {
     flexDirection: 'column',
@@ -95,6 +100,7 @@ const styles = StyleSheet.create({
   productText: {
     fontSize: 16,
     paddingBottom: 5,
+    color: '#EDE9C7' 
   },
   productRating:{
     marginHorizontal: 2

@@ -19,20 +19,20 @@ export default function Profile(){
               <View style={styles.pfstatscont} >
                 <View style={styles.stats}>
                   <Text style={styles.numstat}>69</Text>
-                  <Text>Ratings</Text>
+                  <Text style={{color: '#EDE9C7'}}>Ratings</Text>
                 </View>
                 <View style={styles.stats}>
                   <Text style={styles.numstat}>69</Text>
-                  <Text>Followers</Text>
+                  <Text style={{color: '#EDE9C7'}}>Followers</Text>
                 </View>
                 <View style={styles.stats}>
                   <Text style={styles.numstat}>69</Text>
-                  <Text>Following</Text>
+                  <Text style={{color: '#EDE9C7'}}>Following</Text>
                 </View>
               </View>
             </View>
           </View>
-          <ScrollView horizontal={ true } style={{height: 0}}>
+          <ScrollView horizontal={ true } style={{height: 0, backgroundColor: '#1D190E'}}>
               <Image style={styles.collectionImg}/>
               <Image style={styles.collectionImg}/>
               <Image style={styles.collectionImg}/>
@@ -72,18 +72,19 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     paddingTop: 20,
-    marginBottom: -50
+    marginBottom: -50,
+    backgroundColor: '#1D190E'
   },
   profilecontent: {
     flex: 5,
-    backgroundColor: '#fff'
+    backgroundColor: '#1D190E'
   },
   pfpic: {
     width: 100,
     height: 100,
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: 'black'
+    borderColor: '#EDE9C7'
   },
   pfpiccont: {
     alignItems: 'center',
@@ -100,13 +101,14 @@ const styles = StyleSheet.create({
     columnGap: 10
   },
   username: {
-    fontSize: 20,
-    fontWeight: 'bold'
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#EDE9C7'
   },
   followbtn: {
     alignItems: 'center',
     borderRadius: 4,
-    backgroundColor: 'lightblue',
+    backgroundColor: '#E39914',
     padding: 8,
     width: 72
   },
@@ -121,8 +123,9 @@ const styles = StyleSheet.create({
     rowGap: 5
   },
   numstat:{
-    fontSize: 18,
-    fontWeight: 'bold'
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#EDE9C7'
   },
   collectionImg: {
     width: 75,
@@ -130,7 +133,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 100,
     borderWidth: 1,
-    borderColor: 'black',
+    borderColor: '#EDE9C7',
     marginLeft: 10
   },
   feedImg: {

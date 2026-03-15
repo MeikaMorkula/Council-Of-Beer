@@ -11,11 +11,18 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
   return(
-    <HomeTabs.Navigator>
+    <HomeTabs.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: '#28200C' },
+        tabBarLabelStyle: { color: '#EDE9C7' },
+        tabBarIndicatorStyle: { backgroundColor: '#E39914' }
+      }}
+    >
       <HomeTabs.Screen name="Home" component={Home}/>
       <HomeTabs.Screen name="Leaderboard" component={Leaderboard}/>
       <HomeTabs.Screen name="Search" component={Search}/>
@@ -28,7 +35,7 @@ function MainHeader() {
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
       <TouchableOpacity style={styles.settingsBtn}>
-        <Ionicons name='log-in' size={32} color='black'/>
+        <Ionicons name='log-in' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
   );
@@ -47,11 +54,32 @@ function ProfileHeader() {
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
       <TouchableOpacity style={styles.settingsBtn}>
-        <Ionicons name='menu' size={32} color='black'/>
+        <Ionicons name='menu' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
   );
 }
+
+function ProfileStack(){
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='Profile'
+        component={Profile}
+      />
+      <Stack.Screen
+        name='MainSettings'
+        component={MainSettings}
+      />
+    </Stack.Navigator>
+  );
+}
+
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
@@ -78,8 +106,8 @@ export default function App() {
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
-
-              return <Ionicons name={iconName} size={24} color="black"/>
+              // This error is fine, everything works as it should (14.3.2026)
+              return <Ionicons name={iconName} size={24} color="#EDE9C7"/>
             },
 
             header: ({ route }) => {
@@ -90,14 +118,20 @@ export default function App() {
               } else if(route.name === 'Profile'){
                 return <ProfileHeader/>
               }
-            }
+            },
+
+            tabBarStyle: {
+              backgroundColor: '#28200C'
+            },
+            tabBarInactiveTintColor: '#EDE9C7',
+            tabBarActiveTintColor: '#EFC06D'
           })}  
         >
           <Tabs.Screen name="Feed" component={FeedNav}
           />
           <Tabs.Screen name="New Post" component={NewPost}
           />
-          <Tabs.Screen name="Profile" component={Profile}
+          <Tabs.Screen name="Profile" component={ProfileStack}
           />
         </Tabs.Navigator>
       </NavigationContainer>
@@ -111,15 +145,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 25,
     paddingTop: 50,
-    backgroundColor: '#fff'
+    backgroundColor: '#1D190E',
+    color: '#EDE9C7'
   },
   headerText: {
     fontSize: 30,
-    fontFamily: "GermaniaOne400_Regular"
+    fontFamily: "GermaniaOne400_Regular",
+    color: '#EDE9C7'
   },
   settingsBtn:{
     position: 'absolute',
     right: 15,
-    top: 55
+    top: 55,
+    color: '#EDE9C7'
   }
 });
