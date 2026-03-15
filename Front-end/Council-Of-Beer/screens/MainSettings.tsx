@@ -1,18 +1,22 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 
 export default function MainSettings(){
     return(
         <View style={styles.container}>
             <TouchableOpacity style={styles.settingsNav}>
-                <Text>User Settings</Text>
+                <Text style={styles.settingsText}>User Settings</Text>
+                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.settingsNav}>
-                <Text>App Settings</Text>
+                <Text style={styles.settingsText}>App Settings</Text>
+                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
             <TouchableOpacity style={styles.settingsNav}>
-                <Text>Log Out</Text>
+                <Text style={styles.settingsText}>Log Out</Text>
+                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
         </View>
     );
@@ -21,12 +25,16 @@ export default function MainSettings(){
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#1D190E',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   settingsNav: {
     width: '100%',
-    backgroundColor: 'light blue'
+    backgroundColor: '#28200C',
+    padding: 20
+  },
+  settingsText: {
+    color: '#EDE9C7',
+    fontSize: 16
   }
 });
