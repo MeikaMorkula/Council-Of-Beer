@@ -36,8 +36,8 @@ namespace BeerData.Repository
                         ARRAY[]::text[]
                     ) AS labels
                 FROM beer b
-                LEFT JOIN beer_label bl ON bl.beerid = b.id
-                LEFT JOIN label l ON l.id = bl.labelid
+                LEFT JOIN beer_label bl ON bl.beer_id = b.id
+                LEFT JOIN label l ON l.id = bl.label_id
                 GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country
                 ORDER BY b.id;
             ";
@@ -89,7 +89,7 @@ namespace BeerData.Repository
                   UNION
                   SELECT id, name FROM label WHERE name = ANY(@labels::text[])
                 )
-                INSERT INTO beer_label (beerid, labelid)
+                INSERT INTO beer_label (beer_id, label_id)
                 SELECT nb.id, al.id
                 FROM new_beer nb
                 JOIN all_labels al ON TRUE
