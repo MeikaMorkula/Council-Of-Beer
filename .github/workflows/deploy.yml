@@ -1,0 +1,40 @@
+name: Deploy Council Of Beer Backend
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SERVER_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          ssh-keyscan -p "${{ secrets.SERVER_PORT }}" -H "${{ secrets.SERVER_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Deploy to EduCloud VM
+        run: |
+          ssh -p "${{ secrets.SERVER_PORT }}" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << 'EOF'
+            set -e
+
+            cd /home/ubuntu/Council-Of-Beer
+
+            git fetch origin
+            git checkout main
+            git pull origin main
+
+            cd /home/ubuntu/Council-Of-Beer/Back-end/Beer-Back-end
+            dotnet publish BeerAPI/BeerAPI.csproj -c Release
+
+            sudo systemctl restart backend
+            sudo systemctl status backend --no-pager
+          EOF
