@@ -1,6 +1,4 @@
-@BeerAPI_HostAddress = http://localhost:5156
+@BeerAPI_HostAddress = https://your-service.onrender.com
 
-GET {{BeerAPI_HostAddress}}/weatherforecast/
+GET {{BeerAPI_HostAddress}}/Beer
 Accept: application/json
-
-###
