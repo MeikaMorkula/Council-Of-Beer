@@ -16,13 +16,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
 // ✅ Register DI services BEFORE builder.Build()
-builder.Services.AddScoped<IDbConnection>(_ =>
-{
-    var cs = builder.Configuration.GetConnectionString("Default")
-    ?? Environment.GetEnvironmentVariable("DATABASE_URL");
-    return new NpgsqlConnection(cs);
-});
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 
