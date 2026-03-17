@@ -7,9 +7,35 @@ on:
   workflow_dispatch:
 
 jobs:
+  build:
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Checkout repository
+          uses: actions/checkout@v4
+  
+        - name: Set up .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: '8.0.x'
+  
+        - name: Restore dependencies
+          run: dotnet restore /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/Beer-Back-end.sln
+  
+        - name: Build solution
+          run: dotnet build /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/Beer-Back-end.sln --configuration Release --no-restore
+  
+        - name: Publish API
+          run: dotnet publish /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/BeerAPI/BeerAPI.csproj --configuration Release --no-build --output ./publish
+  
+        - name: Upload publish artifact
+          uses: actions/upload-artifact@v4
+          with:
+            name: beerapi-publish
+            path: ./publish
   deploy:
     runs-on: ubuntu-latest
-
+    needs: build
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
