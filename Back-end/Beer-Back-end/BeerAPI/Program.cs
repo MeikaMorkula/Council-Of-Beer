@@ -18,7 +18,8 @@ builder.Services.AddSwaggerGen();
 
 
 // ✅ Register DI services BEFORE builder.Build()
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddScoped<IDbConnection>(_ =>
+    new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 
