@@ -31,9 +31,14 @@ builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
+builder.Services.AddHealthChecks();
 var app = builder.Build();
 
-app.MapGet("/", () => Results.Ok("BackEnd is running!"));
+app.MapGet("/", () => Results.Content(
+    "<h1>BackEnd is running!</h1><a href='/health'>Check health</a>",
+    "text/html"
+));
+app.MapHealthChecks("/health");
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
