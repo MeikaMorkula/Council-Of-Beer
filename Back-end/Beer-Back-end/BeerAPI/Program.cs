@@ -16,10 +16,16 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
-// ✅ Register DI services BEFORE builder.Build()
+if (string.IsNullOrWhiteSpace(connectionString))
+{
+    throw new InvalidOperationException("DefaultConnection is missing or empty.");
+}
+
+// Register DI services BEFORE builder.Build()
 builder.Services.AddScoped<IDbConnection>(_ =>
-    new NpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection")));
+    new NpgsqlConnection(connectionString));
 
 builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 

@@ -1,41 +1,53 @@
 name: Deploy Council Of Beer Backend
 
+
 on:
   push:
     branches:
-      - main
-  workflow_dispatch:
+      - '**'
+  pull_request:
+    branches:
+      - '**'
 
 jobs:
-  build:
-      runs-on: ubuntu-latest
-  
-      steps:
-        - name: Checkout repository
-          uses: actions/checkout@v4
-  
-        - name: Set up .NET
-          uses: actions/setup-dotnet@v4
-          with:
-            dotnet-version: '8.0.x'
-  
-        - name: Restore dependencies
-          run: dotnet restore /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/Beer-Back-end.sln
-  
-        - name: Build solution
-          run: dotnet build /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/Beer-Back-end.sln --configuration Release --no-restore
-  
-        - name: Publish API
-          run: dotnet publish /home/runner/work/Council-Of-Beer/Council-Of-Beer/Back-end/Beer-Back-end/BeerAPI/BeerAPI.csproj --configuration Release --no-build --output ./publish
-  
-        - name: Upload publish artifact
-          uses: actions/upload-artifact@v4
-          with:
-            name: beerapi-publish
-            path: ./publish
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Back-end/Beer-Back-end
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.nuget/packages
+            ~/.local/share/NuGet/v3-cache
+          key: ${{ runner.os }}-nuget-${{ hashFiles('Back-end/Beer-Back-end/**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test --configuration Release --no-build --verbosity normal
+        
   deploy:
     runs-on: ubuntu-latest
-    needs: build
+    needs: build-and-test
     if: github.ref == 'refs/heads/main'
     steps:
       - name: Checkout repository
