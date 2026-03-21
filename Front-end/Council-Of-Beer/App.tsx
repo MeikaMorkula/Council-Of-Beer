@@ -12,6 +12,7 @@ import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AppSettings from './screens/AppSettings';
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
