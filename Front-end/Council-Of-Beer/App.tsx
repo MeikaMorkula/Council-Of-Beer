@@ -3,13 +3,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './screens/Profile';
 import Home from './screens/Home';
 import NewPost from './screens/NewPost';
-import { NavigationContainer } from '@react-navigation/native';
+import MainSettings from './screens/MainSettings';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import Leaderboard from './screens/Leaderboard';
 import Search from './screens/Search';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AppSettings from './screens/AppSettings';
 import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
@@ -21,7 +24,13 @@ function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
   const { t } = useTranslation();
   return(
-    <HomeTabs.Navigator>
+    <HomeTabs.Navigator
+      screenOptions={{
+        tabBarStyle: { backgroundColor: '#28200C' },
+        tabBarLabelStyle: { color: '#EDE9C7' },
+        tabBarIndicatorStyle: { backgroundColor: '#E39914' }
+      }}
+    >
       <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
       <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
       <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
@@ -31,13 +40,56 @@ function FeedNav(){
   );
 }
 
-function BeerHeader() {
+function MainHeader() {
+  return(
+    <View style={styles.beerHeader}>
+      <Text style={styles.headerText}>Council of Beer</Text>
+      <TouchableOpacity style={styles.settingsBtn}>
+        <Ionicons name='log-in' size={32} color='#EDE9C7'/>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function PostHeader() {
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
     </View>
   );
 }
+
+function ProfileHeader() {
+  return(
+    <View style={styles.beerHeader}>
+      <Text style={styles.headerText}>Council of Beer</Text>
+      <TouchableOpacity style={styles.settingsBtn}>
+        <Ionicons name='menu' size={32} color='#EDE9C7'/>
+      </TouchableOpacity>
+    </View>
+  );
+}
+
+function ProfileStack(){
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='Profile'
+        component={Profile}
+      />
+      <Stack.Screen
+        name='MainSettings'
+        component={MainSettings}
+      />
+    </Stack.Navigator>
+  );
+}
+
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
@@ -66,10 +118,24 @@ export default function App() {
                   : 'person-circle-outline';
               }
               // This error is fine, everything works as it should (14.3.2026)
-              return <Ionicons name={iconName} size={24} color="black"/>
+              return <Ionicons name={iconName} size={24} color="#EDE9C7"/>
             },
 
-            header: BeerHeader
+            header: ({ route }) => {
+              if(route.name === 'Feed'){
+                return <MainHeader/>
+              } else if (route.name === 'New Post'){
+                return <PostHeader/>
+              } else if(route.name === 'Profile'){
+                return <ProfileHeader/>
+              }
+            },
+
+            tabBarStyle: {
+              backgroundColor: '#28200C'
+            },
+            tabBarInactiveTintColor: '#EDE9C7',
+            tabBarActiveTintColor: '#EFC06D'
           })}  
         >
           <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
@@ -90,10 +156,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 25,
     paddingTop: 50,
-    backgroundColor: '#fff'
+    backgroundColor: '#1D190E',
+    color: '#EDE9C7'
   },
   headerText: {
     fontSize: 30,
-    fontFamily: "GermaniaOne400_Regular"
+    fontFamily: "GermaniaOne400_Regular",
+    color: '#EDE9C7'
+  },
+  settingsBtn:{
+    position: 'absolute',
+    right: 15,
+    top: 55,
+    color: '#EDE9C7'
   }
 });
