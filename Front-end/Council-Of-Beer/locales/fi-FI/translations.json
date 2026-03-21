@@ -1,0 +1,21 @@
+{
+  "addBeer.addtodb": "Lisää Tietokantaan",
+  "addBeer.brewery": "Panimo  ",
+  "addBeer.camera.choosefile": "Valitse kuva",
+  "addBeer.camera.removephoto": "Poista kuva",
+  "addBeer.camera.usecamera": "Ota kuva",
+  "addBeer.country": "Maa",
+  "addBeer.name": "Nimi",
+  "addBeer.title": "Ota kuva",
+  "camera.buttons.scanagain": "Skannaa udelleen",
+  "footer.feed": "Syöte",
+  "footer.newPost": "Uusi Julkaisu",
+  "footer.profile": "Profiili",
+  "permissions.camera.grantpermission": "anna lupa",
+  "permissions.camera.needpermission": "Kamera lupa tarvitaan",
+  "tabs.home": "Koti",
+  "tabs.leaderboard": "Leaderboard",
+  "tabs.login": "Kirjaudu",
+  "tabs.search": "Hae",
+  "tabs.signup": "Rekisteröidy"
+}

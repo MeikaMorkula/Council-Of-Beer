@@ -13,9 +13,16 @@ import Search from './screens/Search';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AppSettings from './screens/AppSettings';
+import { useTranslation } from "react-i18next";
+import SignUp from './screens/Signup'
+import Login from './screens/Login'
+import "./i8n.ts";
+
+
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
+  const { t } = useTranslation();
   return(
     <HomeTabs.Navigator
       screenOptions={{
@@ -24,9 +31,11 @@ function FeedNav(){
         tabBarIndicatorStyle: { backgroundColor: '#E39914' }
       }}
     >
-      <HomeTabs.Screen name="Home" component={Home}/>
-      <HomeTabs.Screen name="Leaderboard" component={Leaderboard}/>
-      <HomeTabs.Screen name="Search" component={Search}/>
+      <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
+      <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
+      <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
+      <HomeTabs.Screen name="Sign Up" component={SignUp} options={{ tabBarLabel: t("tabs.signup")}}/>
+      <HomeTabs.Screen name="Log In" component={Login} options={{ tabBarLabel: t("tabs.login")}}/>
     </HomeTabs.Navigator>
   );
 }
@@ -84,6 +93,7 @@ function ProfileStack(){
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
+   const { t } = useTranslation();
 
   return (
     <SafeAreaProvider>
@@ -128,11 +138,11 @@ export default function App() {
             tabBarActiveTintColor: '#EFC06D'
           })}  
         >
-          <Tabs.Screen name="Feed" component={FeedNav}
+          <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPost}
+          <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
           />
-          <Tabs.Screen name="Profile" component={ProfileStack}
+          <Tabs.Screen name="Profile" component={Profile} options={{ tabBarLabel: t("footer.profile") }}
           />
         </Tabs.Navigator>
       </NavigationContainer>
