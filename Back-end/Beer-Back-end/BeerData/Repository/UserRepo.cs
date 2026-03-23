@@ -18,5 +18,10 @@ namespace BeerData.Repository
             //Im guessing i need to check if the email and password are correct in the auth0 db.
             //through some kind of auth0 api call.
         }
+
+        public string RegisterUser(string email, string password)
+        {
+            //check if user already excists else add user
+        }
     }
 }
