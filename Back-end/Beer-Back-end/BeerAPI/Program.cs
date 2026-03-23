@@ -2,6 +2,7 @@ using BeerData.Repository;
 using BeerLogic.Interface;
 using BeerLogic.Mapper;
 using BeerLogic.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Npgsql;
 using System.Data;
 
@@ -17,6 +18,16 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddAuthorization();
+
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(options =>
+{
+    options.Authority = "https://dev-p0o8kuvbwnwfto7i.us.auth0.com/";
+    options.Audience = "https://BeerAuth";
+});
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -47,6 +58,7 @@ if (app.Environment.IsDevelopment())
 
 //app.UseHttpsRedirection();
 app.UseAuthorization();
+app.UseAuthentication();
 app.MapControllers();
 
 app.Run();
