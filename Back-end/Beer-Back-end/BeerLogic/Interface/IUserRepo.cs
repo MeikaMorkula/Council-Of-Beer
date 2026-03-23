@@ -8,5 +8,6 @@ namespace BeerLogic.Interface
 {
     public interface IUserRepo
     {
+        string AuthUser(string emial, string password);
     }
 }

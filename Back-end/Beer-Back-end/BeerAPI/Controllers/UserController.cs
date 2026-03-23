@@ -16,10 +16,10 @@ namespace BeerAPI.Controllers
             _userService = userService;
         }
 
-        [HttpGet("AuthUser/{Token}")]
-        public void AuthUser(string Token)
+        [HttpGet("Login")]
+        public string AuthUser(string emial, string password)
         {
-            //return _userService.AuthUser(Token);
+            return _userService.AuthUser(emial, password);
         }
 
     }

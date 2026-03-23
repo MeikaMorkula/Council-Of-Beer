@@ -16,6 +16,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthorization();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -28,9 +30,11 @@ builder.Services.AddScoped<IDbConnection>(_ =>
     new NpgsqlConnection(connectionString));
 
 builder.Services.AddScoped<IBeerRepo, BeerRepo>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
 
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
+builder.Services.AddScoped<UserService>();
 var app = builder.Build();
 
 app.MapGet("/", () => Results.Ok("BackEnd is running!"));

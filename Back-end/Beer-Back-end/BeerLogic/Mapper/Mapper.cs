@@ -12,7 +12,6 @@ namespace BeerLogic.Mapper
             {
                 Id = userDTO.Id,
                 Name = userDTO.Name,
-                PasswordHash = userDTO.PasswordHash,
                 Birthday = userDTO.Birthday
             };
         }
@@ -23,7 +22,6 @@ namespace BeerLogic.Mapper
             {
                 Id = user.Id,
                 Name = user.Name,
-                PasswordHash = user.PasswordHash,
                 Birthday = user.Birthday
             };
         }
