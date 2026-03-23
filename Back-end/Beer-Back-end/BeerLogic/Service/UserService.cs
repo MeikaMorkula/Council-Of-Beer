@@ -1,12 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using BeerLogic.Entities;
+using BeerLogic.DTOs;
+using BeerLogic.Interface;
+using BeerLogic.Mapper;
 
 namespace BeerLogic.Service
 {
-    internal class UserService
+    public class UserService
     {
+        public void AuthUser(string Token)
+        {
+
+        }
     }
 }
