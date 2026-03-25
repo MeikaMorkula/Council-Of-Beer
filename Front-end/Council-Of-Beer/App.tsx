@@ -156,7 +156,9 @@ const styles = StyleSheet.create({
     padding: 25,
     paddingTop: 50,
     backgroundColor: '#1D190E',
-    color: '#EDE9C7'
+    color: '#EDE9C7',
+    borderBottomWidth: 0.75,
+    borderColor: '#EDE9C7'
   },
   headerText: {
     fontSize: 30,
