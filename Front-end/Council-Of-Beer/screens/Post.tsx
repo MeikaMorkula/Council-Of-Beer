@@ -1,6 +1,27 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
+import { Ionicons } from '@expo/vector-icons';
+
+function CommentArea(){
+    return(
+        <View>
+            <Text style={{color: '#EDE9C7', fontSize: 24}}>Comments</Text>
+            <View style={styles.writeCommentCont}>
+                <TextInput
+                    style={styles.commentTxtField}
+                    placeholder='Write your comment...'
+                    placeholderTextColor={'#EDE9C7'}
+                    multiline
+                    numberOfLines={4}
+                />
+                <TouchableOpacity style={styles.commentIcon}>
+                    <Ionicons name='chatbox' size={32} color='#EDE9C7'/>
+                </TouchableOpacity>
+            </View>
+        </View>
+    );
+}
 
 
 export default function Post(){
@@ -34,6 +55,7 @@ export default function Post(){
                 <Text style={{color: '#EDE9C7', fontSize: 24}}>Review</Text>
                 <Text style={{color: '#EDE9C7', fontSize: 18, textAlign: 'center'}}>Kunnioitettu sotasankari Eversti Johan August Sandels ajatteli aina yhtä taistelua pidemmälle. Eräs nuorempi upseeri ehdotti tiukassa tilanteessa joukkojen ryhmittämistä puoli kilometriä taaemmaksi metsä suojaan. “Ei hitossa, silloinhan antaisimme viholliselle monta hehtaaria viljavaa ohrapeltoa ilmaiseksi”, vastasi Sandels hörpäten tuopista pehmeää olutta.</Text>
             </View>
+            <CommentArea/>
         </ScrollView>
     );
 }
@@ -79,5 +101,25 @@ const styles = StyleSheet.create({
   },
   postReviewCont: {
     padding: 20
-  }
+  },
+  commentAreaCont: {
+
+  },
+  writeCommentCont: {
+    flexDirection: 'row'
+  },
+  commentTxtField: {
+    backgroundColor: '#28200C',
+    padding: 20,
+    fontSize: 14,
+    width: '87%'
+  },
+  commentIcon: {
+    backgroundColor: '#28200C',
+    color: '#EDE9C7',
+    paddingTop: 15,
+    paddingRight: 10,
+    paddingBottom: 10,
+    paddingLeft: 10,
+  },
 });
