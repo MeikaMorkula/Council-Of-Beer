@@ -1,16 +1,32 @@
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import AppSettings from './AppSettings';
+import UserSettings from './UserSettings';
 
+const Stack = createNativeStackNavigator();
 
-export default function MainSettings(){
-    return(
+function SettingsStack() {
+  return(
+    <Stack.Navigator initialRouteName='MainSettingsScreen' screenOptions={{ headerShown: false }}>
+      <Stack.Screen name='MainSettingsScreen' component={MainSettingsScreen}/>
+      <Stack.Screen name='UserSettingsScreen' component={UserSettings}/>
+      <Stack.Screen name='AppSettingsScreen' component={AppSettings}/>
+    </Stack.Navigator>
+  );
+}
+
+function MainSettingsScreen(){
+  const navigation = useNavigation();
+  return(
         <View style={styles.container}>
-            <TouchableOpacity style={styles.settingsNav}>
+            <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('UserSettingsScreen' as never)}>
                 <Text style={styles.settingsText}>User Settings</Text>
                 <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.settingsNav}>
+            <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('AppSettingsScreen' as never)}>
                 <Text style={styles.settingsText}>App Settings</Text>
                 <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
@@ -19,6 +35,12 @@ export default function MainSettings(){
                 <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
             </TouchableOpacity>
         </View>
+    );
+}
+
+export default function MainSettings(){
+    return(
+        <SettingsStack/>
     );
 }
 
