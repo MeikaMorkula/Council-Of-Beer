@@ -14,5 +14,7 @@ namespace BeerLogic.DTOs
         public string Brewery { get; set; }
         public string Country { get; set; }
         public List<string> Labels { get; set; } = new();
+        public string Barcode { get; set; } = string.Empty;
+        public string Url { get; set; } =string.Empty;
     }
 }

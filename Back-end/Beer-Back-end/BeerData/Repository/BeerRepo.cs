@@ -31,6 +31,8 @@ namespace BeerData.Repository
                     b.alcohol_percentage,
                     b.brewery,
                     b.country,
+                    b.barcode,
+                    b.url,
                     COALESCE(
                         array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
                         ARRAY[]::text[]
@@ -38,7 +40,7 @@ namespace BeerData.Repository
                 FROM beer b
                 LEFT JOIN beer_label bl ON bl.beer_id = b.id
                 LEFT JOIN label l ON l.id = bl.label_id
-                GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country
+                GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.url
                 ORDER BY b.id;
             ";
 
@@ -54,7 +56,9 @@ namespace BeerData.Repository
                         AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                         Brewery = reader.GetString(reader.GetOrdinal("brewery")),
                         Country = reader.GetString(reader.GetOrdinal("country")),
-                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
+                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList(),
+                        Barcode = reader.GetString(reader.GetOrdinal("barcode")),
+                        Url = reader.GetString(reader.GetOrdinal("url")),
                     });
                 }
 
@@ -74,8 +78,8 @@ namespace BeerData.Repository
 
                 var sql = @"
                 WITH new_beer AS (
-                  INSERT INTO beer (name, alcohol_percentage, brewery, country)
-                  VALUES (@name, @alcohol_percentage, @brewery, @country)
+                  INSERT INTO beer (name, alcohol_percentage, brewery, country, barcode, url)
+                  VALUES (@name, @alcohol_percentage, @brewery, @country, @country, @url)
                   RETURNING id
                 ),
                 ins_labels AS (
@@ -101,7 +105,8 @@ namespace BeerData.Repository
                 command.Parameters.AddWithValue("@brewery", BeerDTO.Brewery);
                 command.Parameters.AddWithValue("@country", BeerDTO.Country);
                 command.Parameters.AddWithValue("@labels", BeerDTO.Labels?.ToArray() ?? Array.Empty<string>());
-
+                command.Parameters.AddWithValue("barcode", BeerDTO.Barcode);
+                command.Parameters.AddWithValue("url", BeerDTO.Url);
                 command.ExecuteNonQuery();
                 return "Ok";
             }
