@@ -90,7 +90,9 @@ namespace BeerLogic.Mapper
                 AlcPrecentage = beerDTO.AlcPrecentage,
                 Brewery = beerDTO.Brewery,
                 Labels = beerDTO.Labels,
-                Country = beerDTO.Country
+                Country = beerDTO.Country,
+                Barcode = beerDTO.Barcode,
+                Url = beerDTO.Url,
             };
         }
 
@@ -103,7 +105,9 @@ namespace BeerLogic.Mapper
                 AlcPrecentage = beer.AlcPrecentage,
                 Brewery = beer.Brewery,
                 Labels = beer.Labels,
-                Country = beer.Country
+                Country = beer.Country,
+                Barcode = beer.Barcode,
+                Url = beer.Url,
             };
         }
     }
