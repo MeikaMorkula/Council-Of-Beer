@@ -16,8 +16,21 @@ import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
 import "./i8n.ts";
+import AddBeer from './screens/AddBeer';
+import BarcodeScanner from "./components/BarcodeScanner";
 
 
+const NewPostStack = createNativeStackNavigator();
+
+//navigaatiot postauksia ja skannauksia varten
+function NewPostStackScreen() {
+  return (
+    <NewPostStack.Navigator screenOptions={{ headerShown: false }}>
+      <NewPostStack.Screen name="AddBeer" component={AddBeer} />
+      <NewPostStack.Screen name="BarcodeScanner" component={BarcodeScanner} />
+    </NewPostStack.Navigator>
+  );
+}
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
@@ -139,7 +152,7 @@ export default function App() {
         >
           <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
+          <Tabs.Screen name="New Post" component={NewPostStackScreen} options={{ tabBarLabel: t("footer.newPost") }}
           />
           <Tabs.Screen name="Profile" component={Profile} options={{ tabBarLabel: t("footer.profile") }}
           />

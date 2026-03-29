@@ -7,12 +7,18 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CameraComponent from "../components/CameraComponent";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+
+type AddBeerNavigationProp = NativeStackNavigationProp<
+  { BarcodeScanner: { onScan: (code: string) => void } },
+  "BarcodeScanner"
+>;
+
 export default function AddBeer() {
   const [beerName, setBeerName] = useState<string>("");
   const [abv, setAbv] = useState<string>("");
@@ -21,11 +27,9 @@ export default function AddBeer() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
+  const [barcode, setBarcode] = useState<string>("");
 
-  const handleImageSelected = (uri: string | null) => {
-    setImage(uri);
-  };
-
+    const navigation = useNavigation<AddBeerNavigationProp>();
   const { t } = useTranslation();
 
   const handleSubmit = async () => {
@@ -115,6 +119,26 @@ export default function AddBeer() {
           </Pressable>
         </View>
 
+        <Text style={styles.label}>{t("addBeer.barcode")}</Text>
+        <View style={styles.field}>
+          <TextInput
+            style={styles.input}
+            placeholder={t("addBeer.barcodePlaceholder")}
+            value={barcode}
+            editable={false}
+          />
+
+          <Pressable
+            onPress={() =>
+              navigation.navigate("BarcodeScanner", {
+                onScan: (code: string) => setBarcode(code),
+              })
+            }
+          >
+            <Ionicons name="barcode-outline" size={26} color="#6750a4" />
+          </Pressable>
+        </View>
+
         {!!error && <Text style={styles.error}>{error}</Text>}
 
         <View style={styles.buttonRow}>
@@ -177,6 +201,7 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
+    backgroundColor: "#f0f0f0"
   },
   button: {
     marginTop: 8,
