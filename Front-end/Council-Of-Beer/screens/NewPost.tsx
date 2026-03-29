@@ -9,23 +9,33 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CameraComponent from "../components/CameraComponent";
+import StarRating from "../components/StarRating";
+import LabelSelector from "../components/LabelSelector";
 
 export default function NewPost() {
-  const [beerName, setBeerName] = useState<string>("");
-  const [abv, setAbv] = useState<string>("");
-  const [brewery, setBrewery] = useState<string>("");
-  const [country, setCountry] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
-
+  const [rating, setRating] = useState<number>(0);
+  const [review, setReview] = useState<string>("");
+  const [labels, setLabels] = useState<string[]>([]);
   const { t } = useTranslation();
+
+  //väliaikanen setti kunnes bäkkäri toimii
+  const tempLabels = [
+    "Kalia",
+    "Stout",
+    "Lager",
+    "Sour",
+    "Hedelmäinen",
+    "Jäykkä",
+    "Juustoinen",
+    "Pirskahteleva",
+  ];
 
   const handleSubmit = async () => {
     setError("");
@@ -39,35 +49,6 @@ export default function NewPost() {
     }
   };
 
-  //internetin syövereistä, melkone mankeli
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, //deprecated piece of s**t but works
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const takePhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (!permission.granted) {
-      setError("Camera permission required");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
   return (
     <ScrollView
       style={styles.container}
@@ -76,69 +57,51 @@ export default function NewPost() {
     >
       <View style={styles.BeerContent}>
         <Text style={styles.title}>{t("addBeer.title")}</Text>
-            <CameraComponent image={image} onChange={setImage} />
-    
-        <Text style={styles.label}>{t("addBeer.name")}</Text>
-        <View style={styles.field}>
+        <CameraComponent image={image} onChange={setImage} />
+
+        <Text style={styles.title}>{t("newPost.reviewTitle")}</Text>
+
+        <Text style={styles.label}>{t("newPost.rating")}</Text>
+        <StarRating rating={rating} onChange={setRating} />
+
+        <Text style={styles.label}>{t("newPost.review")}</Text>
+
+        <View style={styles.reviewContainer}>
           <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.name")}
-            value={beerName}
-            onChangeText={setBeerName}
+            style={styles.reviewInput}
+            placeholder={t("newPost.reviewPlaceholder")}
+            value={review}
+            onChangeText={setReview}
+            multiline
+            numberOfLines={4}
+            textAlignVertical="top"
+            maxLength={1000} //tietokannassa on tuhannen merkin raja
           />
-          {
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setBeerName("")}
-            >
-              <Ionicons name="close-circle" size={27} color="#888" />
-            </Pressable>
-          }
+
+          
+
+          <View style={styles.reviewFooter}>
+            <Text style={{ alignSelf: "flex-end", color: "#888" }}>
+              {review.length}/1000
+            </Text>
+
+            {review.length > 0 && (
+              <Pressable onPress={() => setReview("")}>
+                <Ionicons name="close-circle" size={27} color="#888" />
+              </Pressable>
+            )}
+          </View>
         </View>
-        <Text style={styles.label}>ABV</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder="ABV (0.0%)"
-            value={abv}
-            onChangeText={setAbv}
-            keyboardType="decimal-pad"
+        <LabelSelector
+            options={tempLabels}
+            selected={labels}
+            onChange={setLabels}
+            label={t("addBeer.labels.title")}
+            buttonText={t("addBeer.labels.select")}
+            buttonTextWithCount={(count) =>
+              t("addBeer.labels.selectedCount", { count })
+            }
           />
-          {
-            <Pressable style={styles.clearButton} onPress={() => setAbv("")}>
-              <Ionicons name="close-circle" size={27} color="#888" />
-            </Pressable>
-          }
-        </View>
-        <Text style={styles.label}>{t("addBeer.brewery")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.brewery")}
-            value={brewery}
-            onChangeText={setBrewery}
-          />
-          {
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setBrewery("")}
-            >
-              <Ionicons name="close-circle" size={27} color="#888" />
-            </Pressable>
-          }
-        </View>
-        <Text style={styles.label}>{t("addBeer.country")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.country")}
-            value={country}
-            onChangeText={setCountry}
-          />
-          <Pressable style={styles.clearButton} onPress={() => setCountry("")}>
-            <Ionicons name="close-circle" size={27} color="#888" />
-          </Pressable>
-        </View>
 
         {!!error && <Text style={styles.error}>{error}</Text>}
 
@@ -151,7 +114,7 @@ export default function NewPost() {
             {loading ? (
               <ActivityIndicator color="#fff" />
             ) : (
-              <Text style={styles.buttonText}>{t("addBeer.addtodb")}</Text>
+              <Text style={styles.buttonText}>{t("newPost.publish")}</Text>
             )}
           </Pressable>
         </View>
@@ -223,34 +186,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 6,
   },
-  imageBox: {
-    width: "100%",
-    height: 300,
-    borderWidth: 2,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    marginBottom: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-
-  imagePreview: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-
-  imagePlaceholder: {
-    color: "#888",
-    marginBottom: 10,
-  },
-
-  imageButtons: {
-    flexDirection: "column",
-    gap: 10,
-    width: "50%",
-  },
 
   smallButton: {
     backgroundColor: "#6750a4",
@@ -280,13 +215,27 @@ const styles = StyleSheet.create({
     paddingVertical: 6,
     borderRadius: 6,
   },
-
-  removeButtonText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "600",
-  },
   clearButton: {
     marginLeft: 8,
+  },
+  reviewContainer: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 8,
+    backgroundColor: "#fff",
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+
+  reviewInput: {
+    fontSize: 16,
+    minHeight: 100,
+  },
+  reviewFooter: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginTop: 6,
   },
 });
