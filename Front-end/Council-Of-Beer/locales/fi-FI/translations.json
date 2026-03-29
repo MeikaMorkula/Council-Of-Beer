@@ -1,5 +1,7 @@
 {
   "addBeer.addtodb": "Lisää Tietokantaan",
+  "addBeer.barcode": "Viivakoodi",
+  "addBeer.barcodePlaceholder": "Skannaa viivakoodi",
   "addBeer.brewery": "Panimo  ",
   "addBeer.camera.choosefile": "Valitse kuva",
   "addBeer.camera.removephoto": "Poista kuva",
@@ -20,6 +22,10 @@
   "newPost.review": "Arvostelu",
   "newPost.reviewPlaceholder": "Kirjoita tähän",
   "newPost.reviewTitle": "Kirjoita Arvostelu",
+  "newPostMenu.addToDatabase": "Lisää Tietokantaan",
+  "newPostMenu.scanBarcode": "Skannaa Viivakoodi",
+  "newPostMenu.searchBeer": "Hae",
+  "newPostMenu.title": "Lisää Kuva",
   "permissions.camera.grantpermission": "anna lupa",
   "permissions.camera.needpermission": "Kamera lupa tarvitaan",
   "tabs.home": "Koti",

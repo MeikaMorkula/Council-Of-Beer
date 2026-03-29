@@ -201,7 +201,6 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     fontSize: 16,
-    backgroundColor: "#f0f0f0"
   },
   button: {
     marginTop: 8,
@@ -223,68 +222,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 6,
   },
-  imageBox: {
-    width: "100%",
-    height: 300,
-    borderWidth: 2,
-    borderColor: "#ccc",
-    borderRadius: 10,
-    marginBottom: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-  },
-
-  imagePreview: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-
-  imagePlaceholder: {
-    color: "#888",
-    marginBottom: 10,
-  },
-
-  imageButtons: {
-    flexDirection: "column",
-    gap: 10,
-    width: "50%",
-  },
-
-  smallButton: {
-    backgroundColor: "#6750a4",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  smallButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-
   buttonRow: {
     marginTop: 12,
     flexDirection: "row",
     justifyContent: "flex-end",
-  },
-  removeButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-
-  removeButtonText: {
-    color: "#fff",
-    fontSize: 12,
-    fontWeight: "600",
   },
   clearButton: {
     marginLeft: 8,

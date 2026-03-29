@@ -1,5 +1,4 @@
 import React from "react";
-
 import { useState } from "react";
 import {
   StyleSheet,
@@ -186,34 +185,10 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 6,
   },
-
-  smallButton: {
-    backgroundColor: "#6750a4",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  smallButtonText: {
-    color: "#fff",
-    fontWeight: "600",
-  },
-
   buttonRow: {
     marginTop: 12,
     flexDirection: "row",
     justifyContent: "flex-end",
-  },
-  removeButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
   },
   clearButton: {
     marginLeft: 8,

@@ -18,6 +18,7 @@ import Login from './screens/Login'
 import "./i8n.ts";
 import AddBeer from './screens/AddBeer';
 import BarcodeScanner from "./components/BarcodeScanner";
+import NewPostMenu from './screens/NewPostMenu'
 
 
 const NewPostStack = createNativeStackNavigator();
@@ -26,6 +27,7 @@ const NewPostStack = createNativeStackNavigator();
 function NewPostStackScreen() {
   return (
     <NewPostStack.Navigator screenOptions={{ headerShown: false }}>
+      <NewPostStack.Screen name="NewPostMenu" component={NewPostMenu}/>
       <NewPostStack.Screen name="AddBeer" component={AddBeer} />
       <NewPostStack.Screen name="BarcodeScanner" component={BarcodeScanner} />
     </NewPostStack.Navigator>

@@ -1,5 +1,7 @@
 {
   "addBeer.addtodb": "Add To Database",
+  "addBeer.barcode": "Barcode",
+  "addBeer.barcodePlaceholder": "Scan a barcode",
   "addBeer.brewery": "Brewery",
   "addBeer.camera.choosefile": "Choose a file",
   "addBeer.camera.removephoto": "Remove photo",
@@ -20,6 +22,10 @@
   "newPost.review": "Review",
   "newPost.reviewPlaceholder": "Write here...",
   "newPost.reviewTitle": "Write Your Review",
+  "newPostMenu.addToDatabase": "Add To Database",
+  "newPostMenu.scanBarcode": "Scan Barcode",
+  "newPostMenu.searchBeer": "Search",
+  "newPostMenu.title": "Add A Picture",
   "permissions.camera.grantpermission": "Give camera permission",
   "permissions.camera.needpermission": "Camera permission needed",
   "tabs.home": "Home",
