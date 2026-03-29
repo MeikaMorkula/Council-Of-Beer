@@ -12,7 +12,7 @@ import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
-
+import CameraComponent from "../components/CameraComponent";
 export default function AddBeer() {
   const [beerName, setBeerName] = useState<string>("");
   const [abv, setAbv] = useState<string>("");
@@ -21,6 +21,10 @@ export default function AddBeer() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
+
+  const handleImageSelected = (uri: string | null) => {
+    setImage(uri);
+  };
 
   const { t } = useTranslation();
 
@@ -37,33 +41,6 @@ export default function AddBeer() {
   };
 
   //internetin syövereistä, melkone mankeli
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, //deprecated piece of s**t but works
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const takePhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (!permission.granted) {
-      setError("Camera permission required");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   return (
     <ScrollView
@@ -73,40 +50,9 @@ export default function AddBeer() {
     >
       <View style={styles.BeerContent}>
         <Text style={styles.title}>{t("addBeer.title")}</Text>
-        <View style={styles.imageBox}>
-          {image ? (
-            <>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
 
-              <Pressable
-                style={styles.removeButton}
-                onPress={() => setImage(null)}
-              >
-                <Text style={styles.removeButtonText}>
-                  {t("addBeer.camera.removephoto")}
-                </Text>
-              </Pressable>
-            </>
-          ) : (
-            <>
-              <Ionicons name="add-circle-outline" size={64} color="#000000" />
-            </>
-          )}
+        <CameraComponent image={image} onChange={setImage} />
 
-          <View style={styles.imageButtons}>
-            <Pressable style={styles.smallButton} onPress={takePhoto}>
-              <Text style={styles.smallButtonText}>
-                {t("addBeer.camera.usecamera")}
-              </Text>
-            </Pressable>
-
-            <Pressable style={styles.smallButton} onPress={pickImage}>
-              <Text style={styles.smallButtonText}>
-                {t("addBeer.camera.choosefile")}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
         <Text style={styles.label}>{t("addBeer.name")}</Text>
         <View style={styles.field}>
           <TextInput
