@@ -30,21 +30,20 @@ function FeedNav(){
         tabBarIndicatorStyle: { backgroundColor: '#E39914' }
       }}
     >
-      <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
+      <HomeTabs.Screen name="LoginStack" component={LoginStack}  options={{ tabBarLabel: t("tabs.home") }}/>
       <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
       <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
-      <HomeTabs.Screen name="Sign Up" component={SignUp} options={{ tabBarLabel: t("tabs.signup")}}/>
-      <HomeTabs.Screen name="Log In" component={Login} options={{ tabBarLabel: t("tabs.login")}}/>
     </HomeTabs.Navigator>
   );
 }
 
+// WORKS 30.3.2026
 function MainHeader() {
   const navigation = useNavigation();
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('LoginStack', {screen: 'LogIn'})}>
+      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Feed', {screen: 'LoginStack', params: {screen: 'LogIn'}})}>
         <Ionicons name='log-in' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
@@ -71,7 +70,6 @@ function ProfileHeader() {
   );
 }
 
-// This also throws an error but doesn't work??????
 function ProfileStack(){
   const Stack = createNativeStackNavigator();
   return(
@@ -101,7 +99,7 @@ function LoginStack() {
       }}
     >
       <Stack.Screen
-        name='Feed'
+        name='HomeFeed'
         component={Home}
       />
       <Stack.Screen
@@ -125,12 +123,12 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Tabs.Navigator 
-          initialRouteName="FeedStack"
+          initialRouteName="Feed"
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
               let iconName;
 
-              if(route.name === 'FeedStack'){
+              if(route.name === 'Feed'){
                 iconName = focused
                   ? 'beer'
                   : 'beer-outline';
@@ -148,7 +146,7 @@ export default function App() {
             },
 
             header: ({ route }) => {
-              if(route.name === 'FeedStack'){
+              if(route.name === 'Feed'){
                 return <MainHeader/>
               } else if (route.name === 'New Post'){
                 return <PostHeader/>
@@ -164,7 +162,7 @@ export default function App() {
             tabBarActiveTintColor: '#EFC06D'
           })}  
         >
-          <Tabs.Screen name="FeedStack" component={LoginStack} options={{ tabBarLabel: t("footer.feed") }}
+          <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
           />
           <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
           />
