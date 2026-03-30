@@ -40,10 +40,11 @@ function FeedNav(){
 }
 
 function MainHeader() {
+  const navigation = useNavigation();
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn}>
+      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('LoginStack', {screen: 'LogIn'})}>
         <Ionicons name='log-in' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
@@ -57,18 +58,20 @@ function PostHeader() {
     </View>
   );
 }
-
+// Throws an error but works as expected 30.3.2026
 function ProfileHeader() {
+  const navigation = useNavigation();
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn}>
+      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('ProfileStack', {screen: 'MainSettings'})}>
         <Ionicons name='menu' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
   );
 }
 
+// This also throws an error but doesn't work??????
 function ProfileStack(){
   const Stack = createNativeStackNavigator();
   return(
@@ -89,6 +92,30 @@ function ProfileStack(){
   );
 }
 
+function LoginStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='Feed'
+        component={Home}
+      />
+      <Stack.Screen
+        name='LogIn'
+        component={Login}
+      />
+      <Stack.Screen
+        name='SignUp'
+        component={SignUp}
+      />
+    </Stack.Navigator>
+  );
+}
+
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
@@ -98,12 +125,12 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Tabs.Navigator 
-          initialRouteName="Feed"
+          initialRouteName="FeedStack"
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
               let iconName;
 
-              if(route.name === 'Feed'){
+              if(route.name === 'FeedStack'){
                 iconName = focused
                   ? 'beer'
                   : 'beer-outline';
@@ -111,7 +138,7 @@ export default function App() {
                 iconName = focused 
                   ? 'add-circle'
                   : 'add-circle-outline';
-              } else if(route.name === 'Profile'){
+              } else if(route.name === 'ProfileStack'){
                 iconName = focused  
                   ? 'person-circle'
                   : 'person-circle-outline';
@@ -121,11 +148,11 @@ export default function App() {
             },
 
             header: ({ route }) => {
-              if(route.name === 'Feed'){
+              if(route.name === 'FeedStack'){
                 return <MainHeader/>
               } else if (route.name === 'New Post'){
                 return <PostHeader/>
-              } else if(route.name === 'Profile'){
+              } else if(route.name === 'ProfileStack'){
                 return <ProfileHeader/>
               }
             },
@@ -137,11 +164,11 @@ export default function App() {
             tabBarActiveTintColor: '#EFC06D'
           })}  
         >
-          <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
+          <Tabs.Screen name="FeedStack" component={LoginStack} options={{ tabBarLabel: t("footer.feed") }}
           />
           <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
           />
-          <Tabs.Screen name="Profile" component={Profile} options={{ tabBarLabel: t("footer.profile") }}
+          <Tabs.Screen name="ProfileStack" component={ProfileStack} options={{ tabBarLabel: t("footer.profile") }}
           />
         </Tabs.Navigator>
       </NavigationContainer>
