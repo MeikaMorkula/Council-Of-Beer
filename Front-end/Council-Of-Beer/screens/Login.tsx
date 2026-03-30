@@ -29,6 +29,7 @@ export default function Login() {
                     <Text style={styles.label}>Username</Text>
                     <TextInput
                         placeholder="Username"
+                        placeholderTextColor={'#EDE9C7'}
                         value={username}
                         onChangeText={setUsername}
                         style={styles.input}
@@ -40,6 +41,7 @@ export default function Login() {
                     <Text style={styles.label}>Password</Text>
                     <TextInput
                         placeholder="Password"
+                        placeholderTextColor={'#EDE9C7'}
                         value={password}
                         onChangeText={setPassword}
                         style={styles.input}
@@ -69,23 +71,26 @@ export default function Login() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#888',
+        backgroundColor: '#1D190E',
         alignItems: 'center',
-        justifyContent: 'center',
         padding: 16,
     },
     loginContent: {
         width: '100%',
         maxWidth: 360,
-        backgroundColor: '#fff',
         borderRadius: 12,
         padding: 16,
+        backgroundColor: '#1D190E',
+        alignItems: 'center',
+        paddingTop: 125
     },
     title: {
-        fontSize: 28,
+        fontSize: 40,
         fontWeight: '700',
-        marginBottom: 16,
+        marginBottom: 75,
         textAlign: 'center',
+        color: '#EDE9C7',
+        fontFamily: "GermaniaOne400_Regular",
     },
     field: {
         marginBottom: 12,
@@ -94,27 +99,30 @@ const styles = StyleSheet.create({
         marginBottom: 6,
         fontSize: 14,
         fontWeight: '600',
+        color: '#EDE9C7'
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ccc',
+        borderColor: '#EDE9C7',
         borderRadius: 8,
         paddingHorizontal: 12,
         paddingVertical: 10,
-        backgroundColor: '#fff',
+        backgroundColor: '#28200C',
+        width: 300
     },
     button: {
         marginTop: 8,
-        backgroundColor: '#2d6cdf',
+        backgroundColor: '#E39914',
         borderRadius: 8,
         paddingVertical: 12,
         alignItems: 'center',
+        width: 72
     },
     buttonDisabled: {
         opacity: 0.7,
     },
     buttonText: {
-        color: '#fff',
+        color: '#EDE9C7',
         fontWeight: '700',
     },
     error: {

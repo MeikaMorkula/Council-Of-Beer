@@ -89,7 +89,7 @@ export default function AddBeer() {
             </>
           ) : (
             <>
-              <Ionicons name="add-circle-outline" size={64} color="#000000" />
+              <Ionicons name="add-circle-outline" size={64} color="#EDE9C7" />
             </>
           )}
 
@@ -112,6 +112,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.name")}
+            placeholderTextColor={'#EDE9C7'}
             value={beerName}
             onChangeText={setBeerName}
           />
@@ -120,7 +121,7 @@ export default function AddBeer() {
               style={styles.clearButton}
               onPress={() => setBeerName("")}
             >
-              <Ionicons name="close-circle" size={27} color="#888" />
+              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
             </Pressable>
           }
         </View>
@@ -129,13 +130,14 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder="ABV (0.0%)"
+            placeholderTextColor={'#EDE9C7'}
             value={abv}
             onChangeText={setAbv}
             keyboardType="decimal-pad"
           />
           {
             <Pressable style={styles.clearButton} onPress={() => setAbv("")}>
-              <Ionicons name="close-circle" size={27} color="#888" />
+              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
             </Pressable>
           }
         </View>
@@ -144,6 +146,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.brewery")}
+            placeholderTextColor={'#EDE9C7'}
             value={brewery}
             onChangeText={setBrewery}
           />
@@ -152,7 +155,7 @@ export default function AddBeer() {
               style={styles.clearButton}
               onPress={() => setBrewery("")}
             >
-              <Ionicons name="close-circle" size={27} color="#888" />
+              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
             </Pressable>
           }
         </View>
@@ -161,11 +164,12 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.country")}
+            placeholderTextColor={'#EDE9C7'}
             value={country}
             onChangeText={setCountry}
           />
           <Pressable style={styles.clearButton} onPress={() => setCountry("")}>
-            <Ionicons name="close-circle" size={27} color="#888" />
+            <Ionicons name="close-circle" size={27} color="#EDE9C7" />
           </Pressable>
         </View>
 
@@ -192,7 +196,7 @@ export default function AddBeer() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#888",
+    backgroundColor: "#1D190E",
   },
   scrollContent: {
     flexGrow: 1,
@@ -203,7 +207,7 @@ const styles = StyleSheet.create({
   BeerContent: {
     width: "105%",
     maxWidth: 360,
-    backgroundColor: "#fff",
+    backgroundColor: "#1D190E",
     borderRadius: 12,
     padding: 16,
   },
@@ -212,29 +216,33 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
+    color: '#EDE9C7',
   },
   field: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#EDE9C7",
     borderRadius: 8,
-    backgroundColor: "#fff",
     paddingHorizontal: 12,
     paddingVertical: 10,
+    backgroundColor: '#28200C'
   },
   label: {
     marginBottom: 6,
     fontSize: 14,
     fontWeight: "600",
+    color: '#EDE9C7',
   },
   input: {
     flex: 1,
     fontSize: 16,
+    backgroundColor: '#28200C',
+    color: '#EDE9C7',
   },
   button: {
     marginTop: 8,
-    backgroundColor: "#6750a4",
+    backgroundColor: "#E39914",
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: "center",
@@ -244,7 +252,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: "#fff",
+    color: '#EDE9C7',
     fontWeight: "700",
   },
   error: {
@@ -256,12 +264,13 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 300,
     borderWidth: 2,
-    borderColor: "#ccc",
+    borderColor: "#EDE9C7",
     borderRadius: 10,
     marginBottom: 16,
     alignItems: "center",
     justifyContent: "center",
     overflow: "hidden",
+    backgroundColor: '#28200C'
   },
 
   imagePreview: {
@@ -271,7 +280,7 @@ const styles = StyleSheet.create({
   },
 
   imagePlaceholder: {
-    color: "#888",
+    color: '#EDE9C7',
     marginBottom: 10,
   },
 
@@ -282,7 +291,7 @@ const styles = StyleSheet.create({
   },
 
   smallButton: {
-    backgroundColor: "#6750a4",
+    backgroundColor: "#E39914",
     paddingHorizontal: 12,
     paddingVertical: 8,
     borderRadius: 6,
@@ -291,7 +300,7 @@ const styles = StyleSheet.create({
   },
 
   smallButtonText: {
-    color: "#fff",
+    color: '#EDE9C7',
     fontWeight: "600",
   },
 
@@ -311,11 +320,12 @@ const styles = StyleSheet.create({
   },
 
   removeButtonText: {
-    color: "#fff",
+    color: "#EDE9C7",
     fontSize: 12,
     fontWeight: "600",
   },
   clearButton: {
     marginLeft: 8,
+    backgroundColor: '#28200C'
   },
 });
