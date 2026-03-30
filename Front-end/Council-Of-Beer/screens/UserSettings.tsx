@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 
 export default function UserSettings(){
+  const [ newUsername, setNewUsername ] = useState("");
+  const [ currentPswd, setCurrentPswd ] = useState("");
+  const [ newPswd, setNewPswd ] = useState("");
+  const [ newPswdAgain, setNewPswdAgain ] = useState("");
+  
     return(
         <View style={styles.container}>
             <View style={styles.changePfCont}>
@@ -29,8 +34,10 @@ export default function UserSettings(){
                   style={[styles.usrNameField, { width: '95%'}]}
                   placeholder='Enter username...'
                   placeholderTextColor={'#EDE9C7'}
+                  value={newUsername}
+                  onChangeText={setNewUsername}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setNewUsername("")}>
                   <Ionicons style={styles.changeUsrIcon} name='close-circle-outline' size={24} color='#EDE9C7'/>
                 </TouchableOpacity>                
               </View>
@@ -46,8 +53,10 @@ export default function UserSettings(){
                   placeholder='Enter current password...'
                   secureTextEntry={true}
                   placeholderTextColor={'#EDE9C7'}
+                  value={currentPswd}
+                  onChangeText={setCurrentPswd}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setCurrentPswd("")}>
                   <Ionicons style={styles.changeUsrIcon} name='close-circle-outline' size={24} color='#EDE9C7'/>
                 </TouchableOpacity>                
               </View>
@@ -57,8 +66,10 @@ export default function UserSettings(){
                   placeholder='Enter new password...'
                   secureTextEntry={true}
                   placeholderTextColor={'#EDE9C7'}
+                  value={newPswd}
+                  onChangeText={setNewPswd}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setNewPswd("")}>
                   <Ionicons style={styles.changeUsrIcon} name='close-circle-outline' size={24} color='#EDE9C7'/>
                 </TouchableOpacity>                
               </View>
@@ -68,8 +79,10 @@ export default function UserSettings(){
                   placeholder='Enter new password again...'
                   secureTextEntry={true}
                   placeholderTextColor={'#EDE9C7'}
+                  value={newPswdAgain}
+                  onChangeText={setNewPswdAgain}
                 />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => setNewPswdAgain("")}>
                   <Ionicons style={styles.changeUsrIcon} name='close-circle-outline' size={24} color='#EDE9C7'/>
                 </TouchableOpacity>                
               </View>
