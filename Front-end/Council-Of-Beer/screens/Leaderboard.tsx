@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
+import { useNavigation } from '@react-navigation/native';
 
 function ProductComponent(){
+  const navigation = useNavigation();
   return(
-    <View style={styles.productCont}>
+    <TouchableOpacity style={styles.productCont} onPress={() => navigation.navigate('ProductPage')} activeOpacity={0.8}>
       <Image style={styles.productIcon}/>
       <View style={styles.productInfo}>
         <Text style={styles.productText}>Beer, 6,6%</Text>
@@ -15,7 +17,7 @@ function ProductComponent(){
           starStyle={styles.productRating}
         />
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

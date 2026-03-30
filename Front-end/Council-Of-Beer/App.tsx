@@ -15,6 +15,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
+import ProductPage from './screens/Product'
 import "./i8n.ts";
 
 
@@ -31,8 +32,8 @@ function FeedNav(){
       }}
     >
       <HomeTabs.Screen name="LoginStack" component={LoginStack}  options={{ tabBarLabel: t("tabs.home") }}/>
-      <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
-      <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
+      <HomeTabs.Screen name="Leaderboard" component={LeaderboardStack} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
+      <HomeTabs.Screen name="Search" component={SearchStack} options={{ tabBarLabel: t("tabs.search") }}/>
     </HomeTabs.Navigator>
   );
 }
@@ -109,6 +110,46 @@ function LoginStack() {
       <Stack.Screen
         name='SignUp'
         component={SignUp}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function LeaderboardStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='LeaderboardScreen'
+        component={Leaderboard}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function SearchStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='SearchScreen'
+        component={Search}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
       />
     </Stack.Navigator>
   );
