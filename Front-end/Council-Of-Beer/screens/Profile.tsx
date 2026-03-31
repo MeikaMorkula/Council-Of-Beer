@@ -1,5 +1,24 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+
+function CollectionObj() {
+  const navigation = useNavigation();
+  return(
+    <TouchableOpacity onPress={() => navigation.navigate('Collection')}>
+      <Image style={styles.collectionImg}/>
+    </TouchableOpacity>
+  );
+}
+
+function PostObj() {
+  const navgiation = useNavigation();
+  return(
+    <TouchableOpacity style={{width: 140}} onPress={() => navgiation.navigate('Post')}>
+      <Image style={styles.feedImg}/>
+    </TouchableOpacity>
+  )
+}
 
 export default function Profile(){
 
@@ -33,32 +52,28 @@ export default function Profile(){
             </View>
           </View>
           <ScrollView horizontal={ true } style={{height: 0, backgroundColor: '#1D190E'}}>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
-              <Image style={styles.collectionImg}/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
+              <CollectionObj/>
           </ScrollView>
           <View style={styles.profilecontent}>            
             <ScrollView style={{height: 0}}>
               <View style={styles.feed}>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
-                <Image style={styles.feedImg}/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
+                <PostObj/>
               </View>
             </ScrollView>
           </View>
@@ -137,10 +152,9 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   feedImg: {
-    width: '33%',
     height: 150,
     backgroundColor: 'white',
-    borderWidth: 1,
+    borderWidth: 0.25,
     borderColor: 'black'
   },
   feed: {

@@ -1,22 +1,26 @@
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import { Image, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Image, StyleSheet, Text, View, ScrollView, TouchableOpacity } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 
 function PostObj(){
+  const navigation = useNavigation();
   return(
     <View style={styles.postCont}>
-      <View style={styles.postHeader}>
-        <Image style={styles.postPfp}/>
-        <View style={styles.postInfoCont}>
-          <Text style={styles.postUsrname}>@username</Text>
-          <Text style={{color: '#EDE9C7', fontSize: 18}}>Beer Name</Text>
-          <StarRatingDisplay 
-            rating={3.5}
-            starSize={18}
-            starStyle={styles.productRating}
-          />
+      <TouchableOpacity onPress={() => navigation.navigate('Post')}>
+        <View style={styles.postHeader}>
+          <Image style={styles.postPfp}/>
+          <View style={styles.postInfoCont}>
+            <Text style={styles.postUsrname}>@username</Text>
+            <Text style={{color: '#EDE9C7', fontSize: 18}}>Beer Name</Text>
+            <StarRatingDisplay 
+              rating={3.5}
+              starSize={18}
+              starStyle={styles.productRating}
+            />
+          </View>
         </View>
-      </View>
+      </TouchableOpacity>
       <View style={styles.postImgCont}>
         <Image style={styles.postImg}/>
       </View>
