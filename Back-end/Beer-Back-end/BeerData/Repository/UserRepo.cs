@@ -1,4 +1,5 @@
 ﻿using BeerLogic.DTOs;
+using BeerLogic.Interface;
 using Microsoft.Data.SqlClient;
 using Npgsql;
 using System;
