@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BeerLogic.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,6 @@ namespace BeerLogic.Interface
 {
     public interface IUserRepo
     {
+        string LookupUserPassword(string userName);
     }
 }

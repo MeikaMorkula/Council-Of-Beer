@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
+using BeerLogic.Utility;
 
 namespace BeerLogic.Service
 {
@@ -24,8 +25,8 @@ namespace BeerLogic.Service
             {
                 return null;
             }
-            var hashedPassword = await _userRepo.LookupUserPassword(request.UserName);
-            if (hashedPassword == null || !PasswordHandler.VerifyPassword(request.Password, hashedPassword))
+            var hashedPassword = _userRepo.LookupUserPassword(request.UserName);
+            if (hashedPassword == null || !Bcrypt.VerifyPassword(request.Password, hashedPassword))
             {
                 return null;
             }

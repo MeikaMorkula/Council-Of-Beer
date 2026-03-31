@@ -1,16 +1,10 @@
 ﻿using BeerLogic.DTOs;
-using Microsoft.Data.SqlClient;
 using Npgsql;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+using BeerLogic.Interface;
 namespace BeerData.Repository
 {
-    public class UserRepo :IUserRepo
+    public class UserRepo : IUserRepo
     {
         private readonly IDbConnection _connection;
 
@@ -48,7 +42,7 @@ namespace BeerData.Repository
             }
         }
 
-        public UserDTO LookupUserPassword(UserDTO user)
+        public string LookupUserPassword(string userName)
         {
             try
             {
@@ -61,14 +55,12 @@ namespace BeerData.Repository
                     WHERE name = @name";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("@name", user.Name);
+                command.Parameters.AddWithValue("@name", userName);
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    return new UserDTO
-                    {
-                        PasswordHash = reader.GetString(reader.GetOrdinal("password_hash"))
-                    };
+                    var PasswordHash = reader.GetString(reader.GetOrdinal("password_hash"));
+                    return PasswordHash;
                 }
 
                 throw new Exception("while retrieving information");
