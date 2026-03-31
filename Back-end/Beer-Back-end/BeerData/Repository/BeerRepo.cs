@@ -76,7 +76,7 @@ namespace BeerData.Repository
                 using NpgsqlConnection connection = (NpgsqlConnection)_connection;
                 connection.Open();
 
-                var sql = @"
+                string sql = @"
                 WITH new_beer AS (
                   INSERT INTO beer (name, alcohol_percentage, brewery, country, barcode, url)
                   VALUES (@name, @alcohol_percentage, @brewery, @country, @country, @url)
