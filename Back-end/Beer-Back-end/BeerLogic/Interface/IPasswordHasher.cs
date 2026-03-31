@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeerLogic.Service
+namespace BeerLogic.Interface
 {
-    public class UserService
+    public class IPasswordHasher
     {
     }
 }
