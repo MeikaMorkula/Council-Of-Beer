@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BeerLogic.Service
 {
-    internal class UserService
+    public class UserService
     {
     }
 }
