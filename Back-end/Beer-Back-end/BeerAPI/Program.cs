@@ -7,6 +7,7 @@ using System.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using BeerLogic.Utility;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,6 +56,11 @@ builder.Services.AddScoped<IBeerRepo, BeerRepo>();
 
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<IUserRepo, UserRepo>();
+builder.Services.AddScoped<IPasswordHasher, Bcrypt>();
+
 builder.Services.AddHealthChecks();
 var app = builder.Build();
 
