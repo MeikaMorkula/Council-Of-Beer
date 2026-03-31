@@ -17,6 +17,8 @@ import SignUp from './screens/Signup'
 import Login from './screens/Login'
 import ProductPage from './screens/Product'
 import "./i8n.ts";
+import Collection from './screens/Collection';
+import Post from './screens/Post';
 
 
 
@@ -86,6 +88,18 @@ function ProfileStack(){
       <Stack.Screen
         name='MainSettings'
         component={MainSettings}
+      />
+      <Stack.Screen
+        name='Collection'
+        component={Collection}
+      />
+      <Stack.Screen 
+        name='Post'
+        component={Post}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
       />
     </Stack.Navigator>
   );
