@@ -9,6 +9,8 @@
 package-lock.json
 */package-lock.json
 
+/Back-end/Beer-Back-end/BeerAPI/appsettings.Development.json
+
 # User-specific files
 *.rsuser
 *.suo
