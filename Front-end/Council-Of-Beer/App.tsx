@@ -125,6 +125,10 @@ function LoginStack() {
         name='SignUp'
         component={SignUp}
       />
+      <Stack.Screen
+        name='Post'
+        component={Post}
+      />
     </Stack.Navigator>
   );
 }
