@@ -8,11 +8,11 @@ namespace BeerData.Repository
 {
     public class BeerRepo : IBeerRepo
     {
-        private readonly IDbConnection _connection;
+        private readonly string _connectionString;
 
-        public BeerRepo(IDbConnection connection)
+        public BeerRepo(string connectionString)
         {
-            _connection = connection;
+            _connectionString = connectionString;
         }
 
         public List<BeerDTO> GetAllBeer()
@@ -21,7 +21,7 @@ namespace BeerData.Repository
             {
                 List<BeerDTO> beers = new List<BeerDTO>();
 
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"
@@ -69,11 +69,99 @@ namespace BeerData.Repository
                 throw new Exception("GetAllBeer failed", ex);
             }
         }
-    public string AddBeer(BeerDTO BeerDTO)
+
+        public List<string> GetBeerNames()
         {
             try
             {
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                List<string> beerNames = new List<string>();
+
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                string query = @"
+                SELECT name
+                FROM beer
+                ORDER BY name;
+                ";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    beerNames.Add(reader.GetString(reader.GetOrdinal("name")));
+                }
+
+                return beerNames;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetAllBeerNames failed", ex);
+            }
+        }
+
+        public BeerDTO GetInfoByBeerName(string beername)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                string query = @"
+            SELECT
+                b.id,
+                b.name,
+                b.alcohol_percentage,
+                b.brewery,
+                b.country,
+                b.barcode,
+                b.url,
+                COALESCE(
+                    array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
+                    ARRAY[]::text[]
+                ) AS labels
+            FROM beer b
+            LEFT JOIN beer_label bl ON bl.beer_id = b.id
+            LEFT JOIN label l ON l.id = bl.label_id
+            WHERE LOWER(b.name) = LOWER(@Name)
+            GROUP BY 
+                b.id, b.name, b.alcohol_percentage, 
+                b.brewery, b.country, b.barcode, b.url;
+             ";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Name", beername);
+
+                using var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new BeerDTO
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
+                        Brewery = reader.GetString(reader.GetOrdinal("brewery")),
+                        Country = reader.GetString(reader.GetOrdinal("country")),
+                        Barcode = reader.GetString(reader.GetOrdinal("barcode")),
+                        Url = reader.GetString(reader.GetOrdinal("url")),
+                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetInfoByBeerName failed", ex);
+            }
+        }
+        public string AddBeer(BeerDTO BeerDTO)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string sql = @"
