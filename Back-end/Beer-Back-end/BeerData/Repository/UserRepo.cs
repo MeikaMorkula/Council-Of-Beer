@@ -6,19 +6,18 @@ namespace BeerData.Repository
 {
     public class UserRepo : IUserRepo
     {
-        private readonly IDbConnection _connection;
+        private readonly string _connectionString;
 
-        public UserRepo(IDbConnection connection)
+        public UserRepo(string connectionString)
         {
-            _connection = connection;
+            _connectionString = connectionString;
         }
 
         public async Task<string> CreateUser(UserDTO user)
         {
             try
             {
-                using var connection = new NpgsqlConnection(_connection);
-                connection.Open();
+                using var connection = new NpgsqlConnection(_connectionString);
 
                 string query = @"
                     INSERT INTO users (name, password_hash, birthday)
@@ -46,7 +45,7 @@ namespace BeerData.Repository
         {
             try
             {
-                using var connection = new NpgsqlConnection(_connection);
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"

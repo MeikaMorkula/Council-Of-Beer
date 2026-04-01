@@ -8,11 +8,11 @@ namespace BeerData.Repository
 {
     public class BeerRepo : IBeerRepo
     {
-        private readonly IDbConnection _connection;
+        private readonly string _connectionString;
 
-        public BeerRepo(IDbConnection connection)
+        public BeerRepo(string connectionString)
         {
-            _connection = connection;
+            _connectionString = connectionString;
         }
 
         public List<BeerDTO> GetAllBeer()
@@ -21,7 +21,7 @@ namespace BeerData.Repository
             {
                 List<BeerDTO> beers = new List<BeerDTO>();
 
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"
@@ -73,7 +73,7 @@ namespace BeerData.Repository
         {
             try
             {
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string sql = @"
