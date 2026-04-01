@@ -21,6 +21,19 @@ namespace BeerAPI.Controllers
            return _beerService.GetAllBeer();
         }
 
+        [HttpGet("GetBeerNames")]
+        public List<string> GetBeerNames()
+        {
+            return _beerService.GetBeerNames();
+        }
+
+        [HttpGet("GetInfoByBeerName")]
+        public BeerDTO GetInfoByBeerName(string beername)
+        {
+            return _beerService.GetInfoByBeerName(beername);
+        }
+
+
         [HttpGet("{id}")]
         public ActionResult<BeerDTO> GetBeerById(int id)
         {
