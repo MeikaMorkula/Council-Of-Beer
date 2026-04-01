@@ -76,7 +76,7 @@ namespace BeerData.Repository
             {
                 List<string> beerNames = new List<string>();
 
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"
@@ -105,7 +105,7 @@ namespace BeerData.Repository
         {
             try
             {
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"
