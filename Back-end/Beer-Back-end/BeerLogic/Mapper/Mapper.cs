@@ -10,7 +10,6 @@ namespace BeerLogic.Mapper
         {
             return new User()
             {
-                Id = userDTO.Id,
                 Name = userDTO.Name,
                 PasswordHash = userDTO.PasswordHash,
                 Birthday = userDTO.Birthday
@@ -21,7 +20,6 @@ namespace BeerLogic.Mapper
         {
             return new UserDTO()
             {
-                Id = user.Id,
                 Name = user.Name,
                 PasswordHash = user.PasswordHash,
                 Birthday = user.Birthday

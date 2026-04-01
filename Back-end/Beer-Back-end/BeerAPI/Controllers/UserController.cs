@@ -1,8 +1,6 @@
-﻿using BeerLogic.DTOs;
-using BeerLogic.Entities;
+﻿using BeerLogic.Entities;
 using BeerLogic.Service;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BeerAPI.Controllers
@@ -37,7 +35,21 @@ namespace BeerAPI.Controllers
         [HttpPost("Authenticate")]
         public async Task<ActionResult<LoginResponse>> Register(RegistrationRequest request)
         {
-            var result = await _jwtService.Authorize(request);
+            var step1 = await _jwtService.Authorize(request);
+
+            if (step1 is null)
+            {
+                return Unauthorized();
+            }
+
+            LoggingInRequest loginrequest = new LoggingInRequest
+            {
+                UserName = request.userName,
+                Password = request.password
+            };
+
+            var result = await _jwtService.Authenticate(loginrequest);
+
             if (result is null)
             {
                 return Unauthorized();

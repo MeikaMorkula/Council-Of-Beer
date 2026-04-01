@@ -13,11 +13,11 @@ namespace BeerData.Repository
             _connection = connection;
         }
 
-        public string CreateUser(UserDTO user)
+        public async Task<string> CreateUser(UserDTO user)
         {
             try
             {
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connection);
                 connection.Open();
 
                 string query = @"
@@ -46,7 +46,7 @@ namespace BeerData.Repository
         {
             try
             {
-                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                using var connection = new NpgsqlConnection(_connection);
                 connection.Open();
 
                 string query = @"

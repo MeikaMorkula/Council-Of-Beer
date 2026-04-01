@@ -88,7 +88,7 @@ namespace BeerLogic.Service
             };
         }
 
-        public async Task<LoginResponse> Authorize(RegistrationRequest request)
+        public async Task<string> Authorize(RegistrationRequest request)
         {
             DateOnly today = DateOnly.FromDateTime(DateTime.Today);
             
@@ -112,20 +112,14 @@ namespace BeerLogic.Service
                 Birthday = request.Birthday
             };
 
-            if (_userRepo.CreateUser(userDTO) != "Ok")
+            string userCreation = await _userRepo.CreateUser(userDTO);
+
+            if (userCreation != "Ok")
             {
                 return null;
             }
 
-            LoggingInRequest loginrequest = new LoggingInRequest
-            {
-                UserName = request.userName,
-                Password = userDTO.PasswordHash
-            };
-
-            LoginResponse loginResponse = await Authenticate(loginrequest);
-
-            return loginResponse;
+            return userDTO.PasswordHash;
         }
     }
 }
