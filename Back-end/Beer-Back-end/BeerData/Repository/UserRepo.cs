@@ -18,6 +18,7 @@ namespace BeerData.Repository
             try
             {
                 using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
 
                 string query = @"
                     INSERT INTO users (name, password_hash, birthday)
