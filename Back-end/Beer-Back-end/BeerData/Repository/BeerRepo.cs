@@ -100,6 +100,63 @@ namespace BeerData.Repository
                 throw new Exception("GetAllBeerNames failed", ex);
             }
         }
+
+        public BeerDTO GetInfoByBeerName(string beername)
+        {
+            try
+            {
+                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                connection.Open();
+
+                string query = @"
+            SELECT
+                b.id,
+                b.name,
+                b.alcohol_percentage,
+                b.brewery,
+                b.country,
+                b.barcode,
+                b.url,
+                COALESCE(
+                    array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
+                    ARRAY[]::text[]
+                ) AS labels
+            FROM beer b
+            LEFT JOIN beer_label bl ON bl.beer_id = b.id
+            LEFT JOIN label l ON l.id = bl.label_id
+            WHERE LOWER(b.name) = LOWER(@Name)
+            GROUP BY 
+                b.id, b.name, b.alcohol_percentage, 
+                b.brewery, b.country, b.barcode, b.url;
+             ";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Name", beername);
+
+                using var reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    return new BeerDTO
+                    {
+                        Id = reader.GetInt32(reader.GetOrdinal("id")),
+                        Name = reader.GetString(reader.GetOrdinal("name")),
+                        AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
+                        Brewery = reader.GetString(reader.GetOrdinal("brewery")),
+                        Country = reader.GetString(reader.GetOrdinal("country")),
+                        Barcode = reader.GetString(reader.GetOrdinal("barcode")),
+                        Url = reader.GetString(reader.GetOrdinal("url")),
+                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
+                    };
+                }
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetInfoByBeerName failed", ex);
+            }
+        }
         public string AddBeer(BeerDTO BeerDTO)
         {
             try

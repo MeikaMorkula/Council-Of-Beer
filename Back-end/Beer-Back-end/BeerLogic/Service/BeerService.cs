@@ -16,14 +16,19 @@ namespace BeerLogic.Service
         }
         public List<BeerDTO> GetAllBeer()
         {
-            List<BeerDTO> beerlist = _repo.GetAllBeer();
-            return beerlist;
+            return _repo.GetAllBeer();
+            
         }
 
         public List<string> GetBeerNames()
         {
-            List<string> beernamelist = _repo.GetBeerNames();
-            return beernamelist;
+            return _repo.GetBeerNames();
+
+        }
+
+        public BeerDTO GetInfoByBeerName(string beername)
+        {
+            return _repo.GetInfoByBeerName(beername);
         }
 
         public string AddBeer(BeerDTO beer)

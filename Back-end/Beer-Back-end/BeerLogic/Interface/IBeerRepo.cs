@@ -6,6 +6,7 @@ namespace BeerLogic.Interface
     {
         public List<BeerDTO> GetAllBeer();
         public List<string> GetBeerNames();
+        public BeerDTO GetInfoByBeerName(string beername);
         public string AddBeer(BeerDTO BeerDTO);
     }
 }
