@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using BeerLogic.Utility;
+using BeerLogic.DTOs;
 
 namespace BeerLogic.Service
 {
@@ -19,7 +20,32 @@ namespace BeerLogic.Service
             _userRepo = userRepo;
         }
 
-        public async Task<LoginResponse> Authenticate(LoginRequest request)
+        public bool PasswordRules(string password)
+        {
+            if (password == null)
+            {
+                return false;
+            }
+
+            if (password.Length < 8)
+            {
+                return false;
+            }
+
+            if (!password.Any(char.IsUpper))
+            {
+                return false;
+            }
+
+            if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<LoginResponse> Authenticate(LoggingInRequest request)
         {
             if (string.IsNullOrEmpty(request.UserName) || string.IsNullOrEmpty(request.Password))
             {
@@ -60,6 +86,46 @@ namespace BeerLogic.Service
                 UserName = request.UserName,
                 ExpiresIn = (int)tokenExpiryTimeStamp.Subtract(DateTime.UtcNow).TotalSeconds
             };
+        }
+
+        public async Task<LoginResponse> Authorize(RegistrationRequest request)
+        {
+            DateOnly today = DateOnly.FromDateTime(DateTime.Today);
+            
+            if (request == null)
+            {
+                return null;
+            }
+            if  (request.Birthday > today.AddYears(-18))
+            {
+                return null;
+            }
+            if (PasswordRules(request.password) == false)
+            {
+                return null;
+            }
+
+            UserDTO userDTO = new UserDTO
+            {
+                Name = request.userName,
+                PasswordHash = Bcrypt.HashPassword(request.password),
+                Birthday = request.Birthday
+            };
+
+            if (_userRepo.CreateUser(userDTO) != "Ok")
+            {
+                return null;
+            }
+
+            LoggingInRequest loginrequest = new LoggingInRequest
+            {
+                UserName = request.userName,
+                Password = userDTO.PasswordHash
+            };
+
+            LoginResponse loginResponse = await Authenticate(loginrequest);
+
+            return loginResponse;
         }
     }
 }

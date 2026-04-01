@@ -9,6 +9,7 @@ namespace BeerLogic.Interface
 {
     public interface IUserRepo
     {
+        string CreateUser(UserDTO user);
         string LookupUserPassword(string userName);
     }
 }

@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BeerLogic.DTOs
+namespace BeerLogic.Entities
 {
-    public class UserDTO
+    public class RegistrationRequest
     {
-        public string Name { get; set; }
-        public string PasswordHash { get; set; }
+        public string userName {  get; set; }
+        public string password { get; set; }
         public DateOnly Birthday { get; set; }
     }
 }
