@@ -69,7 +69,38 @@ namespace BeerData.Repository
                 throw new Exception("GetAllBeer failed", ex);
             }
         }
-    public string AddBeer(BeerDTO BeerDTO)
+
+        public List<string> GetBeerNames()
+        {
+            try
+            {
+                List<string> beerNames = new List<string>();
+
+                using NpgsqlConnection connection = (NpgsqlConnection)_connection;
+                connection.Open();
+
+                string query = @"
+                SELECT name
+                FROM beer
+                ORDER BY name;
+                ";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    beerNames.Add(reader.GetString(reader.GetOrdinal("name")));
+                }
+
+                return beerNames;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("GetAllBeerNames failed", ex);
+            }
+        }
+        public string AddBeer(BeerDTO BeerDTO)
         {
             try
             {
