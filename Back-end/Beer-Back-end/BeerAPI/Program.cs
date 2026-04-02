@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BeerLogic.Utility;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +24,8 @@ if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException("DefaultConnection is missing or empty.");
 }
+
+
 
 builder.Services.AddAuthentication(options =>
 {
@@ -57,6 +60,19 @@ builder.Services.AddScoped<BeerService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JwtService>();
 builder.Services.AddScoped<IPasswordHasher, Bcrypt>();
+
+var cloudName = builder.Configuration["Cloudinary:CloudName"];
+var apiKey = builder.Configuration["Cloudinary:ApiKey"];
+var apiSecret = builder.Configuration["Cloudinary:ApiSecret"];
+
+var account = new Account(cloudName, apiKey, apiSecret);
+var cloudinary = new Cloudinary(account);
+
+builder.Services.AddSingleton(cloudinary);
+builder.Services.AddScoped< CloudinaryHandlerService>();
+builder.Services.AddScoped<ImageHandlerService>();
+builder.Services.AddScoped<IImageHandlerRepo>(_ => new ImageHandlerRepo(connectionString));
+
 
 builder.Services.AddHealthChecks();
 
