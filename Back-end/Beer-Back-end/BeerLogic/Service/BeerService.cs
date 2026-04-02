@@ -16,8 +16,19 @@ namespace BeerLogic.Service
         }
         public List<BeerDTO> GetAllBeer()
         {
-            List<BeerDTO> beerlist = _repo.GetAllBeer();
-            return beerlist;
+            return _repo.GetAllBeer();
+            
+        }
+
+        public List<string> GetBeerNames()
+        {
+            return _repo.GetBeerNames();
+
+        }
+
+        public BeerDTO GetInfoByBeerName(string beername)
+        {
+            return _repo.GetInfoByBeerName(beername);
         }
 
         public string AddBeer(BeerDTO beer)
@@ -44,10 +55,6 @@ namespace BeerLogic.Service
             {
                 throw new Exception("Dont leave alcohole percantage empty");
             }
-            //if (EBeer.Label == null)
-            //{
-            //    throw new Exception("The beer must have a label.");
-            //}
             else
             {
                 beer = _map.BeerEntityToDTO(EBeer);

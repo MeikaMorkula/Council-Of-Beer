@@ -15,10 +15,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
+import ProductPage from './screens/Product'
 import "./i8n.ts";
 import AddBeer from './screens/AddBeer';
 import BarcodeScanner from "./components/BarcodeScanner";
 import NewPostMenu from './screens/NewPostMenu'
+import Collection from './screens/Collection';
+import Post from './screens/Post';
 
 
 const NewPostStack = createNativeStackNavigator();
@@ -45,20 +48,20 @@ function FeedNav(){
         tabBarIndicatorStyle: { backgroundColor: '#E39914' }
       }}
     >
-      <HomeTabs.Screen name="Home" component={Home}  options={{ tabBarLabel: t("tabs.home") }}/>
-      <HomeTabs.Screen name="Leaderboard" component={Leaderboard} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
-      <HomeTabs.Screen name="Search" component={Search} options={{ tabBarLabel: t("tabs.search") }}/>
-      <HomeTabs.Screen name="Sign Up" component={SignUp} options={{ tabBarLabel: t("tabs.signup")}}/>
-      <HomeTabs.Screen name="Log In" component={Login} options={{ tabBarLabel: t("tabs.login")}}/>
+      <HomeTabs.Screen name="LoginStack" component={LoginStack}  options={{ tabBarLabel: t("tabs.home") }}/>
+      <HomeTabs.Screen name="Leaderboard" component={LeaderboardStack} options={{ tabBarLabel: t("tabs.leaderboard") }}/>
+      <HomeTabs.Screen name="Search" component={SearchStack} options={{ tabBarLabel: t("tabs.search") }}/>
     </HomeTabs.Navigator>
   );
 }
 
+// WORKS 30.3.2026
 function MainHeader() {
+  const navigation = useNavigation();
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn}>
+      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Feed', {screen: 'LoginStack', params: {screen: 'LogIn'}})}>
         <Ionicons name='log-in' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
@@ -72,12 +75,13 @@ function PostHeader() {
     </View>
   );
 }
-
+// Throws an error but works as expected 30.3.2026
 function ProfileHeader() {
+  const navigation = useNavigation();
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn}>
+      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('ProfileStack', {screen: 'MainSettings'})}>
         <Ionicons name='menu' size={32} color='#EDE9C7'/>
       </TouchableOpacity>
     </View>
@@ -99,6 +103,86 @@ function ProfileStack(){
       <Stack.Screen
         name='MainSettings'
         component={MainSettings}
+      />
+      <Stack.Screen
+        name='Collection'
+        component={Collection}
+      />
+      <Stack.Screen 
+        name='Post'
+        component={Post}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function LoginStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='HomeFeed'
+        component={Home}
+      />
+      <Stack.Screen
+        name='LogIn'
+        component={Login}
+      />
+      <Stack.Screen
+        name='SignUp'
+        component={SignUp}
+      />
+      <Stack.Screen
+        name='Post'
+        component={Post}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function LeaderboardStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='LeaderboardScreen'
+        component={Leaderboard}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
+      />
+    </Stack.Navigator>
+  );
+}
+
+function SearchStack() {
+  const Stack = createNativeStackNavigator();
+  return(
+    <Stack.Navigator
+      screenOptions={{
+        headerShown: false
+      }}
+    >
+      <Stack.Screen
+        name='SearchScreen'
+        component={Search}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
       />
     </Stack.Navigator>
   );
@@ -126,7 +210,7 @@ export default function App() {
                 iconName = focused 
                   ? 'add-circle'
                   : 'add-circle-outline';
-              } else if(route.name === 'Profile'){
+              } else if(route.name === 'ProfileStack'){
                 iconName = focused  
                   ? 'person-circle'
                   : 'person-circle-outline';
@@ -140,7 +224,7 @@ export default function App() {
                 return <MainHeader/>
               } else if (route.name === 'New Post'){
                 return <PostHeader/>
-              } else if(route.name === 'Profile'){
+              } else if(route.name === 'ProfileStack'){
                 return <ProfileHeader/>
               }
             },
@@ -156,7 +240,7 @@ export default function App() {
           />
           <Tabs.Screen name="New Post" component={NewPostStackScreen} options={{ tabBarLabel: t("footer.newPost") }}
           />
-          <Tabs.Screen name="Profile" component={Profile} options={{ tabBarLabel: t("footer.profile") }}
+          <Tabs.Screen name="ProfileStack" component={ProfileStack} options={{ tabBarLabel: t("footer.profile") }}
           />
         </Tabs.Navigator>
       </NavigationContainer>

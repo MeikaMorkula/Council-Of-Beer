@@ -1,0 +1,61 @@
+﻿using BeerLogic.Entities;
+using BeerLogic.Service;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace BeerAPI.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : Controller
+    {
+        private readonly UserService _userService;
+        private readonly JwtService _jwtService;
+
+        public UserController(UserService userService, JwtService jwtService)
+        {
+            _userService = userService;
+            _jwtService = jwtService;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Authorize")]
+        public async Task<ActionResult<LoginResponse>> Login(LoggingInRequest request)
+        {
+            var result = await _jwtService.Authenticate(request);
+            if (result is null)
+            {
+                return Unauthorized();
+            }
+
+            return result;
+        }
+
+        [AllowAnonymous]
+        [HttpPost("Authenticate")]
+        public async Task<ActionResult<LoginResponse>> Register(RegistrationRequest request)
+        {
+            var step1 = await _jwtService.Authorize(request);
+
+            if (step1 is null)
+            {
+                return Unauthorized();
+            }
+
+            LoggingInRequest loginrequest = new LoggingInRequest
+            {
+                UserName = request.userName,
+                Password = request.password
+            };
+
+            var result = await _jwtService.Authenticate(loginrequest);
+
+            if (result is null)
+            {
+                return Unauthorized();
+            }
+
+            return result;
+        }
+    }
+}
