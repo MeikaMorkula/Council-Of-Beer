@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
 import ProductPage from './screens/Product'
-import "./i8n.ts";
+import "./i8n";
 import AddBeer from './screens/AddBeer';
 import BarcodeScanner from "./components/BarcodeScanner";
 import NewPostMenu from './screens/NewPostMenu'
