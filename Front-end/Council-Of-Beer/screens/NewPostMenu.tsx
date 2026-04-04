@@ -35,7 +35,8 @@ export default function NewPostMenu() {
       <Text style={styles.title}>{t("newPostMenu.title")}</Text>
 
       <MenuButton title={t("newPostMenu.scanBarcode")} />
-      <MenuButton title={t("newPostMenu.searchBeer")} />
+      <MenuButton title={t("newPostMenu.searchBeer")}
+      onPress={()=> navigation.navigate("SearchBeer")}/>
       <MenuButton
         title={t("newPostMenu.addToDatabase")}
         onPress={() => navigation.navigate("AddBeer")}
