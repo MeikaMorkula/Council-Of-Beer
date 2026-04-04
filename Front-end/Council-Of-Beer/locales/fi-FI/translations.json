@@ -7,11 +7,13 @@
   "addBeer.camera.removephoto": "Poista kuva",
   "addBeer.camera.usecamera": "Ota kuva",
   "addBeer.country": "Maa",
+  "addBeer.labels": "Maut",
   "addBeer.labels.select": "Valitse",
   "addBeer.labels.selectedCount_one": "Yksi",
   "addBeer.labels.selectedCount_other": "({{count}})",
   "addBeer.labels.title": "Lisää makuja",
   "addBeer.name": "Nimi",
+  "addBeer.selectLabels": "Valitse Maut",
   "addBeer.title": "Ota kuva",
   "camera.buttons.scanagain": "Skannaa udelleen",
   "footer.feed": "Syöte",
@@ -30,7 +32,5 @@
   "permissions.camera.needpermission": "Kamera lupa tarvitaan",
   "tabs.home": "Koti",
   "tabs.leaderboard": "Leaderboard",
-  "tabs.login": "Kirjaudu",
-  "tabs.search": "Hae",
-  "tabs.signup": "Rekisteröidy"
+  "tabs.search": "Hae"
 }
