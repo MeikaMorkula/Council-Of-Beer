@@ -7,11 +7,13 @@
   "addBeer.camera.removephoto": "Remove photo",
   "addBeer.camera.usecamera": "Use camera",
   "addBeer.country": "Country",
+  "addBeer.labels": "Labels",
   "addBeer.labels.select": "Select",
   "addBeer.labels.selectedCount_one": "One",
   "addBeer.labels.selectedCount_other": "({{count}})",
   "addBeer.labels.title": "Add Tastes",
   "addBeer.name": "Name",
+  "addBeer.selectLabels": "Select labels",
   "addBeer.title": "Add a Picture",
   "camera.buttons.scanagain": "Scan Again",
   "footer.feed": "Feed",
@@ -30,7 +32,5 @@
   "permissions.camera.needpermission": "Camera permission needed",
   "tabs.home": "Home",
   "tabs.leaderboard": "Leaderboard",
-  "tabs.login": "Log In",
-  "tabs.search": "Search",
-  "tabs.signup": "Sign Up"
+  "tabs.search": "Search"
 }

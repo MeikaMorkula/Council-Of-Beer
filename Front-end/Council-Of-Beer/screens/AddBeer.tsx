@@ -13,6 +13,9 @@ import { useTranslation } from "react-i18next";
 import CameraComponent from "../components/CameraComponent";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { addBeer } from "../services/AddBeerService";
+import LabelSelector from "../components/LabelSelector";
+import { checkHealth } from "../services/HealthService";
 
 type AddBeerNavigationProp = NativeStackNavigationProp<
   { BarcodeScanner: { onScan: (code: string) => void } },
@@ -28,17 +31,59 @@ export default function AddBeer() {
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
   const [barcode, setBarcode] = useState<string>("");
+  const [labels, setLabels] = useState<string[]>([]);
 
-    const navigation = useNavigation<AddBeerNavigationProp>();
+  const navigation = useNavigation<AddBeerNavigationProp>();
   const { t } = useTranslation();
+
+  const resetForm = () => {
+    setBeerName("");
+    setAbv("");
+    setBrewery("");
+    setCountry("");
+    setBarcode("");
+    setImage(null);
+  };
 
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
 
     try {
-    } catch (err) {
-      setError("Adding beer failed");
+      const isHealthy = await checkHealth();
+
+      if (!isHealthy) {
+        throw new Error("SERVER_UNAVAILABLE");
+      }
+      if (!beerName || !abv || brewery || !country || !image) {
+        throw new Error("Missing required fields");
+      }
+
+      //make sure that the abv is a numbre
+      const parsedABV = parseFloat(abv);
+      if (isNaN(parsedABV)) {
+        throw new Error("invalid abv");
+      }
+
+      const callContent = {
+        name: beerName,
+        alcPrecentage: parsedABV,
+        brewery,
+        country,
+        labels,
+        barcode,
+        url: "https://www.youtube.com/watch?v=IEcObiev8z0",  //placeholder until image handling works
+      };
+
+      await addBeer(callContent);
+
+      resetForm();
+    } catch (err: any) {
+      if (err.message === "SERVER_UNAVAILABLE") {
+        setError("Server is unavailable");
+      } else {
+        setError("Adding beer failed");
+      }
     } finally {
       setLoading(false);
     }
@@ -62,7 +107,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.name")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={beerName}
             onChangeText={setBeerName}
           />
@@ -80,7 +125,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder="ABV (0.0%)"
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={abv}
             onChangeText={setAbv}
             keyboardType="decimal-pad"
@@ -96,7 +141,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.brewery")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={brewery}
             onChangeText={setBrewery}
           />
@@ -114,13 +159,33 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.country")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={country}
             onChangeText={setCountry}
           />
           <Pressable style={styles.clearButton} onPress={() => setCountry("")}>
             <Ionicons name="close-circle" size={27} color="#EDE9C7" />
           </Pressable>
+        </View>
+        <View>
+          {/* järkevää laittaa tuo valinta tännekin */}
+          <LabelSelector
+            label={t("addBeer.labels")}
+            options={[
+              "Kalia",
+              "Stout",
+              "Lager",
+              "Sour",
+              "Hedelmäinen",
+              "Jäykkä",
+              "Juustoinen",
+              "Pirskahteleva",
+            ]}
+            selected={labels}
+            onChange={setLabels}
+            buttonText={t("addBeer.selectLabels")}
+            buttonTextWithCount={(count) => `${count} selected`}
+          />
         </View>
 
         <Text style={styles.label}>{t("addBeer.barcode")}</Text>
@@ -186,7 +251,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
-    color: '#EDE9C7',
+    color: "#EDE9C7",
   },
   field: {
     flexDirection: "row",
@@ -196,19 +261,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: '#28200C'
+    backgroundColor: "#28200C",
   },
   label: {
     marginBottom: 6,
     fontSize: 14,
     fontWeight: "600",
-    color: '#EDE9C7',
+    color: "#EDE9C7",
   },
   input: {
     flex: 1,
     fontSize: 16,
-    backgroundColor: '#28200C',
-    color: '#EDE9C7',
+    backgroundColor: "#28200C",
+    color: "#EDE9C7",
   },
   button: {
     marginTop: 8,
@@ -222,7 +287,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: '#EDE9C7',
+    color: "#EDE9C7",
     fontWeight: "700",
   },
   error: {
@@ -237,6 +302,6 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     marginLeft: 8,
-    backgroundColor: '#28200C'
+    backgroundColor: "#28200C",
   },
 });

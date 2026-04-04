@@ -27,7 +27,8 @@ export default function LabelSelector({
     if (selected.includes(value)) {
       onChange(selected.filter((v) => v !== value));
     } else {
-      onChange([...selected, value]);
+      //ei duplikaatteja
+      onChange([...new Set([...selected, value])]);
     }
   };
 
@@ -91,28 +92,34 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 14,
     fontWeight: "600",
+    color: "#EDE9C7",
+    fontFamily: "GermaniaOne400_Regular",
   },
 
   button: {
-    backgroundColor: "#6750a4",
+    backgroundColor: "#28200C",
     padding: 10,
     borderRadius: 8,
     alignItems: "center",
     marginBottom: 8,
+     borderWidth: 1,
+    borderColor: "#EDE9C7",
   },
 
   buttonText: {
-    color: "#fff",
+    marginBottom: 6,
+    fontSize: 14,
     fontWeight: "600",
+    color: "#EDE9C7",
   },
 
   dropdown: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#EDE9C7",
     borderRadius: 8,
     padding: 8,
     marginBottom: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#28200C",
   },
 
   item: {
@@ -122,11 +129,12 @@ const styles = StyleSheet.create({
   },
 
   itemSelected: {
-    backgroundColor: "#6750a4",
+    backgroundColor: "#E39914",
   },
 
   itemText: {
     fontSize: 14,
+      color: "#EDE9C7",
   },
 
   tagsContainer: {
@@ -138,7 +146,7 @@ const styles = StyleSheet.create({
   tag: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#6750a4",
+    backgroundColor: "#E39914",
     paddingHorizontal: 8,
     paddingVertical: 4,
     borderRadius: 12,
@@ -146,8 +154,8 @@ const styles = StyleSheet.create({
   },
 
   tagText: {
-    color: "#fff",
-    fontSize: 12,
+  fontSize: 14,
+      color: "#EDE9C7",
   },
   buttonContent: {
     flexDirection: "row",
