@@ -34,9 +34,21 @@ export default function NewPostMenu() {
     <View style={styles.container}>
       <Text style={styles.title}>{t("newPostMenu.title")}</Text>
 
-      <MenuButton title={t("newPostMenu.scanBarcode")} />
-      <MenuButton title={t("newPostMenu.searchBeer")}
-      onPress={()=> navigation.navigate("SearchBeer")}/>
+      <MenuButton
+        title={t("newPostMenu.scanBarcode")}
+        onPress={() =>
+          navigation.navigate("BarcodeScanner", {
+            onScan: (code: string) => {
+              //tähän haku funktionaalisuus
+              console.log("Scanned barcode:", code);
+            },
+          })
+        }
+      />
+      <MenuButton
+        title={t("newPostMenu.searchBeer")}
+        onPress={() => navigation.navigate("SearchBeer")}
+      />
       <MenuButton
         title={t("newPostMenu.addToDatabase")}
         onPress={() => navigation.navigate("AddBeer")}
