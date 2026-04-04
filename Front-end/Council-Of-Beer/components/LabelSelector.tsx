@@ -27,7 +27,8 @@ export default function LabelSelector({
     if (selected.includes(value)) {
       onChange(selected.filter((v) => v !== value));
     } else {
-      onChange([...selected, value]);
+      //ei duplikaatteja
+      onChange([...new Set([...selected, value])]);
     }
   };
 
