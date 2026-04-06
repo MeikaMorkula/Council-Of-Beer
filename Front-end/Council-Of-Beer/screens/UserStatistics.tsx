@@ -1,11 +1,26 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 
 export default function UserStatistics(){
     return(
         <View style={styles.statisticsCont}>
             <Text style={styles.statisticsTitle}>Your statistics</Text>
+            <ScrollView>
+                <View style={styles.statisticsView}>
+                    <View style={styles.singleStatistic}>
+                        <Text style={styles.statisticsTxt}>Statistic 1</Text>
+                        <Image style={styles.statistic}source={require('../assets/placeholdergraph.png')}/>
+                    </View>
+                    <View style={styles.singleStatistic}>
+                        <Text style={styles.statisticsTxt}>Statistic 2</Text>
+                        <Image style={styles.statistic}source={require('../assets/placeholdergraph.png')}/>
+                    </View>
+                    <View style={styles.singleStatistic}>
+                        <Text style={styles.statisticsTxt}>Statistic 3</Text>
+                        <Image style={styles.statistic}source={require('../assets/placeholdergraph.png')}/>
+                    </View>
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -17,7 +32,26 @@ const styles = StyleSheet.create({
     },
     statisticsTitle: {
         color: '#EDE9C7',
-        fontSize: 24,
+        fontSize: 32,
         fontFamily: "GermaniaOne400_Regular",
+        padding: 20,
+        textAlign: 'center'
+    },
+    statisticsView:{
+        padding: 10
+    },
+    singleStatistic: {
+        paddingTop: 10
+    },
+    statisticsTxt: {
+        color: '#EDE9C7',
+        fontSize: 18
+    },
+    statistic: {
+        width: '100%',
+        height: 275,
+        borderWidth: 0.5,
+        borderColor: '#EDE9C7',
+        borderRadius: 8
     },
 }) 
