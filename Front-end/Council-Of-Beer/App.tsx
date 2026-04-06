@@ -33,6 +33,8 @@ function NewPostStackScreen() {
       <NewPostStack.Screen name="NewPostMenu" component={NewPostMenu}/>
       <NewPostStack.Screen name="AddBeer" component={AddBeer} />
       <NewPostStack.Screen name="BarcodeScanner" component={BarcodeScanner} />
+      <NewPostStack.Screen name="SearchBeer" component={Search} />
+      
     </NewPostStack.Navigator>
   );
 }

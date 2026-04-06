@@ -34,9 +34,25 @@ export default function NewPostMenu() {
     <View style={styles.container}>
       <Text style={styles.title}>{t("newPostMenu.title")}</Text>
 
-      <MenuButton title={t("newPostMenu.scanBarcode")} />
-      <MenuButton title={t("newPostMenu.searchBeer")} />
-      <MenuButton title={t("newPostMenu.addToDatabase")} onPress={() => navigation.navigate("AddBeer")} />
+      <MenuButton
+        title={t("newPostMenu.scanBarcode")}
+        onPress={() =>
+          navigation.navigate("BarcodeScanner", {
+            onScan: (code: string) => {
+              //tähän haku funktionaalisuus
+              console.log("Scanned barcode:", code);
+            },
+          })
+        }
+      />
+      <MenuButton
+        title={t("newPostMenu.searchBeer")}
+        onPress={() => navigation.navigate("SearchBeer")}
+      />
+      <MenuButton
+        title={t("newPostMenu.addToDatabase")}
+        onPress={() => navigation.navigate("AddBeer")}
+      />
     </View>
   );
 }
@@ -45,13 +61,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: "#f2f2f2",
+    backgroundColor: "#1D190E",
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: "700",
     marginBottom: 24,
     textAlign: "center",
+    color: "#EDE9C7",
+    fontFamily: "GermaniaOne400_Regular",
   },
   menuButton: {
     flexDirection: "row",
@@ -60,7 +78,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 20,
     borderRadius: 8,
-    backgroundColor: "#f1eded", // slightly gray
+    backgroundColor: "#E39914",
     marginBottom: 12,
   },
   menuText: {
