@@ -5,6 +5,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
 import AppSettings from './AppSettings';
 import UserSettings from './UserSettings';
+import UserStatistics from './UserStatistics';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +15,7 @@ function SettingsStack() {
       <Stack.Screen name='MainSettingsScreen' component={MainSettingsScreen}/>
       <Stack.Screen name='UserSettingsScreen' component={UserSettings}/>
       <Stack.Screen name='AppSettingsScreen' component={AppSettings}/>
+      <Stack.Screen name='UserStatistics' component={UserStatistics}/>
     </Stack.Navigator>
   );
 }
@@ -22,6 +24,10 @@ function MainSettingsScreen(){
   const navigation = useNavigation();
   return(
         <View style={styles.container}>
+            <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('UserStatistics' as never)}>
+                <Text style={styles.settingsText}>User Statistics</Text>
+                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('UserSettingsScreen' as never)}>
                 <Text style={styles.settingsText}>User Settings</Text>
                 <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
