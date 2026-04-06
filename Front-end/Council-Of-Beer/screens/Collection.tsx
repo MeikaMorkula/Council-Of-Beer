@@ -1,6 +1,7 @@
 import React from 'react';
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 
 function PostObj() {
   const navgiation = useNavigation();
@@ -12,8 +13,12 @@ function PostObj() {
 }
 
 export default function Collection() {
+    const navigation = useNavigation();
     return(
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}}>
+                <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+              </TouchableOpacity>
             <View style={styles.collectionHeader}>
                 <Image style={styles.userPfp}/>
                 <View style={styles.collectionInfo}>

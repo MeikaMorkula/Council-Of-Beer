@@ -1,5 +1,7 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Switch } from 'react-native';
+import { StyleSheet, Text, View, Switch, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Dropdown } from 'react-native-element-dropdown';
 
 const langData = [
@@ -14,9 +16,13 @@ export default function AppSettings(){
   const [ commentNotifsEnabled, setCommentNotifsEnabled ] = useState(true);
   const [ postLikeNotifsEnabled, setPostLikeNotifsEnabled ] = useState(true);
   const [ newFollowerNotifsEnabled, setNewFollowerNotifsEnabled ] = useState(true);
+  const navigation = useNavigation();
 
     return(
         <View style={styles.container}>
+          <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+            <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+          </TouchableOpacity>
             <View style={styles.appSettingsCont}>
               <View style={styles.langCont}>
                 <Text style={styles.langText}>Language</Text>

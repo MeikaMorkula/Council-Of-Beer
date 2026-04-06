@@ -1,9 +1,16 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function UserStatistics(){
+    const navigation = useNavigation();
     return(
-        <View style={styles.statisticsCont}>
+        <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8, zIndex: 9999}} >
+                <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+            </TouchableOpacity>
+            <View style={styles.statisticsCont}>
             <Text style={styles.statisticsTitle}>Your statistics</Text>
             <ScrollView>
                 <View style={styles.statisticsView}>
@@ -22,10 +29,15 @@ export default function UserStatistics(){
                 </View>
             </ScrollView>
         </View>
+    </View>
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#1D190E'
+    },
     statisticsCont: {
         flex: 1,
         backgroundColor: '#1D190E'

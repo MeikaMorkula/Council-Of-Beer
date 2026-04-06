@@ -2,6 +2,7 @@ import React from 'react'
 import { Image, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
 import { StarRatingDisplay } from 'react-native-star-rating-widget'
+import { useNavigation } from '@react-navigation/native'
 
 type Review = {
     id: string
@@ -19,11 +20,13 @@ const REVIEWS: Review[] = [
 ]
 
 export default function ProductPage() {
+  const navigation = useNavigation();
     return (
         <ScrollView style={styles.container}>
             <View style={styles.postHeader}>
-                <Image style={styles.userPfp} />
-                <Text style={styles.postUsrname}>@brewery</Text>
+                <TouchableOpacity onPress={() => navigation.pop()} style={{paddingTop: 8, paddingBottom: 8}}>
+                  <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+                </TouchableOpacity>
             </View>
 
             <View style={styles.postImgCont}>

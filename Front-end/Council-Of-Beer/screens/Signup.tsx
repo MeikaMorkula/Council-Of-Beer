@@ -1,6 +1,8 @@
 import Checkbox from 'expo-checkbox'
-import React, {useState} from 'react'
-import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator } from 'react-native'
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function SignUp(){
 
@@ -10,6 +12,7 @@ export default function SignUp(){
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState("")
     const [ TSIsChecked, setTSIsChecked ] = useState(false)
+    const navigation = useNavigation();
 
     const handleSubmit = async () => {
         setError("")
@@ -25,6 +28,9 @@ export default function SignUp(){
 
     return(
         <View style={styles.container}>
+            <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', alignSelf: 'flex-start', top: 8}} >
+                <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+            </TouchableOpacity>
             <View style={styles.loginContent}>
                 <Text style={styles.title}>Sign Up</Text>
 

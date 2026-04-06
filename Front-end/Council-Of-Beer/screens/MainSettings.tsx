@@ -24,6 +24,9 @@ function MainSettingsScreen(){
   const navigation = useNavigation();
   return(
         <View style={styles.container}>
+          <TouchableOpacity onPress={() => navigation.pop()} style={{alignSelf: 'flex-start', paddingTop: 8, paddingBottom: 8}} >
+            <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+          </TouchableOpacity>
             <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('UserStatistics' as never)}>
                 <Text style={styles.settingsText}>User Statistics</Text>
                 <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>

@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, View, Image, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 function CommentArea(){
     return(
@@ -25,9 +26,13 @@ function CommentArea(){
 
 
 export default function Post(){
+  const navigation = useNavigation();
     return(
         <ScrollView style={styles.container}>
             <View style={styles.postHeader}>
+              <TouchableOpacity onPress={() => navigation.pop()} style={{paddingTop:15}}>
+                <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+              </TouchableOpacity>
                 <Image style={styles.userPfp}/>
                 <Text style={styles.postUsrname}>@username</Text>
             </View>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 
 export default function UserSettings(){
@@ -8,9 +9,14 @@ export default function UserSettings(){
   const [ currentPswd, setCurrentPswd ] = useState("");
   const [ newPswd, setNewPswd ] = useState("");
   const [ newPswdAgain, setNewPswdAgain ] = useState("");
+
+  const navigation = useNavigation();
   
     return(
         <View style={styles.container}>
+          <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+            <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+          </TouchableOpacity>
             <View style={styles.changePfCont}>
               <Image style={styles.downloadPfPic}/>
               <View style={styles.downloadPfCont}>
@@ -105,7 +111,8 @@ const styles = StyleSheet.create({
   },
   changePfCont: {
     flexDirection: 'row',
-    paddingBottom: 20
+    paddingBottom: 20,
+    paddingTop: 20
   },
   downloadPfCont: {
     paddingLeft: 10
