@@ -1,7 +1,9 @@
 import React, {useState} from 'react'
+import { useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator } from 'react-native'
 
 export default function Login() {
+    const navigation = useNavigation()
 
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
@@ -61,6 +63,13 @@ export default function Login() {
                     ) : (
                         <Text style={styles.buttonText}>Log In</Text>
                     )}
+                </Pressable>
+
+                <Pressable
+                    onPress={() => navigation.navigate('SignUp' as never)}
+                    style={styles.signupLink}
+                    >
+                    <Text style={styles.signupLinkText}>Don't have an account? Sign up here!</Text>
                 </Pressable>
             </View>
         </View>
@@ -124,6 +133,14 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#EDE9C7',
         fontWeight: '700',
+    },
+    signupLink: {
+        marginTop: 16,
+    },
+    signupLinkText: {
+        color: '#EFC06D',
+        fontWeight: '600',
+        textAlign: 'center',
     },
     error: {
         color: '#d00',
