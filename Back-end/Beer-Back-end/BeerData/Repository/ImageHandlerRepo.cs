@@ -18,7 +18,7 @@ namespace BeerData.Repository
         {
             _connectionString = connectionString;
         }
-        public async Task<CreatePostResponse> CreatePostAsync(int userId, int beerId, string description, string imageUrl, string publicId)
+        public async Task<CreatePostResponse> CreatePostAsync(PostDTO post, CloudinaryUploadResultDTO uploadResult)
         {
             try
             {
@@ -32,11 +32,11 @@ namespace BeerData.Repository
                 ";
 
                 using var command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("@beerId", beerId);
-                command.Parameters.AddWithValue("@description", description ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@image_url", imageUrl);
-                command.Parameters.AddWithValue("@image_public_id", publicId);
-                command.Parameters.AddWithValue("@user_id", 1);
+                command.Parameters.AddWithValue("@beerId", post.BeerId );
+                command.Parameters.AddWithValue("@description", post.Description ?? (object)DBNull.Value);
+                command.Parameters.AddWithValue("@image_url", uploadResult.ImageUrl);
+                command.Parameters.AddWithValue("@image_public_id", uploadResult.PublicId);
+                command.Parameters.AddWithValue("@user_id", post.UserId);
 
                 using var reader = await command.ExecuteReaderAsync();
 

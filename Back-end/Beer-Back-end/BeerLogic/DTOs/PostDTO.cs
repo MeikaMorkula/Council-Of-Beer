@@ -10,10 +10,12 @@ namespace BeerLogic.DTOs
     public class PostDTO
     {
         public int Id { get; set; }
+        public int UserId { get; set; }
+        public int BeerId { get; set; }
         public string ImgUrl { get; set; }
-        public Review Reviews { get; set; }
-        // research how to save location
-        public string Location { get; set; }
+        public string Description { get; set; }
         public string Bar { get; set; }
+        public string City { get; set; }
+        public Review Review { get; set; }
     }
 }

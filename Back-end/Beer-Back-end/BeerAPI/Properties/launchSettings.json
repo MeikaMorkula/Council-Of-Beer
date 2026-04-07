@@ -4,12 +4,6 @@
       "commandName": "Project",
       "launchBrowser": true,
       "launchUrl": "swagger",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development",
-        "Cloudinary__CloudName": "councilofbeer",
-        "Cloudinary__ApiKey": "154639712687958",
-        "Cloudinary__ApiSecret": "wU98GSfSX43doT2f8xB6S6Q3yU8"
-      },
       "dotnetRunMessages": true,
       "applicationUrl": "http://localhost:5156"
     }
