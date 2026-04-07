@@ -1,4 +1,4 @@
-﻿using BeerLogic.Entities;
+﻿using Microsoft.AspNetCore.SignalR;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,15 +7,13 @@ using System.Threading.Tasks;
 
 namespace BeerLogic.DTOs
 {
-    public class PostDTO
+    public class CreatePostResponse
     {
-        public int Id { get; set; }
         public int UserId { get; set; }
+        public int PostId { get; set; }
         public int BeerId { get; set; }
-        public string ImgUrl { get; set; }
         public string Description { get; set; }
-        public string Bar { get; set; }
-        public string City { get; set; }
-        public Review Review { get; set; }
+        public string ImageUrl { get; set; }
+        public string PublicId { get; set; }
     }
 }
