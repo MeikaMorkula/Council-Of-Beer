@@ -11,5 +11,7 @@ namespace BeerLogic.Interface
     {
         Task<string> CreateUser(UserDTO user);
         string LookupUserPassword(string userName);
+        string ChangeUsername(string newUser, string oldUser);
+        string ChangePassword(string newPass, string userName);
     }
 }

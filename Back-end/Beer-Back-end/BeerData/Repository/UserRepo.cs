@@ -72,5 +72,62 @@ namespace BeerData.Repository
 
         }
 
+        public string ChangeUsername(string newUser, string oldUser)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                string query = @"
+                    UPDATE users
+                    SET username = 'new_username'
+                    WHERE username = 'old_username'";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@new_username", newUser);
+                command.Parameters.AddWithValue("@old_username", oldUser);
+                using var reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    return "Username updated";
+                }
+
+                throw new Exception("while retrieving information");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error", ex);
+            }
+        }
+
+        public string ChangePassword(string newPass, string userName)
+        {
+            try
+            {
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                string query = @"
+                    UPDATE users
+                    SET password = 'new_password'
+                    WHERE username = 'username'";
+
+                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@new_password", newPass);
+                command.Parameters.AddWithValue("@username", userName);
+                using var reader = command.ExecuteReader();
+                if (reader.Read())
+                {
+                    return "Password updated";
+                }
+
+                throw new Exception("while retrieving information");
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error", ex);
+            }
+        }
     }
 }

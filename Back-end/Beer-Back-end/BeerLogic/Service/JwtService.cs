@@ -20,7 +20,7 @@ namespace BeerLogic.Service
             _userRepo = userRepo;
         }
 
-        public bool PasswordRules(string password)
+        public static bool PasswordRules(string password)
         {
             if (password == null)
             {
