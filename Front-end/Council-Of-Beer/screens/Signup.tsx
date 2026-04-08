@@ -1,8 +1,11 @@
 import Checkbox from 'expo-checkbox'
 import React, {useState} from 'react'
+import { useNavigation } from '@react-navigation/native'
 import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator } from 'react-native'
 
 export default function SignUp(){
+
+    const navigation = useNavigation()
 
     const [username, setUsername] = useState("")
     const [email, setEmail] = useState("")
@@ -32,7 +35,7 @@ export default function SignUp(){
                     <Text style={styles.label}>Email</Text>
                     <TextInput
                         placeholder="example@example.com"
-                        placeholderTextColor={'#EDE9C7'}
+                        placeholderTextColor={'#dfdbb970'}
                         value={email}
                         onChangeText={setEmail}
                         style={styles.input}
@@ -45,7 +48,7 @@ export default function SignUp(){
                     <Text style={styles.label}>Username</Text>
                     <TextInput
                         placeholder="Username"
-                        placeholderTextColor={'#EDE9C7'}
+                        placeholderTextColor={'#dfdbb970'}
                         value={username}
                         onChangeText={setUsername}
                         style={styles.input}
@@ -57,7 +60,7 @@ export default function SignUp(){
                     <Text style={styles.label}>Password</Text>
                     <TextInput
                         placeholder="Password"
-                        placeholderTextColor={'#EDE9C7'}
+                        placeholderTextColor={'#dfdbb970'}
                         value={password}
                         onChangeText={setPassword}
                         style= {styles.input}
@@ -77,6 +80,13 @@ export default function SignUp(){
                     ): (
                         <Text style={styles.buttonText}>Sign Up</Text>
                     )}
+                </Pressable>
+
+                <Pressable
+                    onPress={() => navigation.navigate('LogIn' as never)}
+                    style={styles.LoginLink}
+                    >
+                    <Text style={styles.LoginLinkText}>Already have an account? Login here!</Text>
                 </Pressable>
             </View>
         </View>
@@ -124,6 +134,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 10,
         backgroundColor: '#28200C',
+        color: '#EDE9C7',
         width: 300
     },
     tsCheckbox: {
@@ -143,6 +154,14 @@ const styles = StyleSheet.create({
     buttonText: {
         color: '#EDE9C7',
         fontWeight: '700',
+    },
+    LoginLink: {
+        marginTop: 16,
+    },
+    LoginLinkText: {
+        color: '#EFC06D',
+        fontWeight: '600',
+        textAlign: 'center',
     },
     error: {
         color: '#d00',
