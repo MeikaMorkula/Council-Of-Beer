@@ -1,6 +1,6 @@
 import React, { useCallback, useRef } from 'react';
 import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
-import { Image, StyleSheet, Text, View, ScrollView } from 'react-native';
+import { Image, StyleSheet, Text, View, ScrollView,TouchableOpacity} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 
