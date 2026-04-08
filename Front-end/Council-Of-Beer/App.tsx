@@ -16,9 +16,28 @@ import { useTranslation } from "react-i18next";
 import SignUp from './screens/Signup'
 import Login from './screens/Login'
 import ProductPage from './screens/Product'
-import "./i8n.ts";
+import "./i8n";
+import AddBeer from './screens/AddBeer';
+import BarcodeScanner from "./components/BarcodeScanner";
+import NewPostMenu from './screens/NewPostMenu'
+import Collection from './screens/Collection';
+import Post from './screens/Post';
 
 
+const NewPostStack = createNativeStackNavigator();
+
+//navigaatiot postauksia ja skannauksia varten
+function NewPostStackScreen() {
+  return (
+    <NewPostStack.Navigator screenOptions={{ headerShown: false }}>
+      <NewPostStack.Screen name="NewPostMenu" component={NewPostMenu}/>
+      <NewPostStack.Screen name="AddBeer" component={AddBeer} />
+      <NewPostStack.Screen name="BarcodeScanner" component={BarcodeScanner} />
+      <NewPostStack.Screen name="SearchBeer" component={Search} />
+      
+    </NewPostStack.Navigator>
+  );
+}
 
 function FeedNav(){
   const HomeTabs = createMaterialTopTabNavigator();
@@ -87,6 +106,18 @@ function ProfileStack(){
         name='MainSettings'
         component={MainSettings}
       />
+      <Stack.Screen
+        name='Collection'
+        component={Collection}
+      />
+      <Stack.Screen 
+        name='Post'
+        component={Post}
+      />
+      <Stack.Screen
+        name='ProductPage'
+        component={ProductPage}
+      />
     </Stack.Navigator>
   );
 }
@@ -110,6 +141,10 @@ function LoginStack() {
       <Stack.Screen
         name='SignUp'
         component={SignUp}
+      />
+      <Stack.Screen
+        name='Post'
+        component={Post}
       />
     </Stack.Navigator>
   );
@@ -216,7 +251,7 @@ export default function App() {
             })}
             options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
+          <Tabs.Screen name="New Post" component={NewPostStackScreen} options={{ tabBarLabel: t("footer.newPost") }}
           />
           <Tabs.Screen name="ProfileStack" component={ProfileStack} options={{ tabBarLabel: t("footer.profile") }}
           />

@@ -10,7 +10,6 @@ namespace BeerLogic.Mapper
         {
             return new User()
             {
-                Id = userDTO.Id,
                 Name = userDTO.Name,
                 PasswordHash = userDTO.PasswordHash,
                 Birthday = userDTO.Birthday
@@ -21,7 +20,6 @@ namespace BeerLogic.Mapper
         {
             return new UserDTO()
             {
-                Id = user.Id,
                 Name = user.Name,
                 PasswordHash = user.PasswordHash,
                 Birthday = user.Birthday
@@ -35,8 +33,7 @@ namespace BeerLogic.Mapper
             {
                 Id = postDTO.Id,
                 ImgUrl = postDTO.ImgUrl,
-                Reviews = postDTO.Reviews,
-                Location = postDTO.Location,
+                Review = postDTO.Review,
                 Bar = postDTO.Bar
             };
         }
@@ -47,8 +44,7 @@ namespace BeerLogic.Mapper
             {
                 Id = post.Id,
                 ImgUrl = post.ImgUrl,
-                Reviews = post.Reviews,
-                Location = post.Location,
+                Review = post.Review,
                 Bar = post.Bar
             };
         }
@@ -92,7 +88,8 @@ namespace BeerLogic.Mapper
                 Labels = beerDTO.Labels,
                 Country = beerDTO.Country,
                 Barcode = beerDTO.Barcode,
-                Url = beerDTO.Url,
+                ImageUrl = beerDTO.ImageUrl,
+                ImagePublicId = beerDTO.ImagePublicId
             };
         }
 
@@ -107,7 +104,8 @@ namespace BeerLogic.Mapper
                 Labels = beer.Labels,
                 Country = beer.Country,
                 Barcode = beer.Barcode,
-                Url = beer.Url,
+                ImageUrl = beer.ImageUrl,
+                ImagePublicId = beer.ImagePublicId
             };
         }
     }

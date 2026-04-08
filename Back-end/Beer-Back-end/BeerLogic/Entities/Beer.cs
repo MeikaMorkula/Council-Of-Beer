@@ -9,6 +9,7 @@
         public string Country { get; set; }
         public List<string> Labels { get; set; } = new();
         public string Barcode { get; set; }
-        public string Url { get; set; }
+        public string ImageUrl { get; set; }
+        public string ImagePublicId { get; set; }
     }
 }

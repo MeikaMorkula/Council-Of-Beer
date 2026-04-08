@@ -7,11 +7,20 @@ import {
   Pressable,
   ActivityIndicator,
 } from "react-native";
-import * as ImagePicker from "expo-image-picker";
-import { Image } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
+import CameraComponent from "../components/CameraComponent";
+import { useNavigation } from "@react-navigation/native";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { addBeer } from "../services/AddBeerService";
+import LabelSelector from "../components/LabelSelector";
+import { checkHealth } from "../services/HealthService";
+
+type AddBeerNavigationProp = NativeStackNavigationProp<
+  { BarcodeScanner: { onScan: (code: string) => void } },
+  "BarcodeScanner"
+>;
 
 export default function AddBeer() {
   const [beerName, setBeerName] = useState<string>("");
@@ -21,49 +30,66 @@ export default function AddBeer() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const [image, setImage] = useState<string | null>(null);
+  const [barcode, setBarcode] = useState<string>("");
+  const [labels, setLabels] = useState<string[]>([]);
 
+  const navigation = useNavigation<AddBeerNavigationProp>();
   const { t } = useTranslation();
+
+  const resetForm = () => {
+    setBeerName("");
+    setAbv("");
+    setBrewery("");
+    setCountry("");
+    setBarcode("");
+    setImage(null);
+  };
 
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
 
     try {
-    } catch (err) {
-      setError("Adding beer failed");
+      const isHealthy = await checkHealth();
+
+      if (!isHealthy) {
+        throw new Error("SERVER_UNAVAILABLE");
+      }
+      if (!beerName || !abv || brewery || !country || !image) {
+        throw new Error("Missing required fields");
+      }
+
+      //make sure that the abv is a numbre
+      const parsedABV = parseFloat(abv);
+      if (isNaN(parsedABV)) {
+        throw new Error("invalid abv");
+      }
+
+      const callContent = {
+        name: beerName,
+        alcPrecentage: parsedABV,
+        brewery,
+        country,
+        labels,
+        barcode,
+        url: "https://www.youtube.com/watch?v=IEcObiev8z0",  //placeholder until image handling works
+      };
+
+      await addBeer(callContent);
+
+      resetForm();
+    } catch (err: any) {
+      if (err.message === "SERVER_UNAVAILABLE") {
+        setError("Server is unavailable");
+      } else {
+        setError("Adding beer failed");
+      }
     } finally {
       setLoading(false);
     }
   };
 
   //internetin syövereistä, melkone mankeli
-  const pickImage = async () => {
-    const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, //deprecated piece of s**t but works
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
-
-  const takePhoto = async () => {
-    const permission = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (!permission.granted) {
-      setError("Camera permission required");
-      return;
-    }
-
-    const result = await ImagePicker.launchCameraAsync({
-      quality: 0.7,
-    });
-
-    if (!result.canceled) {
-      setImage(result.assets[0].uri);
-    }
-  };
 
   return (
     <ScrollView
@@ -73,46 +99,15 @@ export default function AddBeer() {
     >
       <View style={styles.BeerContent}>
         <Text style={styles.title}>{t("addBeer.title")}</Text>
-        <View style={styles.imageBox}>
-          {image ? (
-            <>
-              <Image source={{ uri: image }} style={styles.imagePreview} />
 
-              <Pressable
-                style={styles.removeButton}
-                onPress={() => setImage(null)}
-              >
-                <Text style={styles.removeButtonText}>
-                  {t("addBeer.camera.removephoto")}
-                </Text>
-              </Pressable>
-            </>
-          ) : (
-            <>
-              <Ionicons name="add-circle-outline" size={64} color="#EDE9C7" />
-            </>
-          )}
+        <CameraComponent image={image} onChange={setImage} />
 
-          <View style={styles.imageButtons}>
-            <Pressable style={styles.smallButton} onPress={takePhoto}>
-              <Text style={styles.smallButtonText}>
-                {t("addBeer.camera.usecamera")}
-              </Text>
-            </Pressable>
-
-            <Pressable style={styles.smallButton} onPress={pickImage}>
-              <Text style={styles.smallButtonText}>
-                {t("addBeer.camera.choosefile")}
-              </Text>
-            </Pressable>
-          </View>
-        </View>
         <Text style={styles.label}>{t("addBeer.name")}</Text>
         <View style={styles.field}>
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.name")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={beerName}
             onChangeText={setBeerName}
           />
@@ -130,7 +125,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder="ABV (0.0%)"
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={abv}
             onChangeText={setAbv}
             keyboardType="decimal-pad"
@@ -146,7 +141,7 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.brewery")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={brewery}
             onChangeText={setBrewery}
           />
@@ -164,12 +159,52 @@ export default function AddBeer() {
           <TextInput
             style={styles.input}
             placeholder={t("addBeer.country")}
-            placeholderTextColor={'#EDE9C7'}
+            placeholderTextColor={"#EDE9C7"}
             value={country}
             onChangeText={setCountry}
           />
           <Pressable style={styles.clearButton} onPress={() => setCountry("")}>
             <Ionicons name="close-circle" size={27} color="#EDE9C7" />
+          </Pressable>
+        </View>
+        <View>
+          {/* järkevää laittaa tuo valinta tännekin */}
+          <LabelSelector
+            label={t("addBeer.labels")}
+            options={[
+              "Kalia",
+              "Stout",
+              "Lager",
+              "Sour",
+              "Hedelmäinen",
+              "Jäykkä",
+              "Juustoinen",
+              "Pirskahteleva",
+            ]}
+            selected={labels}
+            onChange={setLabels}
+            buttonText={t("addBeer.selectLabels")}
+            buttonTextWithCount={(count) => `${count} selected`}
+          />
+        </View>
+
+        <Text style={styles.label}>{t("addBeer.barcode")}</Text>
+        <View style={styles.field}>
+          <TextInput
+            style={styles.input}
+            placeholder={t("addBeer.barcodePlaceholder")}
+            value={barcode}
+            editable={false}
+          />
+
+          <Pressable
+            onPress={() =>
+              navigation.navigate("BarcodeScanner", {
+                onScan: (code: string) => setBarcode(code),
+              })
+            }
+          >
+            <Ionicons name="barcode-outline" size={26} color="#6750a4" />
           </Pressable>
         </View>
 
@@ -216,7 +251,7 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
-    color: '#EDE9C7',
+    color: "#EDE9C7",
   },
   field: {
     flexDirection: "row",
@@ -226,19 +261,19 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     paddingHorizontal: 12,
     paddingVertical: 10,
-    backgroundColor: '#28200C'
+    backgroundColor: "#28200C",
   },
   label: {
     marginBottom: 6,
     fontSize: 14,
     fontWeight: "600",
-    color: '#EDE9C7',
+    color: "#EDE9C7",
   },
   input: {
     flex: 1,
     fontSize: 16,
-    backgroundColor: '#28200C',
-    color: '#EDE9C7',
+    backgroundColor: "#28200C",
+    color: "#EDE9C7",
   },
   button: {
     marginTop: 8,
@@ -252,7 +287,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: '#EDE9C7',
+    color: "#EDE9C7",
     fontWeight: "700",
   },
   error: {
@@ -260,72 +295,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 6,
   },
-  imageBox: {
-    width: "100%",
-    height: 300,
-    borderWidth: 2,
-    borderColor: "#EDE9C7",
-    borderRadius: 10,
-    marginBottom: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    overflow: "hidden",
-    backgroundColor: '#28200C'
-  },
-
-  imagePreview: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
-  },
-
-  imagePlaceholder: {
-    color: '#EDE9C7',
-    marginBottom: 10,
-  },
-
-  imageButtons: {
-    flexDirection: "column",
-    gap: 10,
-    width: "50%",
-  },
-
-  smallButton: {
-    backgroundColor: "#E39914",
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    borderRadius: 6,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  smallButtonText: {
-    color: '#EDE9C7',
-    fontWeight: "600",
-  },
-
   buttonRow: {
     marginTop: 12,
     flexDirection: "row",
     justifyContent: "flex-end",
   },
-  removeButton: {
-    position: "absolute",
-    bottom: 10,
-    right: 10,
-    backgroundColor: "rgba(0,0,0,0.6)",
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 6,
-  },
-
-  removeButtonText: {
-    color: "#EDE9C7",
-    fontSize: 12,
-    fontWeight: "600",
-  },
   clearButton: {
     marginLeft: 8,
-    backgroundColor: '#28200C'
+    backgroundColor: "#28200C",
   },
 });

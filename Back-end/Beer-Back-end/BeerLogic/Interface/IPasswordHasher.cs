@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BeerLogic.Interface
 {
-    internal interface IPostRepo
+    public class IPasswordHasher
     {
     }
 }
