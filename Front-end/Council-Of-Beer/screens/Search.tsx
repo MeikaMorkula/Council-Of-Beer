@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
+import { useFocusEffect, useNavigation, useScrollToTop } from '@react-navigation/native';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, ScrollView } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
-import { useNavigation } from '@react-navigation/native';
 
 function ProductComponent(){
   const navigation = useNavigation();
@@ -23,9 +23,36 @@ function ProductComponent(){
 }
 
 export default function Search(){
+    const navigation = useNavigation();
+    const scrollRef = useRef<ScrollView>(null);
+  
+    const scrollToTop = useCallback((animated = true) => {
+      scrollRef.current?.scrollTo({ y: 0, animated });
+    }, []);
+  
+    useScrollToTop(scrollRef);
+  
+    useFocusEffect(
+      useCallback(() => {
+        scrollToTop(false);
+      }, [scrollToTop])
+    );
+  
+    useEffect(() => {
+      const topTabNavigation = navigation.getParent()?.getParent();
+
+      const unsubscribe = topTabNavigation?.addListener('tabPress', () => {
+        if (navigation.isFocused()) {
+          scrollToTop(true);
+        }
+      });
+  
+      return unsubscribe;
+    }, [navigation, scrollToTop]);
+  
 
     return(
-      <>
+      <View style={styles.container}>
         <View style={styles.searchCont}>
           <View style={styles.searchSection}>
             <TextInput
@@ -38,16 +65,26 @@ export default function Search(){
               </TouchableOpacity>
             </View>
         </View>
-        <ScrollView style={styles.resultArea}>
+        <ScrollView ref={scrollRef} style={styles.resultArea}>
+          <ProductComponent/>
+          <ProductComponent/>
+          <ProductComponent/>
+          <ProductComponent/>
+          <ProductComponent/>
+          <ProductComponent/>
           <ProductComponent/>
         </ScrollView>
-      </>
+      </View>
     );
 }
 
 
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#1D190E'
+  },
   searchCont: {
     position: 'relative',
     backgroundColor: '#1D190E'
@@ -79,7 +116,7 @@ const styles = StyleSheet.create({
     height: 65,
   },
   resultArea: {
-    position: 'relative',
+    flex: 1,
     backgroundColor: '#1D190E'
   },
   productCont:{

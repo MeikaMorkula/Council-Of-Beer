@@ -203,7 +203,18 @@ export default function App() {
             tabBarActiveTintColor: '#EFC06D'
           })}  
         >
-          <Tabs.Screen name="Feed" component={FeedNav} options={{ tabBarLabel: t("footer.feed") }}
+          <Tabs.Screen
+            name="Feed"
+            component={FeedNav}
+            listeners={({ navigation }) => ({
+              tabPress: () => {
+                navigation.navigate('Feed', {
+                  screen: 'LoginStack',
+                  params: { screen: 'HomeFeed' },
+                })
+              },
+            })}
+            options={{ tabBarLabel: t("footer.feed") }}
           />
           <Tabs.Screen name="New Post" component={NewPost} options={{ tabBarLabel: t("footer.newPost") }}
           />

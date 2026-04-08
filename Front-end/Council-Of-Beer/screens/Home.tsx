@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useCallback, useRef } from 'react';
+import { useFocusEffect, useScrollToTop } from '@react-navigation/native';
 import { Image, StyleSheet, Text, View, ScrollView } from 'react-native';
 import { StarRatingDisplay } from 'react-native-star-rating-widget';
 
@@ -26,8 +27,18 @@ function PostObj(){
 
 
 export default function Home(){
+    const scrollRef = useRef<ScrollView>(null);
+
+    useScrollToTop(scrollRef);
+
+    useFocusEffect(
+      useCallback(() => {
+        scrollRef.current?.scrollTo({ y: 0, animated: false });
+      }, [])
+    );
+
     return(
-        <ScrollView style={styles.container}>
+        <ScrollView ref={scrollRef} style={styles.container}>
           <PostObj/>
           <PostObj/>
           <PostObj/>

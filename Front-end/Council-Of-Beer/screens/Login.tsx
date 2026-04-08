@@ -31,7 +31,7 @@ export default function Login() {
                     <Text style={styles.label}>Username</Text>
                     <TextInput
                         placeholder="Username"
-                        placeholderTextColor={'#EDE9C7'}
+                        placeholderTextColor={'#dfdbb970'}
                         value={username}
                         onChangeText={setUsername}
                         style={styles.input}
@@ -43,7 +43,7 @@ export default function Login() {
                     <Text style={styles.label}>Password</Text>
                     <TextInput
                         placeholder="Password"
-                        placeholderTextColor={'#EDE9C7'}
+                        placeholderTextColor={'#dfdbb970'}
                         value={password}
                         onChangeText={setPassword}
                         style={styles.input}
@@ -117,6 +117,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 12,
         paddingVertical: 10,
         backgroundColor: '#28200C',
+        color: '#EDE9C7',
         width: 300
     },
     button: {
