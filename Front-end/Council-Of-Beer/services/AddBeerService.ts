@@ -2,12 +2,13 @@
 
 export type AddBeerContent = {
   name: string;
-  alcPrecentage: number;
+  alcohol_percentage : number;
   brewery: string;
   country: string;
   labels: string[];
   barcode: string;
-  url: string | null;
+  imageUrl: string | null;
+  imagePublicId: number|null
 };
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -23,7 +24,7 @@ export const addBeer = async (content: AddBeerContent) => {
     });
     if (!res.ok) {
       const e = await res.text();
-      throw new Error(e || "failed to ad beer");
+      throw new Error(e || "failed to add beer");
     }
     return await res.json();
   } catch (error) {

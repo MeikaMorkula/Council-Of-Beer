@@ -72,7 +72,8 @@ export default function AddBeer() {
         country,
         labels,
         barcode,
-        url: "https://www.youtube.com/watch?v=IEcObiev8z0",  //placeholder until image handling works
+        imageUrl: "https://www.youtube.com/watch?v=IEcObiev8z0",  //placeholder until image handling works
+        imagePublicId: null
       };
 
       await addBeer(callContent);
@@ -82,6 +83,7 @@ export default function AddBeer() {
       if (err.message === "SERVER_UNAVAILABLE") {
         setError("Server is unavailable");
       } else {
+        console.log(err)
         setError("Adding beer failed");
       }
     } finally {
