@@ -30,9 +30,12 @@
       [
         "expo-font",
         {
-          "fonts": ["./assets/fonts/GermaniaOne-Regular.ttf"]
+          "fonts": [
+            "./assets/fonts/GermaniaOne-Regular.ttf"
+          ]
         }
-      ]
+      ],
+      "expo-secure-store"
     ]
   }
 }
