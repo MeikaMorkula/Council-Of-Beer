@@ -4,9 +4,15 @@ import * as ImagePicker from "expo-image-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
 
+type ImageFile = {
+  uri: string;
+  name: string;
+  type: string;
+};
+
 type Props = {
-  image: string | null;
-  onChange: (uri: string | null) => void;
+  image: ImageFile | null;
+  onChange: (image: ImageFile | null) => void;
 };
 
 export default function CameraComponent({ image, onChange }: Props) {
@@ -21,7 +27,14 @@ export default function CameraComponent({ image, onChange }: Props) {
     });
 
     if (!result.canceled) {
-      onChange(result.assets[0].uri);
+      const asset = result.assets[0];
+      const extension = asset.uri.split(".").pop();
+
+      onChange({
+        uri: asset.uri,
+        name: `beer_${Date.now()}.${extension}`,
+        type: asset.mimeType ?? `image/${extension}`,
+      });
     }
   };
 
@@ -38,7 +51,14 @@ export default function CameraComponent({ image, onChange }: Props) {
     });
 
     if (!result.canceled) {
-      onChange(result.assets[0].uri);
+      const asset = result.assets[0];
+      const extension = asset.uri.split(".").pop();
+
+      onChange({
+        uri: asset.uri,
+        name: `beer_${Date.now()}.${extension}`,
+        type: asset.mimeType ?? `image/${extension}`,
+      });
     }
   };
 
@@ -46,7 +66,7 @@ export default function CameraComponent({ image, onChange }: Props) {
     <View style={styles.imageBox}>
       {image ? (
         <>
-          <Image source={{ uri: image }} style={styles.imagePreview} />
+          <Image source={{ uri: image.uri }} style={styles.imagePreview} />
           <Pressable style={styles.removeButton} onPress={() => onChange(null)}>
             <Text style={styles.removeButtonText}>
               {t("addBeer.camera.removephoto")}
@@ -60,14 +80,12 @@ export default function CameraComponent({ image, onChange }: Props) {
       <View style={styles.imageButtons}>
         <Pressable style={styles.smallButton} onPress={takePhoto}>
           <Text style={styles.smallButtonText}>
-            {" "}
             {t("addBeer.camera.usecamera")}
           </Text>
         </Pressable>
 
         <Pressable style={styles.smallButton} onPress={pickImage}>
           <Text style={styles.smallButtonText}>
-            {" "}
             {t("addBeer.camera.choosefile")}
           </Text>
         </Pressable>
