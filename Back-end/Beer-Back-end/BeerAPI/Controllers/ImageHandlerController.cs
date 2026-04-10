@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BeerAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/")]
     [ApiController]
     public class ImageHandlerController : ControllerBase
     {
@@ -17,7 +17,8 @@ namespace BeerAPI.Controllers
         }
         [HttpPost("CreatePost")]
         [Consumes("multipart/form-data")]
-        //[Authorize] 
+        [Authorize]
+
         public async Task<IActionResult> CreatePost([FromForm] CreatePostRequest request)
         {
             if (request.Image == null || request.Image.Length == 0)
