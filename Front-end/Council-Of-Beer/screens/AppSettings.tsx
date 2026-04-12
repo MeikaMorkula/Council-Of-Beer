@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Switch } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { saveSettings, loadSettings } from "../utils/AsyncStorage";
-import i18n from '../i8n'
+import { useTranslation } from "react-i18next";
+import i18n from "../i8n";
 
 const langData = [
   { label: "English", value: "en" },
@@ -16,6 +17,8 @@ export default function AppSettings() {
   const [postLikeNotifsEnabled, setPostLikeNotifsEnabled] = useState(true);
   const [newFollowerNotifsEnabled, setNewFollowerNotifsEnabled] =
     useState(true);
+
+  const { t } = useTranslation();
 
   useEffect(() => {
     const getSettings = async () => {
@@ -54,7 +57,7 @@ export default function AppSettings() {
     <View style={styles.container}>
       <View style={styles.appSettingsCont}>
         <View style={styles.langCont}>
-          <Text style={styles.langText}>Language</Text>
+          <Text style={styles.langText}>{t("settings.titles.language")}</Text>
           <Dropdown
             style={[styles.langDropdown]}
             containerStyle={styles.dropdownCont}
@@ -73,7 +76,9 @@ export default function AppSettings() {
           />
         </View>
         <View style={styles.notifCont}>
-          <Text style={styles.langText}>Notifications</Text>
+          <Text style={styles.langText}>
+            {t("settings.titles.notifications")}
+          </Text>
           <Switch
             trackColor={{ false: "#EDE9C7", true: "#EFC06D" }}
             thumbColor={notifEnabled ? "#E06F24" : "#EFC06D"}
@@ -86,7 +91,9 @@ export default function AppSettings() {
         </View>
         <View style={styles.innerNotifCont}>
           <View style={styles.singleNotif}>
-            <Text style={styles.innerNotifText}>Comments on posts</Text>
+            <Text style={styles.innerNotifText}>
+              {t("settings.titles.commentsOnPosts")}
+            </Text>
             <Switch
               trackColor={{ false: "#EDE9C7", true: "#EFC06D" }}
               thumbColor={commentNotifsEnabled ? "#E06F24" : "#EFC06D"}
@@ -99,7 +106,9 @@ export default function AppSettings() {
             />
           </View>
           <View style={styles.singleNotif}>
-            <Text style={styles.innerNotifText}>Likes on posts</Text>
+            <Text style={styles.innerNotifText}>
+              {t("settings.titles.likesOnPosts")}
+            </Text>
             <Switch
               trackColor={{ false: "#EDE9C7", true: "#EFC06D" }}
               thumbColor={postLikeNotifsEnabled ? "#E06F24" : "#EFC06D"}
@@ -112,7 +121,9 @@ export default function AppSettings() {
             />
           </View>
           <View style={styles.singleNotif}>
-            <Text style={styles.innerNotifText}>New Followers</Text>
+            <Text style={styles.innerNotifText}>
+              {t("settings.titles.newFollowers")}
+            </Text>
             <Switch
               trackColor={{ false: "#EDE9C7", true: "#EFC06D" }}
               thumbColor={newFollowerNotifsEnabled ? "#E06F24" : "#EFC06D"}

@@ -62,7 +62,7 @@ export default function AddBeer() {
       //make sure that the abv is a numbre
       const parsedABV = parseFloat(abv);
       if (isNaN(parsedABV)) {
-        throw new Error("invalid abv");
+        throw new Error(t("addBeer.errors.invalidAbv"));
       }
 
       const callContent = {
@@ -72,7 +72,7 @@ export default function AddBeer() {
         country,
         labels,
         barcode,
-        url: "https://www.youtube.com/watch?v=IEcObiev8z0",  //placeholder until image handling works
+        url: "https://www.youtube.com/watch?v=IEcObiev8z0", //placeholder until image handling works
       };
 
       await addBeer(callContent);
@@ -80,9 +80,9 @@ export default function AddBeer() {
       resetForm();
     } catch (err: any) {
       if (err.message === "SERVER_UNAVAILABLE") {
-        setError("Server is unavailable");
+        setError(t("addBeer.errors.serverUnavailable"));
       } else {
-        setError("Adding beer failed");
+        setError(t("addBeer.errors.addBeerFailed"));
       }
     } finally {
       setLoading(false);
