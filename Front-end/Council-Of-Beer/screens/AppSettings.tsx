@@ -17,6 +17,7 @@ export default function AppSettings() {
   const [postLikeNotifsEnabled, setPostLikeNotifsEnabled] = useState(true);
   const [newFollowerNotifsEnabled, setNewFollowerNotifsEnabled] =
     useState(true);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const { t } = useTranslation();
 
@@ -32,12 +33,26 @@ export default function AppSettings() {
 
         i18n.changeLanguage(saved.lanValue);
       }
+      setIsLoaded(true);
     };
     getSettings();
-  });
+  }, []);
+
+  useEffect(() => {
+    if (!notifEnabled) {
+      setCommentNotifsEnabled(false);
+      setPostLikeNotifsEnabled(false);
+      setNewFollowerNotifsEnabled(false);
+    }
+  }, [notifEnabled]);
+
+  useEffect(() => {
+    i18n.changeLanguage(lanValue);
+  }, [lanValue]);
 
   //Tallennetaan asetukset kun asetuksia muutetaan
   useEffect(() => {
+    if (!isLoaded) return;
     saveSettings({
       lanValue,
       notifEnabled,
@@ -71,7 +86,6 @@ export default function AppSettings() {
             value={lanValue}
             onChange={(item) => {
               setLanValue(item.value);
-              i18n.changeLanguage(item.value);
             }}
           />
         </View>
