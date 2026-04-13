@@ -22,7 +22,7 @@ namespace BeerLogic.Service
 
         public async Task<CreatePostResponse> CreatePostAsync(CreatePostRequest request)
         {
-            var uploadResult = await _cloudinaryHandlerService.UploadImageAsync(request.Image);
+            CloudinaryUploadResultDTO uploadResult = await _cloudinaryHandlerService.UploadImageAsync(request.Image);
 
             var postDto = new PostDTO
             {
@@ -31,7 +31,7 @@ namespace BeerLogic.Service
                 Description = request.Description
             };
 
-            var createdPost = await _imageHandlerRepo.CreatePostAsync(postDto, uploadResult);
+            CreatePostResponse createdPost = await _imageHandlerRepo.CreatePostAsync(postDto, uploadResult);
 
             return new CreatePostResponse
             {
