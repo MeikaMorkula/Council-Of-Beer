@@ -16,7 +16,7 @@ namespace BeerAPI.Controllers
         }
 
         [HttpGet("GetAllBeer")]
-        public List<BeerDTO> GetAllBeer()
+        public List<CreateBeerResponse> GetAllBeer()
         {
            return _beerService.GetAllBeer();
         }
@@ -28,15 +28,15 @@ namespace BeerAPI.Controllers
         }
 
         [HttpGet("GetInfoByBeerName")]
-        public BeerDTO GetInfoByBeerName(string beername)
+        public CreateBeerResponse GetInfoByBeerName(string beername)
         {
             return _beerService.GetInfoByBeerName(beername);
         }
 
         [HttpPost("AddBeer")]
-        public string AddBeer(BeerDTO BeerDTO)
+        public async Task<CreateBeerResponse> AddBeer([FromForm] CreateBeerRequest BeerDTO)
         {
-            return _beerService.AddBeer(BeerDTO);
+            return await _beerService.AddBeer(BeerDTO);
         }
     }
 }

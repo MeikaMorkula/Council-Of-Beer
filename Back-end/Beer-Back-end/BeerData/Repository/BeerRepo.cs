@@ -1,4 +1,5 @@
 ﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Interface;
 using Npgsql;
 
@@ -13,11 +14,11 @@ namespace BeerData.Repository
             _connectionString = connectionString;
         }
 
-        public List<BeerDTO> GetAllBeer()
+        public List<CreateBeerResponse> GetAllBeer()
         {
             try
             {
-                List<BeerDTO> beers = new List<BeerDTO>();
+                List<CreateBeerResponse> beers = new List<CreateBeerResponse>();
 
                 using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
@@ -40,9 +41,8 @@ namespace BeerData.Repository
 
                 while (reader.Read())
                 {
-                    beers.Add(new BeerDTO
+                    beers.Add(new CreateBeerResponse
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                         Brewery = reader.GetString(reader.GetOrdinal("brewery")),
@@ -99,7 +99,7 @@ namespace BeerData.Repository
             }
         }
 
-        public BeerDTO GetInfoByBeerName(string beername)
+        public CreateBeerResponse GetInfoByBeerName(string beername)
         {
             try
             {
@@ -126,9 +126,8 @@ namespace BeerData.Repository
 
                 if (reader.Read())
                 {
-                    return new BeerDTO
+                    return new CreateBeerResponse
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                         Brewery = reader.GetString(reader.GetOrdinal("brewery")),
@@ -154,7 +153,7 @@ namespace BeerData.Repository
             }
         }
 
-        public string AddBeer(BeerDTO beerDTO)
+        public CreateBeerResponse AddBeer(CreateBeerRequest beerDTO, CloudinaryUploadResultDTO uploadDTO)
         {
             try
             {
@@ -187,12 +186,22 @@ namespace BeerData.Repository
                 command.Parameters.AddWithValue("@brewery", beerDTO.Brewery);
                 command.Parameters.AddWithValue("@country", beerDTO.Country);
                 command.Parameters.AddWithValue("@barcode", (object?)beerDTO.Barcode ?? DBNull.Value);
-                command.Parameters.AddWithValue("@image_url", (object?)beerDTO.ImageUrl ?? DBNull.Value);
-                command.Parameters.AddWithValue("@image_public_id", (object?)beerDTO.ImagePublicId ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_url", (object?)uploadDTO.ImageUrl ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_public_id", (object?)uploadDTO.PublicId ?? DBNull.Value);
                 command.Parameters.AddWithValue("@labels", beerDTO.Labels?.ToArray() ?? Array.Empty<string>());
 
                 command.ExecuteNonQuery();
-                return "Ok";
+                return new CreateBeerResponse
+                {
+                    Name = beerDTO.Name,
+                    AlcPrecentage = beerDTO.AlcPrecentage,
+                    Brewery = beerDTO.Brewery,
+                    Country = beerDTO.Country,
+                    Labels = beerDTO.Labels,
+                    Barcode = beerDTO.Barcode,
+                    ImageUrl = uploadDTO.ImageUrl,
+                    ImagePublicId = uploadDTO.PublicId,
+                };
             }
             catch (Exception ex)
             {

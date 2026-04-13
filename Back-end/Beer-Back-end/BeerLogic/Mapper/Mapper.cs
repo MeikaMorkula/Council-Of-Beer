@@ -77,27 +77,36 @@ namespace BeerLogic.Mapper
         }
 
         // BeerMapper
-        public Beer BeerDTOToEntity(BeerDTO beerDTO)
+        public Beer BeerRequestToEntity (CreateBeerRequest beerDTO)
         {
             return new Beer()
             {
-                Id = beerDTO.Id,
                 Name = beerDTO.Name,
                 AlcPrecentage = beerDTO.AlcPrecentage,
                 Brewery = beerDTO.Brewery,
                 Labels = beerDTO.Labels,
                 Country = beerDTO.Country,
                 Barcode = beerDTO.Barcode,
-                ImageUrl = beerDTO.ImageUrl,
-                ImagePublicId = beerDTO.ImagePublicId
             };
         }
 
-        public BeerDTO BeerEntityToDTO(Beer beer)
+        public CreateBeerRequest BeerEntityToRequest(Beer beer)
         {
-            return new BeerDTO()
+            return new CreateBeerRequest
             {
-                Id = beer.Id,
+                Name = beer.Name,
+                AlcPrecentage = beer.AlcPrecentage,
+                Brewery = beer.Brewery,
+                Labels = beer.Labels,
+                Country = beer.Country,
+                Barcode = beer.Barcode,
+            };
+        }
+
+        public CreateBeerResponse BeerEntityToDTO(Beer beer)
+        {
+            return new CreateBeerResponse()
+            {
                 Name = beer.Name,
                 AlcPrecentage = beer.AlcPrecentage,
                 Brewery = beer.Brewery,

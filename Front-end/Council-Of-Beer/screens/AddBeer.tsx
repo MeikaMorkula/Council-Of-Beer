@@ -68,7 +68,7 @@ export default function AddBeer() {
       //make sure that the abv is a numbre
       const parsedABV = parseFloat(abv);
       if (isNaN(parsedABV)) {
-        throw new Error("invalid abv");
+        throw new Error(t("addBeer.errors.invalidAbv"));
       }
 
       const callContent = {
@@ -86,7 +86,7 @@ export default function AddBeer() {
       resetForm();
     } catch (err: any) {
       if (err.message === "SERVER_UNAVAILABLE") {
-        setError("Server is unavailable");
+        setError(t("addBeer.errors.serverUnavailable"));
       } else {
         console.log(err);
         setError("Adding beer failed");
