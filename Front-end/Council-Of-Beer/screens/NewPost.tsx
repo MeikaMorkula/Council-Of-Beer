@@ -77,8 +77,6 @@ export default function NewPost() {
             maxLength={1000} //tietokannassa on tuhannen merkin raja
           />
 
-          
-
           <View style={styles.reviewFooter}>
             <Text style={{ alignSelf: "flex-end", color: "#888" }}>
               {review.length}/1000
@@ -92,15 +90,15 @@ export default function NewPost() {
           </View>
         </View>
         <LabelSelector
-            options={tempLabels}
-            selected={labels}
-            onChange={setLabels}
-            label={t("addBeer.labels.title")}
-            buttonText={t("addBeer.labels.select")}
-            buttonTextWithCount={(count) =>
-              t("addBeer.labels.selectedCount", { count })
-            }
-          />
+          options={tempLabels}
+          selected={labels}
+          onChange={setLabels}
+          label={t("addBeer.labels.title")}
+          buttonText={t("addBeer.labels.select")}
+          buttonTextWithCount={(count) =>
+            t("addBeer.labels.selectedCount", { count })
+          }
+        />
 
         {!!error && <Text style={styles.error}>{error}</Text>}
 
