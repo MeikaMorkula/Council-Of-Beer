@@ -29,7 +29,11 @@ export default function AddBeer() {
   const [country, setCountry] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<{
+    uri: string;
+    name: string;
+    type: string;
+  } | null>(null);
   const [barcode, setBarcode] = useState<string>("");
   const [labels, setLabels] = useState<string[]>([]);
 
@@ -43,6 +47,7 @@ export default function AddBeer() {
     setCountry("");
     setBarcode("");
     setImage(null);
+    setLabels([]);
   };
 
   const handleSubmit = async () => {
@@ -55,7 +60,8 @@ export default function AddBeer() {
       if (!isHealthy) {
         throw new Error("SERVER_UNAVAILABLE");
       }
-      if (!beerName || !abv || brewery || !country || !image) {
+
+      if (!beerName || !abv || !brewery || !country || !image) {
         throw new Error("Missing required fields");
       }
 
@@ -66,13 +72,13 @@ export default function AddBeer() {
       }
 
       const callContent = {
-        name: beerName,
-        alcPrecentage: parsedABV,
-        brewery,
-        country,
-        labels,
-        barcode,
-        url: "https://www.youtube.com/watch?v=IEcObiev8z0", //placeholder until image handling works
+        Name: beerName,
+        AlcPrecentage: parsedABV,
+        Brewery: brewery,
+        Country: country,
+        Labels: labels,
+        Barcode: barcode,
+        Image: image,
       };
 
       await addBeer(callContent);
@@ -82,7 +88,8 @@ export default function AddBeer() {
       if (err.message === "SERVER_UNAVAILABLE") {
         setError(t("addBeer.errors.serverUnavailable"));
       } else {
-        setError(t("addBeer.errors.addBeerFailed"));
+        console.log(err);
+        setError("Adding beer failed");
       }
     } finally {
       setLoading(false);
