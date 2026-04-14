@@ -1,4 +1,5 @@
 ﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using Npgsql;
 using System.Data;
 using BeerLogic.Interface;
@@ -42,6 +43,52 @@ namespace BeerData.Repository
             }
         }
 
+        public async Task<bool> SaveRefreshToken(RefreshRequest refresher, DateTime expiry)
+        {
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            const string query = @"
+                UPDATE users
+                SET refreshtoken = @RefreshToken,
+                    refreshtoken_expiry = @Expiry
+                WHERE name = @name";
+
+            await using var command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@name", refresher.Name);
+            command.Parameters.AddWithValue("@RefreshToken", refresher.Token);
+            command.Parameters.AddWithValue("@Expiry", expiry);
+
+            int rowsAffected = await command.ExecuteNonQueryAsync();
+            return rowsAffected > 0;
+        }
+
+        public async Task<(string RefreshToken, DateTime Expiry)?> GetRefreshTokenData(string username)
+        {
+            await using var connection = new NpgsqlConnection(_connectionString);
+            await connection.OpenAsync();
+
+            const string query = @"
+                SELECT refreshtoken, refreshtoken_expiry
+                FROM users
+                WHERE name = @name";
+
+            await using var command = new NpgsqlCommand(query, connection);
+            command.Parameters.AddWithValue("@name", username);
+
+            await using var reader = await command.ExecuteReaderAsync();
+
+            if (await reader.ReadAsync())
+            {
+                var refreshToken = reader["refreshtoken"]?.ToString();
+                var expiry = reader.GetDateTime(reader.GetOrdinal("refreshtoken_expiry"));
+
+                return (refreshToken, expiry);
+            }
+
+            return null;
+        }
+
         public string LookupUserPassword(string userName)
         {
             try
@@ -81,8 +128,8 @@ namespace BeerData.Repository
 
                 string query = @"
                     UPDATE users
-                    SET username = 'new_username'
-                    WHERE username = 'old_username'";
+                    SET name = 'new_username'
+                    WHERE name = 'old_username'";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@new_username", newUser);
@@ -111,7 +158,7 @@ namespace BeerData.Repository
                 string query = @"
                     UPDATE users
                     SET password = 'new_password'
-                    WHERE username = 'username'";
+                    WHERE name = 'username'";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@new_password", newPass);
