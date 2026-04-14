@@ -2,6 +2,7 @@
 using BeerLogic.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel;
 
 namespace BeerAPI.Controllers
 {
@@ -16,6 +17,19 @@ namespace BeerAPI.Controllers
         {
             _userService = userService;
             _jwtService = jwtService;
+        }
+
+        [HttpPost("refresh")]
+        public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
+        {
+            var result = await _jwtService.RefreshLogin(request);
+
+            if (result == null)
+            {
+                return Unauthorized("Invalid or expired refresh token.");
+            }
+
+            return Ok(result);
         }
 
         [AllowAnonymous]
@@ -55,6 +69,20 @@ namespace BeerAPI.Controllers
                 return Unauthorized();
             }
 
+            return result;
+        }
+
+        [HttpPatch("Username")]
+        public async Task<string> ChangeUsername(string newUser, string oldUser)
+        {
+            string result = _userService.ChangeUsername(newUser, oldUser);
+            return result;
+        }
+
+        [HttpPatch("Password")]
+        public async Task<string> ChangePassword(string newPass, string username)
+        {
+            string result = _userService.ChangePassword(newPass, username);
             return result;
         }
     }
