@@ -8,7 +8,7 @@ namespace BeerLogic.Service
         private readonly IUserRepo _userRepo;
         public UserService(IUserRepo userRepo)
         {
-            userRepo = _userRepo;
+            _userRepo = userRepo;
         }
 
         public string ChangeUsername(string newUser, string oldUser)
@@ -17,15 +17,27 @@ namespace BeerLogic.Service
             return result;
         }
 
-        public string ChangePassword(string newPass, string username)
+        public string ChangePassword(string newPass, string oldPass, string username)
         {
-            if (JwtService.PasswordRules(newPass) == true)
+            string hasholdpass = _userRepo.LookupUserPassword(username);
+
+            if (string.IsNullOrWhiteSpace(hasholdpass))
             {
-                string hashPass = Bcrypt.HashPassword(newPass);
-                string result = _userRepo.ChangePassword(hashPass, username);
-                return result;
+                return "User not found";
             }
-            else return null;
+
+            if (!Bcrypt.VerifyPassword(oldPass, hasholdpass))
+            {
+                return "Old password is incorrect";
+            }
+
+            if (!JwtService.PasswordRules(newPass))
+            {
+                return "New password does not meet password rules";
+            }
+
+            string hashPass = Bcrypt.HashPassword(newPass);
+            return _userRepo.ChangePassword(hashPass, username);
         }
     }
 }
