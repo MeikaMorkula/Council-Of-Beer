@@ -39,5 +39,17 @@ namespace BeerLogic.Service
             string hashPass = Bcrypt.HashPassword(newPass);
             return _userRepo.ChangePassword(hashPass, username);
         }
+
+        public string DeleteAccount(string username, string password)
+        {
+            string hashPassword = Bcrypt.HashPassword(password);
+
+            if(!Bcrypt.VerifyPassword(password, hashPassword))
+            {
+                return "Password is incorrect";
+            }
+
+            return _userRepo.DeleteAccount(username);
+        }
     }
 }

@@ -179,5 +179,39 @@ namespace BeerData.Repository
                 throw new Exception($"ChangePassword failed: {ex.Message}", ex);
             }
         }
+
+        public string DeleteAccount(string username)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(username))
+                {
+                    return "Username is required";
+                }
+
+                using var connection = new NpgsqlConnection(_connectionString);
+                connection.Open();
+
+                const string query = @"
+                    DELETE FROM users
+                    WHERE name = @username";
+
+                using var command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@username", username);
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
+                {
+                    return "User not found";
+                }
+
+                return "Account deleted";
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"DeleteAccount failed: {ex.Message}", ex);
+            }
+        }
     }
 }
