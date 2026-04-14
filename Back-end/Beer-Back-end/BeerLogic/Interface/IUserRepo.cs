@@ -10,5 +10,6 @@ namespace BeerLogic.Interface
         string ChangePassword(string newPass, string userName);
         Task<bool> SaveRefreshToken(RefreshRequest refresher, DateTime expiry);
         Task<(string RefreshToken, DateTime Expiry)?> GetRefreshTokenData(string username);
+        string DeleteAccount(string username);
     }
 }

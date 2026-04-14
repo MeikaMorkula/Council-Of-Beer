@@ -91,5 +91,18 @@ namespace BeerAPI.Controllers
 
             return BadRequest(result);
         }
+
+        [HttpDelete("Terminate")]
+        public IActionResult DeleteAccount(string username, string password)
+        {
+            string result = _userService.DeleteAccount(username, password);
+
+            if (result == "Account deleted")
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
     }
 }
