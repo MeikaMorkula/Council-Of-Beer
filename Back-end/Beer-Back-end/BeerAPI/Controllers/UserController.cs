@@ -80,10 +80,16 @@ namespace BeerAPI.Controllers
         }
 
         [HttpPatch("Password")]
-        public async Task<string> ChangePassword(string newPass, string username)
+        public IActionResult ChangePassword(string newPass, string oldPass, string username)
         {
-            string result = _userService.ChangePassword(newPass, username);
-            return result;
+            string result = _userService.ChangePassword(newPass, oldPass, username);
+
+            if (result == "Password changed")
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
         }
     }
 }

@@ -128,23 +128,25 @@ namespace BeerData.Repository
 
                 string query = @"
                     UPDATE users
-                    SET name = 'new_username'
-                    WHERE name = 'old_username'";
+                    SET name = @new_username
+                    WHERE name = @old_username";
 
-                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@new_username", newUser);
                 command.Parameters.AddWithValue("@old_username", oldUser);
-                using var reader = command.ExecuteReader();
-                if (reader.Read())
+
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
                 {
-                    return "Username updated";
+                    return "User not found";
                 }
 
-                throw new Exception("while retrieving information");
+                return "Username updated";
             }
             catch (Exception ex)
             {
-                throw new Exception("Error", ex);
+                throw new Exception($"ChangeUsername failed: {ex.Message}", ex);
             }
         }
 
@@ -157,23 +159,24 @@ namespace BeerData.Repository
 
                 string query = @"
                     UPDATE users
-                    SET password = 'new_password'
-                    WHERE name = 'username'";
+                    SET password_hash = @new_password
+                    WHERE name = @username";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@new_password", newPass);
                 command.Parameters.AddWithValue("@username", userName);
-                using var reader = command.ExecuteReader();
-                if (reader.Read())
+                int rowsAffected = command.ExecuteNonQuery();
+
+                if (rowsAffected == 0)
                 {
-                    return "Password updated";
+                    return "User not found";
                 }
 
-                throw new Exception("while retrieving information");
+                return "Password changed";
             }
             catch (Exception ex)
             {
-                throw new Exception("Error", ex);
+                throw new Exception($"ChangePassword failed: {ex.Message}", ex);
             }
         }
     }
