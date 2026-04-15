@@ -66,12 +66,12 @@ builder.Services.AddAuthorization();
 // Repos / services
 builder.Services.AddScoped<IUserRepo>(_ => new UserRepo(connectionString));
 builder.Services.AddScoped<IBeerRepo>(_ => new BeerRepo(connectionString));
-//builder.Services.AddScoped<ISocialRepo>(_ => new SocialRepo(connectionString));
+builder.Services.AddScoped<ISocialRepo>(_ => new SocialRepo(connectionString));
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JwtService>();
-//builder.Services.AddScoped<SocialService>();
+builder.Services.AddScoped<SocialService>();
 builder.Services.AddScoped<IPasswordHasher, Bcrypt>();
 
 builder.Services.AddHealthChecks();
