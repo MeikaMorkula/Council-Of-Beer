@@ -2,7 +2,6 @@
 using BeerLogic.Entities;
 using BeerLogic.Interface;
 using Npgsql;
-using System.Data;
 
 namespace BeerData.Repository
 {
@@ -15,50 +14,49 @@ namespace BeerData.Repository
             _connectionString = connectionString;
         }
 
-        public List<BeerDTO> GetAllBeer()
+        public List<CreateBeerResponse> GetAllBeer()
         {
             try
             {
-                List<BeerDTO> beers = new List<BeerDTO>();
+                List<CreateBeerResponse> beers = new List<CreateBeerResponse>();
 
                 using var connection = new NpgsqlConnection(_connectionString);
                 connection.Open();
 
                 string query = @"
-                SELECT
-                    b.id,
-                    b.name,
-                    b.alcohol_percentage,
-                    b.brewery,
-                    b.country,
-                    b.barcode,
-                    b.url,
-                    COALESCE(
-                        array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
-                        ARRAY[]::text[]
-                    ) AS labels
-                FROM beer b
-                LEFT JOIN beer_label bl ON bl.beer_id = b.id
-                LEFT JOIN label l ON l.id = bl.label_id
-                GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.url
-                ORDER BY b.id;
-            ";
+                    SELECT b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.image_url, b.image_public_id,
+                        COALESCE(
+                            array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
+                            ARRAY[]::text[]
+                        ) AS labels
+                    FROM beer b
+                    LEFT JOIN beer_label bl ON bl.beer_id = b.id
+                    LEFT JOIN label l ON l.id = bl.label_id
+                    GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.image_url, b.image_public_id
+                    ORDER BY b.id;
+                ";
 
-                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var command = new NpgsqlCommand(query, connection);
                 using var reader = command.ExecuteReader();
 
                 while (reader.Read())
                 {
-                    beers.Add(new BeerDTO
+                    beers.Add(new CreateBeerResponse
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                         Brewery = reader.GetString(reader.GetOrdinal("brewery")),
                         Country = reader.GetString(reader.GetOrdinal("country")),
-                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList(),
-                        Barcode = reader.GetString(reader.GetOrdinal("barcode")),
-                        Url = reader.GetString(reader.GetOrdinal("url")),
+                        Barcode = reader.IsDBNull(reader.GetOrdinal("barcode"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("barcode")),
+                        ImageUrl = reader.IsDBNull(reader.GetOrdinal("image_url"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("image_url")),
+                        ImagePublicId = reader.IsDBNull(reader.GetOrdinal("image_public_id"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("image_public_id")),
+                        Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
                     });
                 }
 
@@ -80,12 +78,12 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-                SELECT name
-                FROM beer
-                ORDER BY name;
+                    SELECT name
+                    FROM beer
+                    ORDER BY name;
                 ";
 
-                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var command = new NpgsqlCommand(query, connection);
                 using var reader = command.ExecuteReader();
 
                 while (reader.Read())
@@ -101,7 +99,7 @@ namespace BeerData.Repository
             }
         }
 
-        public BeerDTO GetInfoByBeerName(string beername)
+        public CreateBeerResponse GetInfoByBeerName(string beername)
         {
             try
             {
@@ -109,43 +107,40 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-            SELECT
-                b.id,
-                b.name,
-                b.alcohol_percentage,
-                b.brewery,
-                b.country,
-                b.barcode,
-                b.url,
-                COALESCE(
-                    array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
-                    ARRAY[]::text[]
-                ) AS labels
-            FROM beer b
-            LEFT JOIN beer_label bl ON bl.beer_id = b.id
-            LEFT JOIN label l ON l.id = bl.label_id
-            WHERE LOWER(b.name) = LOWER(@Name)
-            GROUP BY 
-                b.id, b.name, b.alcohol_percentage, 
-                b.brewery, b.country, b.barcode, b.url;
-             ";
+                    SELECT b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.image_url, b.image_public_id,
+                        COALESCE(
+                            array_agg(l.name) FILTER (WHERE l.name IS NOT NULL),
+                            ARRAY[]::text[]
+                        ) AS labels
+                    FROM beer b
+                    LEFT JOIN beer_label bl ON bl.beer_id = b.id
+                    LEFT JOIN label l ON l.id = bl.label_id
+                    WHERE LOWER(b.name) = LOWER(@Name)
+                    GROUP BY b.id, b.name, b.alcohol_percentage, b.brewery, b.country, b.barcode, b.image_url, b.image_public_id;
+                ";
 
-                using NpgsqlCommand command = new NpgsqlCommand(query, connection);
+                using var command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Name", beername);
 
                 using var reader = command.ExecuteReader();
 
                 if (reader.Read())
                 {
-                    return new BeerDTO
+                    return new CreateBeerResponse
                     {
-                        Id = reader.GetInt32(reader.GetOrdinal("id")),
                         Name = reader.GetString(reader.GetOrdinal("name")),
                         AlcPrecentage = reader.GetDouble(reader.GetOrdinal("alcohol_percentage")),
                         Brewery = reader.GetString(reader.GetOrdinal("brewery")),
                         Country = reader.GetString(reader.GetOrdinal("country")),
-                        Barcode = reader.GetString(reader.GetOrdinal("barcode")),
-                        Url = reader.GetString(reader.GetOrdinal("url")),
+                        Barcode = reader.IsDBNull(reader.GetOrdinal("barcode"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("barcode")),
+                        ImageUrl = reader.IsDBNull(reader.GetOrdinal("image_url"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("image_url")),
+                        ImagePublicId = reader.IsDBNull(reader.GetOrdinal("image_public_id"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("image_public_id")),
                         Labels = reader.GetFieldValue<string[]>(reader.GetOrdinal("labels")).ToList()
                     };
                 }
@@ -157,7 +152,8 @@ namespace BeerData.Repository
                 throw new Exception("GetInfoByBeerName failed", ex);
             }
         }
-        public string AddBeer(BeerDTO BeerDTO)
+
+        public CreateBeerResponse AddBeer(CreateBeerRequest beerDTO, CloudinaryUploadResultDTO uploadDTO)
         {
             try
             {
@@ -165,38 +161,47 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string sql = @"
-                WITH new_beer AS (
-                  INSERT INTO beer (name, alcohol_percentage, brewery, country, barcode, url)
-                  VALUES (@name, @alcohol_percentage, @brewery, @country, @country, @url)
-                  RETURNING id
-                ),
-                ins_labels AS (
-                  INSERT INTO label (name)
-                  SELECT DISTINCT unnest(@labels::text[])
-                  ON CONFLICT (name) DO NOTHING
-                  RETURNING id, name
-                ),
-                all_labels AS (
-                  SELECT id, name FROM ins_labels
-                  UNION
-                  SELECT id, name FROM label WHERE name = ANY(@labels::text[])
-                )
-                INSERT INTO beer_label (beer_id, label_id)
-                SELECT nb.id, al.id
-                FROM new_beer nb
-                JOIN all_labels al ON TRUE
+                    WITH new_beer AS (
+                        INSERT INTO beer (name, alcohol_percentage, brewery, country, barcode, image_url, image_public_id)
+                        VALUES (@name, @alcohol_percentage, @brewery, @country, @barcode, @image_url, @image_public_id)
+                        RETURNING id ),
+                    ins_labels AS (
+                        INSERT INTO label (name)
+                        SELECT DISTINCT unnest(@labels::text[])
+                        ON CONFLICT (name) DO NOTHING
+                        RETURNING id, name ),
+                    all_labels AS (
+                        SELECT id, name FROM ins_labels
+                        UNION
+                        SELECT id, name FROM label WHERE name = ANY(@labels::text[]))
+                    INSERT INTO beer_label (beer_id, label_id)
+                    SELECT nb.id, al.id
+                    FROM new_beer nb
+                    JOIN all_labels al ON TRUE;
                 ";
 
-                using NpgsqlCommand command = new NpgsqlCommand(sql, connection);
-                command.Parameters.AddWithValue("@name", BeerDTO.Name);
-                command.Parameters.AddWithValue("@alcohol_percentage", BeerDTO.AlcPrecentage);
-                command.Parameters.AddWithValue("@brewery", BeerDTO.Brewery);
-                command.Parameters.AddWithValue("@country", BeerDTO.Country);
-                command.Parameters.AddWithValue("@labels", BeerDTO.Labels?.ToArray() ?? Array.Empty<string>());
-                command.Parameters.AddWithValue("barcode", BeerDTO.Barcode);
-                command.Parameters.AddWithValue("url", BeerDTO.Url);
+                using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@name", beerDTO.Name);
+                command.Parameters.AddWithValue("@alcohol_percentage", beerDTO.AlcPrecentage);
+                command.Parameters.AddWithValue("@brewery", beerDTO.Brewery);
+                command.Parameters.AddWithValue("@country", beerDTO.Country);
+                command.Parameters.AddWithValue("@barcode", (object?)beerDTO.Barcode ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_url", (object?)uploadDTO.ImageUrl ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_public_id", (object?)uploadDTO.PublicId ?? DBNull.Value);
+                command.Parameters.AddWithValue("@labels", beerDTO.Labels?.ToArray() ?? Array.Empty<string>());
+
                 command.ExecuteNonQuery();
-                return "Ok";
+                return new CreateBeerResponse
+                {
+                    Name = beerDTO.Name,
+                    AlcPrecentage = beerDTO.AlcPrecentage,
+                    Brewery = beerDTO.Brewery,
+                    Country = beerDTO.Country,
+                    Labels = beerDTO.Labels,
+                    Barcode = beerDTO.Barcode,
+                    ImageUrl = uploadDTO.ImageUrl,
+                    ImagePublicId = uploadDTO.PublicId,
+                };
             }
             catch (Exception ex)
             {

@@ -33,8 +33,7 @@ namespace BeerLogic.Mapper
             {
                 Id = postDTO.Id,
                 ImgUrl = postDTO.ImgUrl,
-                Reviews = postDTO.Reviews,
-                Location = postDTO.Location,
+                Review = postDTO.Review,
                 Bar = postDTO.Bar
             };
         }
@@ -45,8 +44,7 @@ namespace BeerLogic.Mapper
             {
                 Id = post.Id,
                 ImgUrl = post.ImgUrl,
-                Reviews = post.Reviews,
-                Location = post.Location,
+                Review = post.Review,
                 Bar = post.Bar
             };
         }
@@ -79,33 +77,44 @@ namespace BeerLogic.Mapper
         }
 
         // BeerMapper
-        public Beer BeerDTOToEntity(BeerDTO beerDTO)
+        public Beer BeerRequestToEntity (CreateBeerRequest beerDTO)
         {
             return new Beer()
             {
-                Id = beerDTO.Id,
                 Name = beerDTO.Name,
                 AlcPrecentage = beerDTO.AlcPrecentage,
                 Brewery = beerDTO.Brewery,
                 Labels = beerDTO.Labels,
                 Country = beerDTO.Country,
                 Barcode = beerDTO.Barcode,
-                Url = beerDTO.Url,
             };
         }
 
-        public BeerDTO BeerEntityToDTO(Beer beer)
+        public CreateBeerRequest BeerEntityToRequest(Beer beer)
         {
-            return new BeerDTO()
+            return new CreateBeerRequest
             {
-                Id = beer.Id,
                 Name = beer.Name,
                 AlcPrecentage = beer.AlcPrecentage,
                 Brewery = beer.Brewery,
                 Labels = beer.Labels,
                 Country = beer.Country,
                 Barcode = beer.Barcode,
-                Url = beer.Url,
+            };
+        }
+
+        public CreateBeerResponse BeerEntityToDTO(Beer beer)
+        {
+            return new CreateBeerResponse()
+            {
+                Name = beer.Name,
+                AlcPrecentage = beer.AlcPrecentage,
+                Brewery = beer.Brewery,
+                Labels = beer.Labels,
+                Country = beer.Country,
+                Barcode = beer.Barcode,
+                ImageUrl = beer.ImageUrl,
+                ImagePublicId = beer.ImagePublicId
             };
         }
     }

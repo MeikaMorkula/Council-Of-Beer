@@ -1,133 +1,171 @@
-import React, {useState} from 'react'
-import { StyleSheet, Text, View, TextInput, Pressable, ActivityIndicator } from 'react-native'
+import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
+import { useTranslation } from "react-i18next";
+import { login } from "../services/LoginService";
 
 export default function Login() {
+  const navigation = useNavigation();
 
-    const [username, setUsername] = useState("")
-    const [password, setPassword] = useState("")
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState("")
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-    const handleSubmit = async () => {
-        setError("")
-        setLoading(true)
+  const { t } = useTranslation();
 
-        try {
-        } catch (err) {
-            setError('Log in failed')
-        } finally {
-            setLoading(false)
-        }
+  const handleSubmit = async () => {
+    setError("");
+    setLoading(true);
+
+    try {
+      await login({
+        username: username.trim(),
+        password,
+      });
+
+      navigation.navigate("HomeFeed" as never);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(t("login.errors.loginFailed"));
+      }
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return(
-        <View style={styles.container}>
-            <View style={styles.loginContent}>
-                <Text style={styles.title}>Log in</Text>
+  return (
+    <View style={styles.container}>
+      <View style={styles.loginContent}>
+        <Text style={styles.title}>{t("login.title")}</Text>
 
-                <View style={styles.field}>
-                    <Text style={styles.label}>Username</Text>
-                    <TextInput
-                        placeholder="Username"
-                        placeholderTextColor={'#EDE9C7'}
-                        value={username}
-                        onChangeText={setUsername}
-                        style={styles.input}
-                        autoCapitalize="none"
-                    />
-                </View>
-
-                <View style={styles.field}>
-                    <Text style={styles.label}>Password</Text>
-                    <TextInput
-                        placeholder="Password"
-                        placeholderTextColor={'#EDE9C7'}
-                        value={password}
-                        onChangeText={setPassword}
-                        style={styles.input}
-                        secureTextEntry
-                    />
-                </View>
-
-                {!!error && <Text style={styles.error}>{error}</Text>}
-
-                <Pressable
-                    style={[styles.button, loading && styles.buttonDisabled]}
-                    onPress={handleSubmit}
-                    disabled={loading}
-                >
-                    {loading ? (
-                        <ActivityIndicator color="#fff" />
-                    ) : (
-                        <Text style={styles.buttonText}>Log In</Text>
-                    )}
-                </Pressable>
-            </View>
+        <View style={styles.field}>
+          <Text style={styles.label}>{t("login.fields.username")}</Text>
+          <TextInput
+            placeholder={t("login.fields.placeholders.username")}
+            placeholderTextColor={"#dfdbb970"}
+            value={username}
+            onChangeText={setUsername}
+            style={styles.input}
+            autoCapitalize="none"
+          />
         </View>
-    )
+
+        <View style={styles.field}>
+          <Text style={styles.label}>{t("login.fields.password")}</Text>
+          <TextInput
+            placeholder={t("login.fields.placeholders.password")}
+            placeholderTextColor={"#dfdbb970"}
+            value={password}
+            onChangeText={setPassword}
+            style={styles.input}
+            secureTextEntry
+          />
+        </View>
+
+        {!!error && <Text style={styles.error}>{error}</Text>}
+
+        <Pressable
+          style={[styles.button, loading && styles.buttonDisabled]}
+          onPress={handleSubmit}
+          disabled={loading}
+        >
+          {loading ? (
+            <ActivityIndicator color="#fff" />
+          ) : (
+            <Text style={styles.buttonText}>{t("login.title")}</Text>
+          )}
+        </Pressable>
+
+        <Pressable
+          onPress={() => navigation.navigate("SignUp" as never)}
+          style={styles.signupLink}
+        >
+          <Text style={styles.signupLinkText}>{t("login.signuplink")}</Text>
+        </Pressable>
+      </View>
+    </View>
+  );
 }
 
-
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#1D190E',
-        alignItems: 'center',
-        padding: 16,
-    },
-    loginContent: {
-        width: '100%',
-        maxWidth: 360,
-        borderRadius: 12,
-        padding: 16,
-        backgroundColor: '#1D190E',
-        alignItems: 'center',
-        paddingTop: 125
-    },
-    title: {
-        fontSize: 40,
-        fontWeight: '700',
-        marginBottom: 75,
-        textAlign: 'center',
-        color: '#EDE9C7',
-        fontFamily: "GermaniaOne400_Regular",
-    },
-    field: {
-        marginBottom: 12,
-    },
-    label: {
-        marginBottom: 6,
-        fontSize: 14,
-        fontWeight: '600',
-        color: '#EDE9C7'
-    },
-    input: {
-        borderWidth: 1,
-        borderColor: '#EDE9C7',
-        borderRadius: 8,
-        paddingHorizontal: 12,
-        paddingVertical: 10,
-        backgroundColor: '#28200C',
-        width: 300
-    },
-    button: {
-        marginTop: 8,
-        backgroundColor: '#E39914',
-        borderRadius: 8,
-        paddingVertical: 12,
-        alignItems: 'center',
-        width: 72
-    },
-    buttonDisabled: {
-        opacity: 0.7,
-    },
-    buttonText: {
-        color: '#EDE9C7',
-        fontWeight: '700',
-    },
-    error: {
-        color: '#d00',
-        marginTop: 4,
-        marginBottom: 6,
+  container: {
+    flex: 1,
+    backgroundColor: "#1D190E",
+    alignItems: "center",
+    padding: 16,
   },
-})
+  loginContent: {
+    width: "100%",
+    maxWidth: 360,
+    borderRadius: 12,
+    padding: 16,
+    backgroundColor: "#1D190E",
+    alignItems: "center",
+    paddingTop: 125,
+  },
+  title: {
+    fontSize: 40,
+    fontWeight: "700",
+    marginBottom: 75,
+    textAlign: "center",
+    color: "#EDE9C7",
+    fontFamily: "GermaniaOne400_Regular",
+  },
+  field: {
+    marginBottom: 12,
+  },
+  label: {
+    marginBottom: 6,
+    fontSize: 14,
+    fontWeight: "600",
+    color: "#EDE9C7",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#EDE9C7",
+    borderRadius: 8,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    backgroundColor: "#28200C",
+    color: "#EDE9C7",
+    width: 300,
+  },
+  button: {
+    marginTop: 8,
+    backgroundColor: "#E39914",
+    borderRadius: 8,
+    paddingVertical: 12,
+    alignItems: "center",
+    width: 72,
+  },
+  buttonDisabled: {
+    opacity: 0.7,
+  },
+  buttonText: {
+    color: "#EDE9C7",
+    fontWeight: "700",
+  },
+  signupLink: {
+    marginTop: 16,
+  },
+  signupLinkText: {
+    color: "#EFC06D",
+    fontWeight: "600",
+    textAlign: "center",
+  },
+  error: {
+    color: "#d00",
+    marginTop: 4,
+    marginBottom: 6,
+  },
+});

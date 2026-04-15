@@ -3,13 +3,17 @@ import React from "react";
 import { useState } from "react";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { useTranslation } from "react-i18next";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 export default function BarcodeScanner() {
   const [barcode, setBarcode] = useState<string>("");
   const [permission, requestPermission] = useCameraPermissions();
   const [loading, setLoading] = useState(false);
   const { t } = useTranslation();
+  const navigation = useNavigation();
+  const route = useRoute();
+  const onScan = (route.params as any)?.onScan; //mankeli
+
 
   if (!permission) {
     return <View></View>;
@@ -32,16 +36,9 @@ export default function BarcodeScanner() {
   const handleBarcode = async (data: string) => {
     setBarcode(data);
 
-    setLoading(true);
-    try{
-        //here we should do an api call to check if the beer exists
-        //will be something like const res =await fetch(`${apiaddress}/${data}`)
-        //then check if 404 or 200
-
-    }catch(err){console.log(err)}
-    setLoading(false);
-  }
-
+    onScan?.(data);
+    navigation.goBack();
+  };
   return (
     <View style={styles.container}>
       <CameraView
@@ -51,7 +48,9 @@ export default function BarcodeScanner() {
           barcodeTypes: ["ean13", "ean8"],
         }}
         //disable scanning when barcode found
-        onBarcodeScanned={barcode ? undefined : (res) => handleBarcode(res.data)}
+        onBarcodeScanned={
+          barcode ? undefined : (res) => handleBarcode(res.data)
+        }
       />
       <View style={styles.overlay}>
         <Text style={styles.text}>{barcode}</Text>

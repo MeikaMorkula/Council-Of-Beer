@@ -1,62 +1,113 @@
-import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import AppSettings from './AppSettings';
-import UserSettings from './UserSettings';
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import AppSettings from "./AppSettings";
+import UserSettings from "./UserSettings";
+import UserStatistics from "./UserStatistics";
+import { useTranslation } from "react-i18next";
 
 const Stack = createNativeStackNavigator();
 
 function SettingsStack() {
-  return(
-    <Stack.Navigator initialRouteName='MainSettingsScreen' screenOptions={{ headerShown: false }}>
-      <Stack.Screen name='MainSettingsScreen' component={MainSettingsScreen}/>
-      <Stack.Screen name='UserSettingsScreen' component={UserSettings}/>
-      <Stack.Screen name='AppSettingsScreen' component={AppSettings}/>
+  return (
+    <Stack.Navigator
+      initialRouteName="MainSettingsScreen"
+      screenOptions={{ headerShown: false }}
+    >
+      <Stack.Screen name="MainSettingsScreen" component={MainSettingsScreen} />
+      <Stack.Screen name="UserSettingsScreen" component={UserSettings} />
+      <Stack.Screen name="AppSettingsScreen" component={AppSettings} />
+      <Stack.Screen name="UserStatistics" component={UserStatistics} />
     </Stack.Navigator>
   );
 }
 
-function MainSettingsScreen(){
+function MainSettingsScreen() {
   const navigation = useNavigation();
-  return(
-        <View style={styles.container}>
-            <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('UserSettingsScreen' as never)}>
-                <Text style={styles.settingsText}>User Settings</Text>
-                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.settingsNav} onPress={() => navigation.navigate('AppSettingsScreen' as never)}>
-                <Text style={styles.settingsText}>App Settings</Text>
-                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.settingsNav}>
-                <Text style={styles.settingsText}>Log Out</Text>
-                <Ionicons name='chevron-forward' size={32} color='#EDE9C7' alignSelf='flex-end' marginTop='-27'/>
-            </TouchableOpacity>
-        </View>
-    );
+  const { t } = useTranslation();
+
+  return (
+    <View style={styles.container}>
+      <TouchableOpacity
+        style={styles.settingsNav}
+        onPress={() => navigation.navigate("UserStatistics" as never)}
+      >
+        <Text style={styles.settingsText}>
+          {t("mainsettings.titles.userstatistics")}
+        </Text>
+        <Ionicons
+          name="chevron-forward"
+          size={32}
+          color="#EDE9C7"
+          alignSelf="flex-end"
+          marginTop="-27"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.settingsNav}
+        onPress={() => navigation.navigate("UserSettingsScreen" as never)}
+      >
+        <Text style={styles.settingsText}>
+          {t("mainsettings.titles.usersettings")}
+        </Text>
+        <Ionicons
+          name="chevron-forward"
+          size={32}
+          color="#EDE9C7"
+          alignSelf="flex-end"
+          marginTop="-27"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.settingsNav}
+        onPress={() => navigation.navigate("AppSettingsScreen" as never)}
+      >
+        <Text style={styles.settingsText}>
+          {t("mainsettings.titles.appsettings")}
+        </Text>
+        <Ionicons
+          name="chevron-forward"
+          size={32}
+          color="#EDE9C7"
+          alignSelf="flex-end"
+          marginTop="-27"
+        />
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.settingsNav}>
+        <Text style={styles.settingsText}>
+          {t("mainsettings.titles.logout")}
+        </Text>
+        <Ionicons
+          name="chevron-forward"
+          size={32}
+          color="#EDE9C7"
+          alignSelf="flex-end"
+          marginTop="-27"
+        />
+      </TouchableOpacity>
+    </View>
+  );
 }
 
-export default function MainSettings(){
-    return(
-        <SettingsStack/>
-    );
+export default function MainSettings() {
+  return <SettingsStack />;
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1D190E',
-    alignItems: 'center',
+    backgroundColor: "#1D190E",
+    alignItems: "center",
   },
   settingsNav: {
-    width: '100%',
-    backgroundColor: '#28200C',
-    padding: 20
+    width: "100%",
+    backgroundColor: "#28200C",
+    padding: 20,
   },
   settingsText: {
-    color: '#EDE9C7',
-    fontSize: 16
-  }
+    color: "#EDE9C7",
+    fontSize: 16,
+  },
 });

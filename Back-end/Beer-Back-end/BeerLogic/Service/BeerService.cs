@@ -8,13 +8,15 @@ namespace BeerLogic.Service
     {
         private readonly IBeerRepo _repo;
         private readonly Mapper.Mapper _map;
+        private readonly CloudinaryHandlerService _cloudinaryHandlerService;
 
-        public BeerService(Mapper.Mapper map, IBeerRepo repo)
+        public BeerService(Mapper.Mapper map, IBeerRepo repo, CloudinaryHandlerService cloudinaryHandler)
         {
             _repo = repo;
             _map = map;
+            _cloudinaryHandlerService = cloudinaryHandler;
         }
-        public List<BeerDTO> GetAllBeer()
+        public List<CreateBeerResponse> GetAllBeer()
         {
             return _repo.GetAllBeer();
             
@@ -26,15 +28,17 @@ namespace BeerLogic.Service
 
         }
 
-        public BeerDTO GetInfoByBeerName(string beername)
+        public CreateBeerResponse GetInfoByBeerName(string beername)
         {
             return _repo.GetInfoByBeerName(beername);
         }
 
-        public string AddBeer(BeerDTO beer)
+        public async Task<CreateBeerResponse> AddBeer(CreateBeerRequest beer)
         {
-            Beer EBeer = _map.BeerDTOToEntity(beer);
-            
+            Beer EBeer = _map.BeerRequestToEntity(beer);
+            CloudinaryUploadResultDTO uploadResultDTO = await _cloudinaryHandlerService.UploadImageAsync(beer.Image);
+
+
             if (EBeer == null)
             {
                 throw new Exception("Beer cant be empty");
@@ -57,8 +61,9 @@ namespace BeerLogic.Service
             }
             else
             {
-                beer = _map.BeerEntityToDTO(EBeer);
-                return _repo.AddBeer(beer);
+                beer = _map.BeerEntityToRequest(EBeer);
+                return _repo.AddBeer(beer,uploadResultDTO);
+
             }
         }
     }
