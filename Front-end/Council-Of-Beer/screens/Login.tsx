@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useTranslation } from "react-i18next";
+import { login } from "../services/LoginService";
 
 export default function Login() {
   const navigation = useNavigation();
@@ -25,8 +26,18 @@ export default function Login() {
     setLoading(true);
 
     try {
+      await login({
+        username: username.trim(),
+        password,
+      });
+
+      navigation.navigate("HomeFeed" as never);
     } catch (err) {
-      setError(t("login.errors.loginFailed"));
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(t("login.errors.loginFailed"));
+      }
     } finally {
       setLoading(false);
     }

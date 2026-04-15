@@ -1,4 +1,3 @@
-import Checkbox from "expo-checkbox";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
@@ -10,16 +9,65 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { useTranslation } from "react-i18next";
+import { signup } from "../services/SignupService";
+
+const formatBirthdayInput = (value: string, previousValue: string) => {
+  const digits = value.replace(/\D/g, "").slice(0, 8);
+  const isDeleting = value.length < previousValue.length;
+
+  if (digits.length < 2) {
+    return digits;
+  }
+
+  if (digits.length === 2) {
+    return isDeleting ? digits : `${digits}-`;
+  }
+
+  if (digits.length < 4) {
+    return `${digits.slice(0, 2)}-${digits.slice(2)}`;
+  }
+
+  if (digits.length === 4) {
+    return isDeleting
+      ? `${digits.slice(0, 2)}-${digits.slice(2)}`
+      : `${digits.slice(0, 2)}-${digits.slice(2)}-`;
+  }
+
+  return `${digits.slice(0, 2)}-${digits.slice(2, 4)}-${digits.slice(4)}`;
+};
+
+const isValidDateInput = (value: string) => {
+  if (!/^\d{2}-\d{2}-\d{4}$/.test(value)) {
+    return false;
+  }
+
+  const [dayText, monthText, yearText] = value.split("-");
+  const day = Number(dayText);
+  const month = Number(monthText);
+  const year = Number(yearText);
+
+  const parsedDate = new Date(Date.UTC(year, month - 1, day));
+
+  return (
+    parsedDate.getUTCFullYear() === year &&
+    parsedDate.getUTCMonth() === month - 1 &&
+    parsedDate.getUTCDate() === day
+  );
+};
+
+const toApiBirthday = (value: string) => {
+  const [day, month, year] = value.split("-");
+  return `${year}-${month}-${day}`;
+};
 
 export default function SignUp() {
   const navigation = useNavigation();
 
   const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [birthday, setBirthday] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [TSIsChecked, setTSIsChecked] = useState(false);
 
   const { t } = useTranslation();
 
@@ -28,8 +76,24 @@ export default function SignUp() {
     setLoading(true);
 
     try {
+      if (!isValidDateInput(birthday.trim())) {
+        setError(t("signup.errors.invalidBirthday"));
+        return;
+      }
+
+      await signup({
+        username: username.trim(),
+        password,
+        birthday: toApiBirthday(birthday.trim()),
+      });
+
+      navigation.navigate("HomeFeed" as never);
     } catch (err) {
-      setError(t("signup.errors.signupFailed"));
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(t("signup.errors.signupFailed"));
+      }
     } finally {
       setLoading(false);
     }
@@ -39,19 +103,6 @@ export default function SignUp() {
     <View style={styles.container}>
       <View style={styles.loginContent}>
         <Text style={styles.title}>{t("signup.title")}</Text>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("signup.fields.email")}</Text>
-          <TextInput
-            placeholder="example@example.com"
-            placeholderTextColor={"#dfdbb970"}
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="email-address"
-          />
-        </View>
 
         <View style={styles.field}>
           <Text style={styles.label}>{t("signup.fields.username")}</Text>
@@ -74,6 +125,24 @@ export default function SignUp() {
             onChangeText={setPassword}
             style={styles.input}
             secureTextEntry
+          />
+        </View>
+
+        <View style={styles.field}>
+          <Text style={styles.label}>{t("signup.fields.birthday")}</Text>
+          <TextInput
+            placeholder={t("signup.fields.placeholders.birthday")}
+            placeholderTextColor={"#dfdbb970"}
+            value={birthday}
+            onChangeText={(value) =>
+              setBirthday((previousValue) =>
+                formatBirthdayInput(value, previousValue)
+              )
+            }
+            style={styles.input}
+            autoCapitalize="none"
+            keyboardType="number-pad"
+            maxLength={10}
           />
         </View>
 
