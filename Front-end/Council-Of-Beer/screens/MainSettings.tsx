@@ -8,6 +8,10 @@ import UserSettings from "./UserSettings";
 import UserStatistics from "./UserStatistics";
 import { useTranslation } from "react-i18next";
 
+import { DeleteTokens } from "../utils/SecureStorage";
+import { deleteUserName } from "../utils/AsyncStorage";
+import Login from "./Login";
+
 const Stack = createNativeStackNavigator();
 
 function SettingsStack() {
@@ -20,6 +24,7 @@ function SettingsStack() {
       <Stack.Screen name="UserSettingsScreen" component={UserSettings} />
       <Stack.Screen name="AppSettingsScreen" component={AppSettings} />
       <Stack.Screen name="UserStatistics" component={UserStatistics} />
+      <Stack.Screen name="Login" component={Login}></Stack.Screen>
     </Stack.Navigator>
   );
 }
@@ -27,6 +32,17 @@ function SettingsStack() {
 function MainSettingsScreen() {
   const navigation = useNavigation();
   const { t } = useTranslation();
+
+  const LogOut = async () => {
+    try {
+      await deleteUserName();
+      await DeleteTokens();
+
+      navigation.navigate("Login" as never);
+    } catch (e) {
+      console.error("Error during logout", e);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -75,7 +91,7 @@ function MainSettingsScreen() {
           marginTop="-27"
         />
       </TouchableOpacity>
-      <TouchableOpacity style={styles.settingsNav}>
+      <TouchableOpacity style={styles.settingsNav} onPress={LogOut}>
         <Text style={styles.settingsText}>
           {t("mainsettings.titles.logout")}
         </Text>
