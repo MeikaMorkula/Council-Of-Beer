@@ -40,10 +40,58 @@ namespace BeerAPI.Controllers
             var requests = _socialService.GetFollowRequests(username);
             return Ok(requests);
         }
-        //Unfollow
-        //AcceptFollow
-        //DeclineFollow
-        //GetAllFollowers
-        //GetAllFollowing
+
+        [HttpDelete("Unfollow")]
+        public IActionResult UnfollowUser(string username, string followingUsername)
+        {
+            string result = _socialService.UnfollowUser(username, followingUsername);
+
+            if (result == "Unfollowed successfully")
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpPatch("AcceptFollowRequest")]
+        public IActionResult AcceptFollowRequest(string username, string followerUsername)
+        {
+            string result = _socialService.AcceptFollow(username, followerUsername);
+
+            if (result == "Follow request accepted")
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpDelete("RejectFollowRequest")]
+        public IActionResult RejectFollowRequest(string username, string followerUsername)
+        {
+            string result = _socialService.RejectFollow(username, followerUsername);
+
+            if (result == "Follow request rejected")
+            {
+                return Ok(result);
+            }
+
+            return BadRequest(result);
+        }
+
+        [HttpGet("Followers")]
+        public IActionResult GetFollowers(string username)
+        {
+            var followers = _socialService.GetFollowers(username);
+            return Ok(followers);
+        }
+
+        [HttpGet("Following")]
+        public IActionResult GetFollowing(string username)
+        {
+            var following = _socialService.GetFollowing(username);
+            return Ok(following);
+        }
     }
 }

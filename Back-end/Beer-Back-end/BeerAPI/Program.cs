@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BeerLogic.Utility;
+using CloudinaryDotNet;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,6 +31,25 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod();
     });
 });
+
+builder.Services.AddSingleton(sp =>
+{
+    var cloudName = builder.Configuration["Cloudinary:CloudName"];
+    var apiKey = builder.Configuration["Cloudinary:ApiKey"];
+    var apiSecret = builder.Configuration["Cloudinary:ApiSecret"];
+
+    if (string.IsNullOrWhiteSpace(cloudName) ||
+        string.IsNullOrWhiteSpace(apiKey) ||
+        string.IsNullOrWhiteSpace(apiSecret))
+    {
+        throw new InvalidOperationException("Cloudinary configuration is missing.");
+    }
+
+    var account = new Account(cloudName, apiKey, apiSecret);
+    return new Cloudinary(account);
+});
+
+builder.Services.AddScoped<CloudinaryHandlerService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 

@@ -26,5 +26,30 @@ namespace BeerLogic.Service
         {
             return _socialRepo.GetFollowRequests(username);
         }
+
+        public string UnfollowUser(string username, string followingUsername)
+        {
+            return _socialRepo.UnfollowUser(username, followingUsername);
+        }
+
+        public string AcceptFollow(string username, string followerUsername)
+        {
+            return _socialRepo.AcceptFollowRequest(username, followerUsername);
+        }
+
+        public string RejectFollow(string username, string followerUsername)
+        {
+            return _socialRepo.RejectFollowRequest(username, followerUsername);
+        }
+
+        public List<string> GetFollowers(string username)
+        {
+            return _socialRepo.GetFollowers(username);
+        }
+
+        public List<string> GetFollowing(string username)
+        {
+            return _socialRepo.GetFollowing(username);
+        }
     }
 }
