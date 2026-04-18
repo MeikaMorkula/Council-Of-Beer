@@ -18,7 +18,11 @@ import LabelSelector from "../components/LabelSelector";
 export default function NewPost() {
   const [error, setError] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<{
+    uri: string;
+    name: string;
+    type: string;
+  } | null>(null);
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
   const [labels, setLabels] = useState<string[]>([]);
@@ -35,6 +39,12 @@ export default function NewPost() {
     "Juustoinen",
     "Pirskahteleva",
   ];
+
+  function validateFom(): boolean {
+    if (!rating || !image) {
+      return false;
+    } else return true;
+  }
 
   const handleSubmit = async () => {
     setError("");
@@ -106,7 +116,7 @@ export default function NewPost() {
           <Pressable
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={loading || validateFom()}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
@@ -123,7 +133,7 @@ export default function NewPost() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#888",
+    backgroundColor: "#1D190E",
   },
   scrollContent: {
     flexGrow: 1,
@@ -134,7 +144,7 @@ const styles = StyleSheet.create({
   BeerContent: {
     width: "105%",
     maxWidth: 360,
-    backgroundColor: "#fff",
+    backgroundColor: "#1D190E",
     borderRadius: 12,
     padding: 16,
   },
@@ -143,14 +153,15 @@ const styles = StyleSheet.create({
     fontWeight: "700",
     marginBottom: 16,
     textAlign: "center",
+    color: "#EDE9C7",
   },
   field: {
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#EDE9C7",
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#28200C",
     paddingHorizontal: 12,
     paddingVertical: 10,
   },
@@ -158,14 +169,17 @@ const styles = StyleSheet.create({
     marginBottom: 6,
     fontSize: 14,
     fontWeight: "600",
+    color: "#EDE9C7",
   },
   input: {
     flex: 1,
     fontSize: 16,
+    backgroundColor: "#28200C",
+    color: "#EDE9C7",
   },
   button: {
     marginTop: 8,
-    backgroundColor: "#6750a4",
+    backgroundColor: "#E39914",
     borderRadius: 8,
     paddingVertical: 12,
     alignItems: "center",
@@ -175,7 +189,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   buttonText: {
-    color: "#fff",
+    color: "#EDE9C7",
     fontWeight: "700",
   },
   error: {
@@ -190,12 +204,13 @@ const styles = StyleSheet.create({
   },
   clearButton: {
     marginLeft: 8,
+    backgroundColor: "#28200C",
   },
   reviewContainer: {
     borderWidth: 1,
-    borderColor: "#ccc",
+    borderColor: "#EDE9C7",
     borderRadius: 8,
-    backgroundColor: "#fff",
+    backgroundColor: "#28200C",
     paddingHorizontal: 12,
     paddingVertical: 10,
     marginBottom: 10,
