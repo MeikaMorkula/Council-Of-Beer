@@ -50,6 +50,12 @@ export default function AddBeer() {
     setLabels([]);
   };
 
+  function validateFom(): boolean {
+    if (!beerName || !abv || !brewery || !country || !image) {
+      return false;
+    } else return true;
+  }
+
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
@@ -59,10 +65,6 @@ export default function AddBeer() {
 
       if (!isHealthy) {
         throw new Error("SERVER_UNAVAILABLE");
-      }
-
-      if (!beerName || !abv || !brewery || !country || !image) {
-        throw new Error("Missing required fields");
       }
 
       //make sure that the abv is a numbre
@@ -89,14 +91,12 @@ export default function AddBeer() {
         setError(t("addBeer.errors.serverUnavailable"));
       } else {
         console.log(err);
-        setError("Adding beer failed");
+        setError(err);
       }
     } finally {
       setLoading(false);
     }
   };
-
-  //internetin syövereistä, melkone mankeli
 
   return (
     <ScrollView
@@ -221,7 +221,7 @@ export default function AddBeer() {
           <Pressable
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
-            disabled={loading}
+            disabled={loading || !validateFom()}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
