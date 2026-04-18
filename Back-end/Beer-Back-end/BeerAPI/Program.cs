@@ -18,14 +18,45 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins(
+                "http://localhost:8081",
+                "http://localhost:5173",
+                "http://localhost:3000"
+            )
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
+builder.Services.AddSingleton(sp =>
+{
+    var cloudName = builder.Configuration["Cloudinary:CloudName"];
+    var apiKey = builder.Configuration["Cloudinary:ApiKey"];
+    var apiSecret = builder.Configuration["Cloudinary:ApiSecret"];
+
+    if (string.IsNullOrWhiteSpace(cloudName) ||
+        string.IsNullOrWhiteSpace(apiKey) ||
+        string.IsNullOrWhiteSpace(apiSecret))
+    {
+        throw new InvalidOperationException("Cloudinary configuration is missing.");
+    }
+
+    var account = new Account(cloudName, apiKey, apiSecret);
+    return new Cloudinary(account);
+});
+
+builder.Services.AddScoped<CloudinaryHandlerService>();
+
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException("DefaultConnection is missing or empty.");
 }
-
-
 
 builder.Services.AddAuthentication(options =>
 {
@@ -55,24 +86,13 @@ builder.Services.AddAuthorization();
 // Repos / services
 builder.Services.AddScoped<IUserRepo>(_ => new UserRepo(connectionString));
 builder.Services.AddScoped<IBeerRepo>(_ => new BeerRepo(connectionString));
+builder.Services.AddScoped<ISocialRepo>(_ => new SocialRepo(connectionString));
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<JwtService>();
+builder.Services.AddScoped<SocialService>();
 builder.Services.AddScoped<IPasswordHasher, Bcrypt>();
-
-var cloudName = builder.Configuration["Cloudinary:CloudName"];
-var apiKey = builder.Configuration["Cloudinary:ApiKey"];
-var apiSecret = builder.Configuration["Cloudinary:ApiSecret"];
-
-var account = new Account(cloudName, apiKey, apiSecret);
-var cloudinary = new Cloudinary(account);
-
-builder.Services.AddSingleton(cloudinary);
-builder.Services.AddScoped< CloudinaryHandlerService>();
-builder.Services.AddScoped<ImageHandlerService>();
-builder.Services.AddScoped<IImageHandlerRepo>(_ => new ImageHandlerRepo(connectionString));
-
 
 builder.Services.AddHealthChecks();
 
@@ -92,6 +112,9 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+
+app.UseCors("AllowFrontend");
+
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

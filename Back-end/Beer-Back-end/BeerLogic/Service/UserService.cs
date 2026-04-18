@@ -51,5 +51,6 @@ namespace BeerLogic.Service
 
             return _userRepo.DeleteAccount(username);
         }
+
     }
 }
