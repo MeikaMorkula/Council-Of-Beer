@@ -1,0 +1,29 @@
+services:
+  councilofbeer-api:
+    build:
+      context: .
+      dockerfile: BeerAPI/Dockerfile
+    container_name: councilofbeer-api
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: Host=councilofbeer-db;Port=5432;Database=${POSTGRES_DB};Username=${POSTGRES_USER};Password=${POSTGRES_PASSWORD}
+    depends_on:
+      - councilofbeer-db
+
+  councilofbeer-db:
+    image: postgres:17
+    container_name: councilofbeer-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "5433:5432"
+    volumes:
+      - councilofbeer_postgres_data:/var/lib/postgresql/data
+
+volumes:
+  councilofbeer_postgres_data:

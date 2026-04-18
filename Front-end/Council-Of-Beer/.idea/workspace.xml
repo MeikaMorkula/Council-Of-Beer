@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="ec00f08a-7530-4916-b03e-16f2aa01bfe4" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerAPI/Controllers/BeerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerAPI/Controllers/BeerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerAPI/Controllers/ImageHandlerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerAPI/Controllers/ImageHandlerController.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerData/Repository/BeerRepo.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerData/Repository/BeerRepo.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerLogic/DTOs/CreatePostRequest.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerLogic/DTOs/CreatePostRequest.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerLogic/Service/ImageHandlerService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/../../Back-end/Beer-Back-end/BeerLogic/Service/ImageHandlerService.cs" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "qb-le"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/MeikaMorkula/Council-Of-Beer.git",
+    "accountId": "4cbaefd5-234b-4872-8666-ef6e95ba045f"
+  }
+}]]></component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 1
+}]]></component>
+  <component name="ProjectId" id="3CP8p4ZTRmqQFWk2Akqv8yWpfpz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "backend-image-handeling",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/school/GitRepos/Council-Of-Beer/Front-end/Council-Of-Beer",
+    "nodejs_package_manager_path": "npm",
+    "ts.external.directory.path": "C:\\Program Files\\JetBrains\\IntelliJ IDEA 2024.3.3\\plugins\\javascript-plugin\\jsLanguageServicesImpl\\external",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-125ca727e0f0-intellij.indexing.shared.core-IU-243.24978.46" />
+        <option value="bundled-js-predefined-d6986cc7102b-76f8388c3a79-JavaScript-IU-243.24978.46" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="ec00f08a-7530-4916-b03e-16f2aa01bfe4" name="Changes" comment="" />
+      <created>1776276024311</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1776276024311</updated>
+      <workItem from="1776276025587" duration="86000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
