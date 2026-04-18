@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
+import KaliaPieChart from "../components/PieChart";
+import AvgRatingChart from "../components/AvgRatingsChart";
+import BeersInAWeekChart from "../components/BeersWithinAWeekChart";
+import AvgDonut from "../components/AvgRatingDonutChart";
 
 export default function UserStatistics() {
   const { t } = useTranslation();
@@ -10,25 +14,16 @@ export default function UserStatistics() {
       <ScrollView>
         <View style={styles.statisticsView}>
           <View style={styles.singleStatistic}>
-            <Text style={styles.statisticsTxt}>Statistic 1</Text>
-            <Image
-              style={styles.statistic}
-              source={require("../assets/placeholdergraph.png")}
-            />
+            <KaliaPieChart></KaliaPieChart>
           </View>
           <View style={styles.singleStatistic}>
-            <Text style={styles.statisticsTxt}>Statistic 2</Text>
-            <Image
-              style={styles.statistic}
-              source={require("../assets/placeholdergraph.png")}
-            />
+            <AvgRatingChart></AvgRatingChart>
           </View>
           <View style={styles.singleStatistic}>
-            <Text style={styles.statisticsTxt}>Statistic 3</Text>
-            <Image
-              style={styles.statistic}
-              source={require("../assets/placeholdergraph.png")}
-            />
+            <BeersInAWeekChart></BeersInAWeekChart>
+          </View>
+          <View style={styles.singleStatistic}>
+            <AvgDonut></AvgDonut>
           </View>
         </View>
       </ScrollView>
