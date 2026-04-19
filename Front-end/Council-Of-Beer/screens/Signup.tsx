@@ -3,6 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   View,
   TextInput,
   Pressable,
@@ -100,74 +103,84 @@ export default function SignUp() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginContent}>
-        <Text style={styles.title}>{t("signup.title")}</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.loginContent}>
+          <Text style={styles.title}>{t("signup.title")}</Text>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("signup.fields.username")}</Text>
-          <TextInput
-            placeholder={t("signup.fields.placeholders.username")}
-            placeholderTextColor={"#dfdbb970"}
-            value={username}
-            onChangeText={setUsername}
-            style={styles.input}
-            autoCapitalize="none"
-          />
+          <View style={styles.field}>
+            <Text style={styles.label}>{t("signup.fields.username")}</Text>
+            <TextInput
+              placeholder={t("signup.fields.placeholders.username")}
+              placeholderTextColor={"#dfdbb970"}
+              value={username}
+              onChangeText={setUsername}
+              style={styles.input}
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.field}>
+            <Text style={styles.label}>{t("signup.fields.password")}</Text>
+            <TextInput
+              placeholder={t("signup.fields.placeholders.password")}
+              placeholderTextColor={"#dfdbb970"}
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+              secureTextEntry
+            />
+          </View>
+
+          <View style={styles.field}>
+            <Text style={styles.label}>{t("signup.fields.birthday")}</Text>
+            <TextInput
+              placeholder={t("signup.fields.placeholders.birthday")}
+              placeholderTextColor={"#dfdbb970"}
+              value={birthday}
+              onChangeText={(value) =>
+                setBirthday((previousValue) =>
+                  formatBirthdayInput(value, previousValue)
+                )
+              }
+              style={styles.input}
+              autoCapitalize="none"
+              keyboardType="number-pad"
+              maxLength={10}
+            />
+          </View>
+
+          {!!error && <Text style={styles.error}>{error}</Text>}
+
+          <Pressable
+            style={[styles.button, loading && styles.buttonDisabled]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>{t("signup.btns.signup")}</Text>
+            )}
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate("LogIn" as never)}
+            style={styles.LoginLink}
+          >
+            <Text style={styles.LoginLinkText}>{t("signup.loginlink")}</Text>
+          </Pressable>
         </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("signup.fields.password")}</Text>
-          <TextInput
-            placeholder={t("signup.fields.placeholders.password")}
-            placeholderTextColor={"#dfdbb970"}
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-            secureTextEntry
-          />
-        </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("signup.fields.birthday")}</Text>
-          <TextInput
-            placeholder={t("signup.fields.placeholders.birthday")}
-            placeholderTextColor={"#dfdbb970"}
-            value={birthday}
-            onChangeText={(value) =>
-              setBirthday((previousValue) =>
-                formatBirthdayInput(value, previousValue)
-              )
-            }
-            style={styles.input}
-            autoCapitalize="none"
-            keyboardType="number-pad"
-            maxLength={10}
-          />
-        </View>
-
-        {!!error && <Text style={styles.error}>{error}</Text>}
-
-        <Pressable
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>{t("signup.btns.signup")}</Text>
-          )}
-        </Pressable>
-
-        <Pressable
-          onPress={() => navigation.navigate("LogIn" as never)}
-          style={styles.LoginLink}
-        >
-          <Text style={styles.LoginLinkText}>{t("signup.loginlink")}</Text>
-        </Pressable>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -175,8 +188,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1D190E",
+  },
+  scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    justifyContent: "center",
   },
   loginContent: {
     width: "100%",
@@ -185,7 +202,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#1D190E",
     alignItems: "center",
-    paddingTop: 125,
   },
   title: {
     fontSize: 40,
