@@ -6,13 +6,14 @@ Council of Beer is a social media app for sharing and discovering beers. The app
 
 ### The app
 
-![Login page](./Front-end/Council-Of-Beer/assets/images/loginapp.png)
+<img style="width: 25%;" src="./Front-end/Council-Of-Beer/assets/images/loginapp.png"/>
 
-![Sign up page](./Front-end/Council-Of-Beer/assets/images/signupapp.png)
+<img style="width: 25%;" src="./Front-end/Council-Of-Beer/assets/images/signupapp.png"/>
 
-![Review page](./Front-end/Council-Of-Beer/assets/images/reviewapp.png)
+<img style="width: 25%;" src="./Front-end/Council-Of-Beer/assets/images/reviewapp.png"/>
 
-![Product page](./Front-end/Council-Of-Beer/assets/images/productpageapp.png)
+<img style="width: 25%;" src="./Front-end/Council-Of-Beer/assets/images/productpageapp.png"/>
+
 
 ### Technical information
 
