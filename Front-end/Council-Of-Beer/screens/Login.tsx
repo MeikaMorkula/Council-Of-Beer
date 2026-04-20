@@ -3,6 +3,9 @@ import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
   View,
   TextInput,
   Pressable,
@@ -44,56 +47,66 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.loginContent}>
-        <Text style={styles.title}>{t("login.title")}</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
+    >
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.loginContent}>
+          <Text style={styles.title}>{t("login.title")}</Text>
 
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("login.fields.username")}</Text>
-          <TextInput
-            placeholder={t("login.fields.placeholders.username")}
-            placeholderTextColor={"#dfdbb970"}
-            value={username}
-            onChangeText={setUsername}
-            style={styles.input}
-            autoCapitalize="none"
-          />
+          <View style={styles.field}>
+            <Text style={styles.label}>{t("login.fields.username")}</Text>
+            <TextInput
+              placeholder={t("login.fields.placeholders.username")}
+              placeholderTextColor={"#dfdbb970"}
+              value={username}
+              onChangeText={setUsername}
+              style={styles.input}
+              autoCapitalize="none"
+            />
+          </View>
+
+          <View style={styles.field}>
+            <Text style={styles.label}>{t("login.fields.password")}</Text>
+            <TextInput
+              placeholder={t("login.fields.placeholders.password")}
+              placeholderTextColor={"#dfdbb970"}
+              value={password}
+              onChangeText={setPassword}
+              style={styles.input}
+              secureTextEntry
+            />
+          </View>
+
+          {!!error && <Text style={styles.error}>{error}</Text>}
+
+          <Pressable
+            style={[styles.button, loading && styles.buttonDisabled]}
+            onPress={handleSubmit}
+            disabled={loading}
+          >
+            {loading ? (
+              <ActivityIndicator color="#fff" />
+            ) : (
+              <Text style={styles.buttonText}>{t("login.title")}</Text>
+            )}
+          </Pressable>
+
+          <Pressable
+            onPress={() => navigation.navigate("SignUp" as never)}
+            style={styles.signupLink}
+          >
+            <Text style={styles.signupLinkText}>{t("login.signuplink")}</Text>
+          </Pressable>
         </View>
-
-        <View style={styles.field}>
-          <Text style={styles.label}>{t("login.fields.password")}</Text>
-          <TextInput
-            placeholder={t("login.fields.placeholders.password")}
-            placeholderTextColor={"#dfdbb970"}
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-            secureTextEntry
-          />
-        </View>
-
-        {!!error && <Text style={styles.error}>{error}</Text>}
-
-        <Pressable
-          style={[styles.button, loading && styles.buttonDisabled]}
-          onPress={handleSubmit}
-          disabled={loading}
-        >
-          {loading ? (
-            <ActivityIndicator color="#fff" />
-          ) : (
-            <Text style={styles.buttonText}>{t("login.title")}</Text>
-          )}
-        </Pressable>
-
-        <Pressable
-          onPress={() => navigation.navigate("SignUp" as never)}
-          style={styles.signupLink}
-        >
-          <Text style={styles.signupLinkText}>{t("login.signuplink")}</Text>
-        </Pressable>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
@@ -101,8 +114,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1D190E",
+  },
+  scrollContent: {
+    flexGrow: 1,
     alignItems: "center",
     padding: 16,
+    justifyContent: "center",
   },
   loginContent: {
     width: "100%",
@@ -111,7 +128,6 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#1D190E",
     alignItems: "center",
-    paddingTop: 125,
   },
   title: {
     fontSize: 40,
