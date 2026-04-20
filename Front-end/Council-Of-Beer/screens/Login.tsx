@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
   KeyboardAvoidingView,
+  Keyboard,
   Platform,
   ScrollView,
   View,
@@ -46,9 +47,30 @@ export default function Login() {
     }
   };
 
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setFlexToggle(false);
+    });
+
+    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setFlexToggle(true);
+    });
+    return () => {
+      keyboardShowListener.remove()
+      keyboardHideListener.remove()
+    };
+  }, []);
+
+  const [flexToggle, setFlexToggle] = useState(false)
+
   return (
     <KeyboardAvoidingView
-      style={styles.container}
+      style={
+        flexToggle
+        ? [{ flexGrow: 1}, styles.container]
+        : [{ flex: 1}, styles.container]
+      }
+      enabled={!flexToggle}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 64 : 0}
     >

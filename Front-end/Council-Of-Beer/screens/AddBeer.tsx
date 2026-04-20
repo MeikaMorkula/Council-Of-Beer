@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
+  KeyboardAvoidingView,
+  Keyboard,
+  Platform,
+  ScrollView,
   View,
   TextInput,
   Pressable,
   ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CameraComponent from "../components/CameraComponent";
 import { useNavigation } from "@react-navigation/native";
@@ -98,11 +101,37 @@ export default function AddBeer() {
     }
   };
 
+  useEffect(() => {
+    const keyboardShowListener = Keyboard.addListener("keyboardDidShow", () => {
+      setFlexToggle(false);
+    });
+
+    const keyboardHideListener = Keyboard.addListener("keyboardDidHide", () => {
+      setFlexToggle(true);
+    });
+    return () => {
+      keyboardShowListener.remove()
+      keyboardHideListener.remove()
+    };
+  }, []);
+
+  const [flexToggle, setFlexToggle] = useState(false)
+
   return (
+    <KeyboardAvoidingView
+      style={
+        flexToggle
+        ? [{ flexGrow: 1}, styles.container]
+        : [{ flex: 1}, styles.container]
+      }
+      enabled={!flexToggle}
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 128 : 0}
+    >
     <ScrollView
-      style={styles.container}
       contentContainerStyle={styles.scrollContent}
       keyboardShouldPersistTaps="handled"
+      showsVerticalScrollIndicator={false}
     >
       <View style={styles.BeerContent}>
         <Text style={styles.title}>{t("addBeer.title")}</Text>
@@ -229,9 +258,10 @@ export default function AddBeer() {
               <Text style={styles.buttonText}>{t("addBeer.addtodb")}</Text>
             )}
           </Pressable>
+          </View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
