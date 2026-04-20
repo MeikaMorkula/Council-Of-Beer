@@ -1,4 +1,5 @@
-﻿using BeerLogic.Interface;
+﻿using BeerLogic.Entities;
+using BeerLogic.Interface;
 using BeerLogic.Utility;
 
 namespace BeerLogic.Service
@@ -11,45 +12,45 @@ namespace BeerLogic.Service
             _userRepo = userRepo;
         }
 
-        public string ChangeUsername(string newUser, string oldUser)
+        public string ChangeUsername(ChangeUsernameRequest request)
         {
-            string result = _userRepo.ChangeUsername(newUser, oldUser);
+            string result = _userRepo.ChangeUsername(request.newUser, request.oldUser);
             return result;
         }
 
-        public string ChangePassword(string newPass, string oldPass, string username)
+        public string ChangePassword(PasswordChangeRequest request)
         {
-            string hasholdpass = _userRepo.LookupUserPassword(username);
+            string hasholdpass = _userRepo.LookupUserPassword(request.username);
 
             if (string.IsNullOrWhiteSpace(hasholdpass))
             {
                 return "User not found";
             }
 
-            if (!Bcrypt.VerifyPassword(oldPass, hasholdpass))
+            if (!Bcrypt.VerifyPassword(request.oldPass, hasholdpass))
             {
                 return "Old password is incorrect";
             }
 
-            if (!JwtService.PasswordRules(newPass))
+            if (!JwtService.PasswordRules(request.newPass))
             {
                 return "New password does not meet password rules";
             }
 
-            string hashPass = Bcrypt.HashPassword(newPass);
-            return _userRepo.ChangePassword(hashPass, username);
+            string hashPass = Bcrypt.HashPassword(request.newPass);
+            return _userRepo.ChangePassword(hashPass, request.username);
         }
 
-        public string DeleteAccount(string username, string password)
+        public string DeleteAccount(DeleteAccountRequest request)
         {
-            string hashPassword = Bcrypt.HashPassword(password);
+            string hashPassword = Bcrypt.HashPassword(request.password);
 
-            if(!Bcrypt.VerifyPassword(password, hashPassword))
+            if(!Bcrypt.VerifyPassword(request.password, hashPassword))
             {
                 return "Password is incorrect";
             }
 
-            return _userRepo.DeleteAccount(username);
+            return _userRepo.DeleteAccount(request.username);
         }
 
     }

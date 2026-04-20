@@ -73,16 +73,16 @@ namespace BeerAPI.Controllers
         }
 
         [HttpPatch("Username")]
-        public async Task<string> ChangeUsername(string newUser, string oldUser)
+        public async Task<string> ChangeUsername(ChangeUsernameRequest request)
         {
-            string result = _userService.ChangeUsername(newUser, oldUser);
+            string result = _userService.ChangeUsername(request);
             return result;
         }
 
         [HttpPatch("Password")]
-        public IActionResult ChangePassword(string newPass, string oldPass, string username)
+        public IActionResult ChangePassword(PasswordChangeRequest request)
         {
-            string result = _userService.ChangePassword(newPass, oldPass, username);
+            string result = _userService.ChangePassword(request);
 
             if (result == "Password changed")
             {
@@ -93,9 +93,9 @@ namespace BeerAPI.Controllers
         }
 
         [HttpDelete("Terminate")]
-        public IActionResult DeleteAccount(string username, string password)
+        public IActionResult DeleteAccount(DeleteAccountRequest request)
         {
-            string result = _userService.DeleteAccount(username, password);
+            string result = _userService.DeleteAccount(request);
 
             if (result == "Account deleted")
             {
