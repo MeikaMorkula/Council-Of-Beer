@@ -25,5 +25,5 @@ Documentation for endpoints and the project requirements can be found here:
 
 ### Installation
 
-instructions for installation come here
+You can get your own development version of the app by copying the repo and deploying it in expo. 
 
