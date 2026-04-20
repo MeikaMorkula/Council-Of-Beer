@@ -17,9 +17,9 @@ namespace BeerLogic.Service
             return _socialRepo.GetAllUsernames();
         }
 
-        public string FollowUser(string username, string followingUsername)
+        public string FollowUser(UserAndFollowing request)
         {
-            return _socialRepo.FollowUser(username, followingUsername);
+            return _socialRepo.FollowUser(request.Username, request.FollowingUsername);
         }
 
         public List<FollowRequestResponse> GetFollowRequests(string username)
