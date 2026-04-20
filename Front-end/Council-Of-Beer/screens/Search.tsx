@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   useFocusEffect,
   useNavigation,
@@ -49,8 +49,27 @@ export default function Search() {
   const navigation = useNavigation<any>();
   const scrollRef = useRef<ScrollView>(null);
   const [beers, setBeers] = useState<Beer[]>([]);
+  const [query, setQuery] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+
+  const filteredBeers = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+
+    if (!normalizedQuery) {
+      return beers;
+    }
+
+    return beers.filter((beer) => {
+      const labelsText = beer.labels.join(" ").toLowerCase();
+      return (
+        beer.name.toLowerCase().includes(normalizedQuery) ||
+        beer.brewery.toLowerCase().includes(normalizedQuery) ||
+        beer.country.toLowerCase().includes(normalizedQuery) ||
+        labelsText.includes(normalizedQuery)
+      );
+    });
+  }, [beers, query]);
 
   const loadBeers = useCallback(async () => {
     try {
@@ -105,8 +124,15 @@ export default function Search() {
             style={styles.searchField}
             placeholder="Search"
             placeholderTextColor={"#EDE9C7"}
+            value={query}
+            onChangeText={setQuery}
           />
-          <TouchableOpacity style={styles.searchIcon} onPress={loadBeers}>
+          <TouchableOpacity
+            style={styles.searchIcon}
+            onPress={() => {
+              scrollToTop(true);
+            }}
+          >
             <Ionicons name="search" size={32} color="#EDE9C7" />
           </TouchableOpacity>
         </View>
@@ -122,12 +148,12 @@ export default function Search() {
           <Text style={styles.statusText}>{errorMessage}</Text>
         ) : null}
 
-        {!isLoading && !errorMessage && beers.length === 0 ? (
+        {!isLoading && !errorMessage && filteredBeers.length === 0 ? (
           <Text style={styles.statusText}>No beers found.</Text>
         ) : null}
 
         {!isLoading && !errorMessage
-          ? beers.map((beer, index) => (
+          ? filteredBeers.map((beer, index) => (
               <ProductComponent
                 key={`${beer.name || "beer"}-${beer.imageUrl || "no-image"}-${index}`}
                 beer={beer}
@@ -157,6 +183,7 @@ const styles = StyleSheet.create({
   },
   searchField: {
     backgroundColor: "#28200C",
+    color: "#EDE9C7",
     paddingTop: 20,
     paddingRight: 20,
     paddingBottom: 20,
