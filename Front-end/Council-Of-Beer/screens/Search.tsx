@@ -23,7 +23,7 @@ function ProductComponent({ beer }: { beer: Beer }) {
   return (
     <TouchableOpacity
       style={styles.productCont}
-      onPress={() => navigation.navigate("ProductPage")}
+      onPress={() => navigation.navigate("ProductPage", { beerName: beer.name })}
       activeOpacity={0.8}
     >
       <Image

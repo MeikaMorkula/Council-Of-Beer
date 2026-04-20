@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
   ScrollView,
   StyleSheet,
@@ -7,8 +8,10 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { Beer, getBeerByName } from "../services/ProductService";
 
 type Review = {
   id: string;
@@ -17,35 +20,81 @@ type Review = {
   text: string;
 };
 
-const TAGS = ["Lager", "Malt", "Crisp", "Stout", "Porter", "Classic"];
-
 const REVIEWS: Review[] = [
   { id: "1", username: "@kalianjuoja", rating: 4.5, text: "on hyvettiä" },
   { id: "2", username: "@kaliaherra", rating: 5, text: "guunaa suussa" },
   { id: "3", username: "@kalialainen", rating: 1, text: "rimmeriä" },
 ];
 
+type ProductPageRouteParams = {
+  beerName?: string;
+};
+
 export default function ProductPage() {
+  const route = useRoute();
+  const { beerName } = (route.params as ProductPageRouteParams | undefined) ?? {};
+  const [beer, setBeer] = useState<Beer | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const loadBeer = useCallback(async () => {
+    if (!beerName) {
+      setErrorMessage("Beer was not provided for this page.");
+      setIsLoading(false);
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      setErrorMessage("");
+      const response = await getBeerByName(beerName);
+      setBeer(response);
+    } catch (error) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage("Failed to load beer details.");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [beerName]);
+
+  useEffect(() => {
+    loadBeer();
+  }, [loadBeer]);
+
+  if (isLoading) {
+    return (
+      <View style={styles.statusContainer}>
+        <ActivityIndicator size="large" color="#EDE9C7" />
+      </View>
+    );
+  }
+
+  if (errorMessage || !beer) {
+    return (
+      <View style={styles.statusContainer}>
+        <Text style={styles.statusText}>
+          {errorMessage || "Beer details were not found."}
+        </Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.postHeader}>
-        <Image style={styles.userPfp} />
-        <Text style={styles.postUsrname}>@brewery</Text>
-      </View>
-
       <View style={styles.postImgCont}>
         <Image
           style={styles.postImg}
           resizeMode="contain"
-          source={{
-            uri: "https://www.sinebrychoff.fi/globalassets/tuotteet/beer/sandels/sandels_033.png",
-          }}
+          source={beer.imageUrl ? { uri: beer.imageUrl } : undefined}
         />
       </View>
 
       <View style={styles.postBeerInfoCont}>
         <View style={styles.infoRow}>
-          <Text style={styles.mainInfoText}>Sandels, </Text>
+          <Text style={styles.mainInfoText}>{beer.name}, </Text>
           <StarRatingDisplay
             rating={4}
             starSize={22}
@@ -53,16 +102,16 @@ export default function ProductPage() {
           />
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.subInfoText}>4.7%, </Text>
-          <Text style={styles.subInfoText}>Olvi</Text>
+          <Text style={styles.subInfoText}>{beer.alcPrecentage}%, </Text>
+          <Text style={styles.subInfoText}>{beer.brewery}</Text>
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.subInfoText}>Finland</Text>
+          <Text style={styles.subInfoText}>{beer.country}</Text>
         </View>
       </View>
 
       <View style={styles.tagRow}>
-        {TAGS.map((tag) => (
+        {beer.labels.map((tag) => (
           <View key={tag} style={styles.tagChip}>
             <Text style={styles.tagText}>{tag}</Text>
           </View>
@@ -99,6 +148,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1D190E",
+  },
+  statusContainer: {
+    flex: 1,
+    backgroundColor: "#1D190E",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 24,
+  },
+  statusText: {
+    color: "#EDE9C7",
+    fontSize: 16,
+    textAlign: "center",
   },
   postHeader: {
     flexDirection: "row",
