@@ -18,7 +18,7 @@ namespace BeerData.Repository
         {
             _connectionString = connectionString;
         }
-        public async Task<CreatePostResponse> CreatePostAsync(PostDTO post, CloudinaryUploadResultDTO uploadResult)
+        public async Task<CreatePostResponse> CreatePostAsync(CreatePostRequest post, CloudinaryUploadResultDTO uploadResult)
         {
             try
             {

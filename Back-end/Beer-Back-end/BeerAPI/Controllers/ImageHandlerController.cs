@@ -41,11 +41,9 @@ namespace BeerAPI.Controllers
             {
                 return BadRequest("Image size cannot be larger than 5MB.");
             }
-
-            // Example if you want user id from JWT later:
-            // var userIdClaim = User.FindFirst("id")?.Value;
-            // if (userIdClaim == null) return Unauthorized();
-            // int userId = int.Parse(userIdClaim);
+             var userIdClaim = User.FindFirst("id")?.Value;
+            if (userIdClaim == null) return Unauthorized();
+            int userId = int.Parse(userIdClaim);
 
             var result = await _imageHandlerService.CreatePostAsync(request);
 

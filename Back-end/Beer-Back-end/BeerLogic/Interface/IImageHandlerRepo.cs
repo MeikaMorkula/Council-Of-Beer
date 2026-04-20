@@ -9,6 +9,6 @@ namespace BeerLogic.Interface
 {
     public interface IImageHandlerRepo
     {
-        Task<CreatePostResponse> CreatePostAsync(PostDTO post, CloudinaryUploadResultDTO uploadResult);
+        Task<CreatePostResponse> CreatePostAsync(CreatePostRequest post, CloudinaryUploadResultDTO uploadResult);
     }
 }

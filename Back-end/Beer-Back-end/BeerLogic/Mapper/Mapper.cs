@@ -26,55 +26,7 @@ namespace BeerLogic.Mapper
             };
         }
 
-        // PostMapper
-        public Post PostDTOToEntity(PostDTO postDTO)
-        {
-            return new Post()
-            {
-                Id = postDTO.Id,
-                ImgUrl = postDTO.ImgUrl,
-                Review = postDTO.Review,
-                Bar = postDTO.Bar
-            };
-        }
-        
-        public PostDTO PostEntityToDTO(Post post)
-        {
-            return new PostDTO()
-            {
-                Id = post.Id,
-                ImgUrl = post.ImgUrl,
-                Review = post.Review,
-                Bar = post.Bar
-            };
-        }
 
-        // ReviewMapper
-        public Review ReviewDTOToEntity(ReviewDTO reviewDTO)
-        {
-            return new Review()
-            {
-                Id = reviewDTO.Id,
-                BeerId = reviewDTO.BeerId,
-                UserId = reviewDTO.UserId,
-                Score = reviewDTO.Score,
-                Description = reviewDTO.Description,
-                Created = reviewDTO.Created
-            };
-        }
-
-        public ReviewDTO ReviewEntityToDTO(Review review)
-        {
-            return new ReviewDTO()
-            {
-                Id = review.Id,
-                BeerId = review.BeerId,
-                UserId = review.UserId,
-                Score = review.Score,
-                Description = review.Description,
-                Created = review.Created
-            };
-        }
 
         // BeerMapper
         public Beer BeerRequestToEntity (CreateBeerRequest beerDTO)

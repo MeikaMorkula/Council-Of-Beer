@@ -24,14 +24,7 @@ namespace BeerLogic.Service
         {
             CloudinaryUploadResultDTO uploadResult = await _cloudinaryHandlerService.UploadImageAsync(request.Image);
 
-            var postDto = new PostDTO
-            {
-                UserId = request.UserId,
-                BeerId = request.BeerId,
-                Description = request.Description
-            };
-
-            CreatePostResponse createdPost = await _imageHandlerRepo.CreatePostAsync(postDto, uploadResult);
+            CreatePostResponse createdPost = await _imageHandlerRepo.CreatePostAsync(request, uploadResult);
 
             return new CreatePostResponse
             {
