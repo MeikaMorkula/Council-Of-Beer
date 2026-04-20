@@ -1,4 +1,5 @@
 import { StoreTokens } from "../utils/SecureStorage";
+import {saveUserName} from "../utils/AsyncStorage"
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -53,6 +54,7 @@ export const login = async ({ username, password }: LoginRequest): Promise<AuthR
 
 	const data = (await response.json()) as AuthResponse;
 	await StoreTokens(data.accessToken, data.refreshToken);
+	await saveUserName(data.userName)
 
 	return data;
 };

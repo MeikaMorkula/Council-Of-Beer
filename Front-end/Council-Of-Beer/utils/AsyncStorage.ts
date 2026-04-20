@@ -11,17 +11,12 @@ export type AppSettings = {
   newFollowerNotifsEnabled: boolean;
 };
 
-//tänne voi periaattessa tallentaa profiilikuvan urlin
-export type UserData = {
-  username: string;
-};
-
 export const saveSettings = async (settings: AppSettings) => {
   try {
     const jsonValue = JSON.stringify(settings);
     await AsyncStorage.setItem(STORAGE_KEY, jsonValue);
   } catch (e) {
-    console.error('Error saving settings', e);
+    console.error("Error saving settings", e);
   }
 };
 
@@ -30,26 +25,24 @@ export const loadSettings = async (): Promise<AppSettings | null> => {
     const jsonValue = await AsyncStorage.getItem(STORAGE_KEY);
     return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
-    console.error('Error loading settings', e);
+    console.error("Error loading settings", e);
     return null;
   }
 };
 
-
-export const saveUserName = async (username: UserData) => {
+export const saveUserName = async (userName: string) => {
   try {
-    const jsonValue = JSON.stringify(username);
+    const jsonValue = JSON.stringify(userName);
     await AsyncStorage.setItem(USER_DATA_KEY, jsonValue);
   } catch (e) {
-    console.error('Error saving settings', e);
+    console.error("Error saving settings", e);
   }
 };
 
-
-export const getUserName = async (): Promise<UserData | null> => {
+export const getUserName = async () => {
   try {
     const jsonValue = await AsyncStorage.getItem(USER_DATA_KEY);
-    return jsonValue  != null ?  JSON.parse(jsonValue) : null;
+    return jsonValue != null ? JSON.parse(jsonValue) : null;
   } catch (e) {
     console.error("Error loading user data", e);
     return null;

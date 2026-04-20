@@ -52,9 +52,10 @@ export const ChangePassWord = async ({
       body: JSON.stringify({
         newPass,
         oldPass,
-        username
+        username,
       }),
     });
+
     if (!res.ok) {
       const e = await res.text();
       throw new Error(e || "failed to change password");

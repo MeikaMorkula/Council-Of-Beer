@@ -9,7 +9,10 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
-import { ChangeUserName, ChangePassWord } from "../services/UserSettingsService";
+import {
+  ChangeUserName,
+  ChangePassWord,
+} from "../services/UserSettingsService";
 import { getUserName } from "../utils/AsyncStorage";
 
 export default function UserSettings() {
@@ -17,6 +20,8 @@ export default function UserSettings() {
   const [currentPswd, setCurrentPswd] = useState("");
   const [newPswd, setNewPswd] = useState("");
   const [newPswdAgain, setNewPswdAgain] = useState("");
+  const [error, setError] = useState<string>("");
+
   const { t } = useTranslation();
 
   const handleUsernameSubmit = async () => {
@@ -31,14 +36,17 @@ export default function UserSettings() {
           newUser: newUsername.trim(),
           oldUser: curUserName,
         });
-      } catch (err) {
+      } catch (err: any) {
         console.log(err);
+        setError(err);
       }
+    } else {
+      setError("missing fields");
     }
   };
 
   const handlePassWordchange = async () => {
-    const curUserName = await getUserName().toString();
+    const curUserName = await getUserName();
 
     if (
       newPswd === newPswdAgain &&
@@ -47,14 +55,16 @@ export default function UserSettings() {
     ) {
       try {
         await ChangePassWord({
-        newPass: newPswd,
-        oldPass: currentPswd,
-        username: curUserName
-      })
-      } catch (err) {
+          newPass: newPswd ?? "",
+          oldPass: currentPswd ?? "",
+          username: curUserName ?? "",
+        });
+      } catch (err: any) {  
         console.log(err);
+        setError(err);
       }
-      
+    } else {
+      setError("missing fields");
     }
   };
 
@@ -168,12 +178,17 @@ export default function UserSettings() {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.changeUsrBtn} onPress={handlePassWordchange}>
+        <TouchableOpacity
+          style={styles.changeUsrBtn}
+          onPress={handlePassWordchange}
+        >
           <Text style={{ fontSize: 16, color: "#E06F24" }}>
             {t("usersettings.btn.changepassword")}
           </Text>
         </TouchableOpacity>
       </View>
+      {!!error && <Text style={styles.error}>{error}</Text>}
+
       <TouchableOpacity style={styles.deleteAccBtn}>
         <Text style={{ fontSize: 16, color: "#e02424", fontWeight: "bold" }}>
           {t("usersettings.btn.deleteaccount")}
@@ -212,6 +227,11 @@ const styles = StyleSheet.create({
     padding: 5,
     flexDirection: "row",
     marginTop: 10,
+  },
+  error: {
+    color: "#d00",
+    marginTop: 4,
+    marginBottom: 6,
   },
   downloadBtnTxt: {
     fontSize: 16,
