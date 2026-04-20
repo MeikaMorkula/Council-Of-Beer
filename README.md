@@ -8,7 +8,11 @@ images from the app come here
 
 ### Technical information
 
-Front-end of the app is developed with React Native/Expo, back-end is developed in C# with a PostgreSQL database.
+Front-end of the app is developed with React Native/Expo, back-end is developed in C# with a PostgreSQL database. The app uses fetch to connect backend and frontend. 
+
+Documentation for endpoints and the project requirements can be found here:
+
+[Endpoint documentation](https://docs.google.com/document/d/1gM8-We3tKFnQQ7tYDEpT5TZS4sAdaB8miwwqCoh5_T0/edit?usp=sharing)
 
 ### Installation
 
