@@ -1,4 +1,4 @@
-@BeerAPI_HostAddress = https://145.220.72.157:8080
+@BeerAPI_HostAddress = http://145.220.72.157/
 
 GET {{BeerAPI_HostAddress}}/Beer
 Accept: application/json

@@ -1,6 +1,5 @@
 name: Deploy Council Of Beer Backend
 
-
 on:
   push:
     branches:
@@ -44,15 +43,13 @@ jobs:
 
       - name: Run tests
         run: dotnet test --configuration Release --no-build --verbosity normal
-        
+
   deploy:
     runs-on: ubuntu-latest
     needs: build-and-test
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
 
+    steps:
       - name: Configure SSH
         run: |
           mkdir -p ~/.ssh
@@ -65,15 +62,13 @@ jobs:
           ssh -p "${{ secrets.SERVER_PORT }}" "${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }}" << 'EOF'
             set -e
 
-            cd /home/ubuntu/Council-Of-Beer
-
+            cd /home/ubuntu/apps/Council-Of-Beer
             git fetch origin
             git checkout main
             git pull origin main
 
-            cd /home/ubuntu/Council-Of-Beer/Back-end/Beer-Back-end
-            dotnet publish BeerAPI/BeerAPI.csproj -c Release
+            cd /home/ubuntu/apps/Council-Of-Beer/Back-end/Beer-Back-end
+            docker compose up -d --build
 
-            sudo systemctl restart backend
-            sudo systemctl status backend --no-pager
+            docker compose ps
           EOF
