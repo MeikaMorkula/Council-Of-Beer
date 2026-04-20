@@ -11,6 +11,8 @@ import { useTranslation } from "react-i18next";
 import { DeleteTokens } from "../utils/SecureStorage";
 import { deleteUserName } from "../utils/AsyncStorage";
 import Login from "./Login";
+import SignUp from "./Signup";
+import Home from "./Home"
 
 const Stack = createNativeStackNavigator();
 
@@ -25,6 +27,8 @@ function SettingsStack() {
       <Stack.Screen name="AppSettingsScreen" component={AppSettings} />
       <Stack.Screen name="UserStatistics" component={UserStatistics} />
       <Stack.Screen name="Login" component={Login}></Stack.Screen>
+      <Stack.Screen name="SignUp" component={SignUp}></Stack.Screen>
+       <Stack.Screen name="HomeFeed" component={Home}></Stack.Screen>
     </Stack.Navigator>
   );
 }
