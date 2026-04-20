@@ -1,5 +1,6 @@
 # Council-Of-Beer
-<img style="float: right;" src="./Front-end/Council-Of-Beer/assets/images/icon.png"/>
+
+<img style="width: 15%;" src="./Front-end/Council-Of-Beer/assets/images/icon.png" align="right"/>
 
 Council of Beer is a social media app for sharing and discovering beers. The app is aimed towards people over the age of 18 that are interested in beer, especially students. This project was done in collaboration between finnish and dutch students in a short-term exchange.
 
