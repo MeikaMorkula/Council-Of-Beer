@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { ChangeUserName, ChangePassWord } from "../services/UserSettingsService";
+import { getUserName } from "../utils/AsyncStorage";
 
 export default function UserSettings() {
   const [newUsername, setNewUsername] = useState("");
@@ -16,6 +18,45 @@ export default function UserSettings() {
   const [newPswd, setNewPswd] = useState("");
   const [newPswdAgain, setNewPswdAgain] = useState("");
   const { t } = useTranslation();
+
+  const handleUsernameSubmit = async () => {
+    const curUserName = await getUserName().toString();
+    if (
+      newUsername != "" &&
+      newUsername != null &&
+      newUsername != curUserName
+    ) {
+      try {
+        await ChangeUserName({
+          newUser: newUsername.trim(),
+          oldUser: curUserName,
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  };
+
+  const handlePassWordchange = async () => {
+    const curUserName = await getUserName().toString();
+
+    if (
+      newPswd === newPswdAgain &&
+      newPswd != currentPswd &&
+      newPswd.length >= 8
+    ) {
+      try {
+        await ChangePassWord({
+        newPass: newPswd,
+        oldPass: currentPswd,
+        username: curUserName
+      })
+      } catch (err) {
+        console.log(err);
+      }
+      
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -60,7 +101,10 @@ export default function UserSettings() {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.changeUsrBtn}>
+        <TouchableOpacity
+          style={styles.changeUsrBtn}
+          onPress={handleUsernameSubmit}
+        >
           <Text style={{ fontSize: 16, color: "#E06F24" }}>
             {t("usersettings.btn.changeusername")}
           </Text>
@@ -124,7 +168,7 @@ export default function UserSettings() {
             />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.changeUsrBtn}>
+        <TouchableOpacity style={styles.changeUsrBtn} onPress={handlePassWordchange}>
           <Text style={{ fontSize: 16, color: "#E06F24" }}>
             {t("usersettings.btn.changepassword")}
           </Text>
