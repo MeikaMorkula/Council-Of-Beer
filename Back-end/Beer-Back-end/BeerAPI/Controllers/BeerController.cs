@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BeerLogic.Service;
 using BeerLogic.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class BeerController : Controller
     {
         private readonly BeerService _beerService;

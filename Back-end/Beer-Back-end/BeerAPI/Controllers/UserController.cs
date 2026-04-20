@@ -20,6 +20,7 @@ namespace BeerAPI.Controllers
         }
 
         [HttpPost("refresh")]
+        [Authorize]
         public async Task<IActionResult> Refresh([FromBody] RefreshRequest request)
         {
             var result = await _jwtService.RefreshLogin(request);
@@ -73,6 +74,7 @@ namespace BeerAPI.Controllers
         }
 
         [HttpPatch("Username")]
+        [Authorize]
         public async Task<string> ChangeUsername(ChangeUsernameRequest request)
         {
             string result = _userService.ChangeUsername(request);
@@ -80,6 +82,7 @@ namespace BeerAPI.Controllers
         }
 
         [HttpPatch("Password")]
+        [Authorize]
         public IActionResult ChangePassword(PasswordChangeRequest request)
         {
             string result = _userService.ChangePassword(request);
@@ -93,6 +96,7 @@ namespace BeerAPI.Controllers
         }
 
         [HttpDelete("Terminate")]
+        [Authorize]
         public IActionResult DeleteAccount(DeleteAccountRequest request)
         {
             string result = _userService.DeleteAccount(request);
