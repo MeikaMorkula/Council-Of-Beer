@@ -11,11 +11,16 @@ import {
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Ionicons } from "@expo/vector-icons";
 import { CommentArea } from "./PostComments";
+import { useNavigation } from '@react-navigation/native';
 
 export default function Post() {
+  const navigation = useNavigation<any>();
   return (
     <ScrollView style={styles.container} nestedScrollEnabled={true}>
       <View style={styles.postHeader}>
+        <TouchableOpacity onPress={() => navigation.pop()} style={{paddingTop:15}}>
+          <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+        </TouchableOpacity>
         <Image style={styles.userPfp} />
         <Text style={styles.postUsrname}>@username</Text>
       </View>

@@ -11,9 +11,11 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { signup } from "../services/SignupService";
+import { Ionicons } from '@expo/vector-icons';
 
 const formatBirthdayInput = (value: string, previousValue: string) => {
   const digits = value.replace(/\D/g, "").slice(0, 8);
@@ -65,7 +67,7 @@ const toApiBirthday = (value: string) => {
 };
 
 export default function SignUp() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const [username, setUsername] = useState("");
   const [birthday, setBirthday] = useState("");
@@ -135,6 +137,9 @@ export default function SignUp() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', alignSelf: 'flex-start', top: 8}} >
+          <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+        </TouchableOpacity>
         <View style={styles.loginContent}>
           <Text style={styles.title}>{t("signup.title")}</Text>
 

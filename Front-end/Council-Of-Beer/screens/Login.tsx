@@ -11,12 +11,14 @@ import {
   TextInput,
   Pressable,
   ActivityIndicator,
+  TouchableOpacity
 } from "react-native";
 import { useTranslation } from "react-i18next";
 import { login } from "../services/LoginService";
+import { Ionicons } from '@expo/vector-icons';
 
 export default function Login() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -79,6 +81,9 @@ export default function Login() {
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', alignSelf: 'flex-start', top: 8}} >
+          <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+        </TouchableOpacity>
         <View style={styles.loginContent}>
           <Text style={styles.title}>{t("login.title")}</Text>
 
