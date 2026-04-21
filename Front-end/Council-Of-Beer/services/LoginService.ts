@@ -1,5 +1,6 @@
 import { StoreTokens } from "../utils/SecureStorage";
 import {saveUserName} from "../utils/AsyncStorage"
+import { checkHealth } from "./HealthService";
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
@@ -35,6 +36,11 @@ const getErrorMessage = async (response: Response, fallbackMessage: string) => {
 };
 
 export const login = async ({ username, password }: LoginRequest): Promise<AuthResponse> => {
+	const isHealthy = await checkHealth();
+		
+			if (!isHealthy) {
+			  throw new Error("SERVER_UNAVAILABLE");
+			}
 	const response = await fetch(getAuthUrl("/User/Authorize"), {
 		method: "POST",
 		headers: {
