@@ -13,7 +13,7 @@ import { ScrollView } from "react-native";
 import { useTranslation } from "react-i18next";
 import CameraComponent from "../components/CameraComponent";
 import StarRating from "../components/StarRating";
-import LabelSelector from "../components/LabelSelector";
+import { getUserName } from "../utils/AsyncStorage";
 
 export default function NewPost() {
   const [error, setError] = useState<string>("");
@@ -25,36 +25,39 @@ export default function NewPost() {
   } | null>(null);
   const [rating, setRating] = useState<number>(0);
   const [review, setReview] = useState<string>("");
-  const [labels, setLabels] = useState<string[]>([]);
   const { t } = useTranslation();
 
-  //väliaikanen setti kunnes bäkkäri toimii
-  const tempLabels = [
-    "Kalia",
-    "Stout",
-    "Lager",
-    "Sour",
-    "Hedelmäinen",
-    "Jäykkä",
-    "Juustoinen",
-    "Pirskahteleva",
-  ];
+  function resetForm() {
+    setRating(3);
+    setReview("");
+    setImage(null);
+  }
 
-  function validateFom(): boolean {
+  function validateForm(): boolean {
     if (!rating || !image) {
       return false;
     } else return true;
   }
+  
 
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
+    const user = await getUserName();
+    if (validateForm()) {
+      try {
 
-    try {
-    } catch (err) {
-      setError("Adding beer failed");
-    } finally {
-      setLoading(false);
+        const NewPost= {
+          username:user,
+          
+        }
+
+        resetForm();
+      } catch (err) {
+        setError("Adding beer failed");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -99,16 +102,6 @@ export default function NewPost() {
             )}
           </View>
         </View>
-        <LabelSelector
-          options={tempLabels}
-          selected={labels}
-          onChange={setLabels}
-          label={t("addBeer.labels.title")}
-          buttonText={t("addBeer.labels.select")}
-          buttonTextWithCount={(count) =>
-            t("addBeer.labels.selectedCount", { count })
-          }
-        />
 
         {!!error && <Text style={styles.error}>{error}</Text>}
 
@@ -116,7 +109,7 @@ export default function NewPost() {
           <Pressable
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleSubmit}
-            disabled={loading || validateFom()}
+            disabled={loading || validateForm()}
           >
             {loading ? (
               <ActivityIndicator color="#fff" />
