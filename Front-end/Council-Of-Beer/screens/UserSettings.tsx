@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,6 +16,7 @@ import {
 import { getUserName } from "../utils/AsyncStorage";
 
 export default function UserSettings() {
+  const [username, setUsername] = useState("");
   const [newUsername, setNewUsername] = useState("");
   const [currentPswd, setCurrentPswd] = useState("");
   const [newPswd, setNewPswd] = useState("");
@@ -24,6 +25,10 @@ export default function UserSettings() {
 
   const { t } = useTranslation();
 
+  const displayUserName = async () => {
+    const curUserName = await getUserName().toString();
+    return curUserName;
+  };
   const handleUsernameSubmit = async () => {
     const curUserName = await getUserName().toString();
     if (
@@ -37,13 +42,22 @@ export default function UserSettings() {
           oldUser: curUserName,
         });
       } catch (err: any) {
-        console.log(err);
-        setError(err);
+        setError(err.message || "An unexpected error occurred");
       }
     } else {
       setError("missing fields");
     }
   };
+
+  useEffect(() => {
+    const loadUsername = async () => {
+      const data = await getUserName();
+      if (data) {
+        setUsername(typeof data === "object" ? data.username : data.toString());
+      }
+    };
+    loadUsername();
+  }, []);
 
   const handlePassWordchange = async () => {
     const curUserName = await getUserName();
@@ -59,9 +73,8 @@ export default function UserSettings() {
           oldPass: currentPswd ?? "",
           username: curUserName ?? "",
         });
-      } catch (err: any) {  
-        console.log(err);
-        setError(err);
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred");
       }
     } else {
       setError("missing fields");
@@ -91,7 +104,7 @@ export default function UserSettings() {
         <TextInput
           style={styles.usrNameField}
           editable={false}
-          placeholder={t("usersettings.placeholders.username")}
+          placeholder={username}
           placeholderTextColor={"#EDE9C7"}
         />
         <View style={styles.changeUsrFieldCont}>

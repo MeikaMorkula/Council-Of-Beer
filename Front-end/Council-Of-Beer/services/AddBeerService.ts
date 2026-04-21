@@ -19,7 +19,8 @@ const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 export const addBeer = async (content: AddBeerContent) => {
   try {
     const formData = new FormData();
-    const token = GetAccessToken();
+    const token = await GetAccessToken();
+
 
     formData.append("Name", content.Name);
     formData.append("AlcPrecentage", content.AlcPrecentage.toString());
