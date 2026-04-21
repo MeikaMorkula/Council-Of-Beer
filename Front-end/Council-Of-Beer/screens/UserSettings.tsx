@@ -14,6 +14,7 @@ import {
   ChangePassWord,
 } from "../services/UserSettingsService";
 import { getUserName } from "../utils/AsyncStorage";
+import { useNavigation } from '@react-navigation/native';
 
 export default function UserSettings() {
   const [newUsername, setNewUsername] = useState("");
@@ -21,6 +22,7 @@ export default function UserSettings() {
   const [newPswd, setNewPswd] = useState("");
   const [newPswdAgain, setNewPswdAgain] = useState("");
   const [error, setError] = useState<string>("");
+  const navigation = useNavigation<any>();
 
   const { t } = useTranslation();
 
@@ -70,6 +72,9 @@ export default function UserSettings() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+        <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+      </TouchableOpacity>
       <View style={styles.changePfCont}>
         <Image style={styles.downloadPfPic} />
         <View style={styles.downloadPfCont}>
@@ -207,6 +212,7 @@ const styles = StyleSheet.create({
   changePfCont: {
     flexDirection: "row",
     paddingBottom: 20,
+    paddingTop: 20
   },
   downloadPfCont: {
     paddingLeft: 10,

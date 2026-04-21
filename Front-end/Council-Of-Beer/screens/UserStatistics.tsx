@@ -1,15 +1,21 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, ScrollView, TouchableOpacity } from "react-native";
 import { useTranslation } from "react-i18next";
 import KaliaPieChart from "../components/PieChart";
 import AvgRatingChart from "../components/AvgRatingsChart";
 import BeersInAWeekChart from "../components/BeersWithinAWeekChart";
 import AvgDonut from "../components/AvgRatingDonutChart";
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
 export default function UserStatistics() {
+  const navigation = useNavigation<any>();
   const { t } = useTranslation();
   return (
     <View style={styles.statisticsCont}>
+      <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8, zIndex: 9999}} >
+        <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+      </TouchableOpacity>
       <Text style={styles.statisticsTitle}>{t("statistics.title")}</Text>
       <ScrollView>
         <View style={styles.statisticsView}>
