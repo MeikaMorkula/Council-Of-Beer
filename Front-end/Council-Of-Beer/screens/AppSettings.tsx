@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, Switch } from "react-native";
+import { useNavigation } from '@react-navigation/native';
+import { StyleSheet, Text, View, Switch, TouchableOpacity } from 'react-native';
 import { Dropdown } from "react-native-element-dropdown";
 import { saveSettings, loadSettings } from "../utils/AsyncStorage";
 import { useTranslation } from "react-i18next";
 import i18n from "../i8n";
+import { Ionicons } from '@expo/vector-icons';
 
 const langData = [
   { label: "English", value: "en" },
@@ -18,6 +20,7 @@ export default function AppSettings() {
   const [newFollowerNotifsEnabled, setNewFollowerNotifsEnabled] =
     useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigation = useNavigation<any>();
 
   const { t } = useTranslation();
 
@@ -70,6 +73,9 @@ export default function AppSettings() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+        <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+      </TouchableOpacity>
       <View style={styles.appSettingsCont}>
         <View style={styles.langCont}>
           <Text style={styles.langText}>{t("settings.titles.language")}</Text>

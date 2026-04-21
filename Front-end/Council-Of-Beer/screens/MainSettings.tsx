@@ -34,7 +34,7 @@ function SettingsStack() {
 }
 
 function MainSettingsScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { t } = useTranslation();
 
   const LogOut = async () => {
@@ -50,6 +50,9 @@ function MainSettingsScreen() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.pop()} style={{alignSelf: 'flex-start', paddingTop: 8, paddingBottom: 8}} >
+        <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+      </TouchableOpacity>
       <TouchableOpacity
         style={styles.settingsNav}
         onPress={() => navigation.navigate("UserStatistics" as never)}
