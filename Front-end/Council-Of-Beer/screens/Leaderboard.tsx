@@ -13,16 +13,19 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { Beer, search } from "../services/SearchService";
 
-function ProductComponent() {
-  const navigation = useNavigation();
+function ProductComponent( { beer }: { beer: Beer } ) {
+  const navigation = useNavigation<any>();
   return (
     <TouchableOpacity
       style={styles.productCont}
-      onPress={() => navigation.navigate("ProductPage")}
+      onPress={() => navigation.navigate("ProductPage", { beerName : beer.name })}
       activeOpacity={0.8}
     >
-      <Image style={styles.productIcon} />
+      <Image style={styles.productIcon} 
+        source={beer.imageUrl ? { uri: beer.imageUrl } : undefined}
+      />
       <View style={styles.productInfo}>
         <Text style={styles.productText}>Beer, 6,6%</Text>
         <Text style={styles.productText}>Brewery, Country</Text>
