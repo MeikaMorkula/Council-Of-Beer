@@ -100,7 +100,8 @@ namespace BeerAPI.Controllers
         [Authorize]
         public IActionResult DeleteAccount(DeleteAccountRequest request)
         {
-            string result = _userService.DeleteAccount(request);
+            string username = User.FindFirst("name")?.Value;
+            string result = _userService.DeleteAccount(username);
 
             if (result == "Account deleted")
             {
@@ -110,10 +111,12 @@ namespace BeerAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize]
         [HttpGet("GetAccount")]
-        public IActionResult ViewAccount(RetrieveUserRequest request)
+        public IActionResult GetAccount()
         {
-            RetrieveUserResponse response = _userService.ViewAccount(request);
+            string username = User.FindFirst("name")?.Value;
+            RetrieveUserResponse response = _userService.ViewAccount(username);
 
             if (response.Result == "succes")
             {
