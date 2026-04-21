@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Npgsql;
 using System.Data;
 
@@ -6,6 +7,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("health")]
+    [AllowAnonymous]
     public class HealthController : ControllerBase
     {
         private readonly IDbConnection _connection;
@@ -16,6 +18,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public IActionResult Get()
         {
             try
