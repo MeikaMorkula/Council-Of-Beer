@@ -33,10 +33,10 @@ export const signup = async ({
   password,
   birthday,
 }: SignupRequest): Promise<AuthResponse> => {
-  const isHealthy = await checkHealth();
+  /*const isHealthy = await checkHealth();
   if (!isHealthy) {
     throw new Error("SERVER_UNAVAILABLE");
-  }
+  }*/
   const response = await fetch(getAuthUrl("/User/Authenticate"), {
     method: "POST",
     headers: {

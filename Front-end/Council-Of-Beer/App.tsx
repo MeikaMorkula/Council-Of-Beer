@@ -46,9 +46,9 @@ function FeedNav(){
   return(
     <HomeTabs.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: '#28200C' },
-        tabBarLabelStyle: { color: '#EDE9C7' },
-        tabBarIndicatorStyle: { backgroundColor: '#E39914' }
+        tabBarStyle: styles.topTabBar,
+        tabBarLabelStyle: styles.topTabLabel,
+        tabBarIndicatorStyle: styles.topTabIndicator,
       }}
     >
       <HomeTabs.Screen name="LoginStack" component={LoginStack}  options={{ tabBarLabel: t("tabs.home") }}/>
@@ -212,7 +212,8 @@ function SearchStack() {
 export default function App() {
   const Tabs = createBottomTabNavigator();
   const { t } = useTranslation();
-  const {isLoggedIn, setIsLoggedIn} = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [blockedTab, setBlockedTab] = useState<"New Post" | "ProfileStack" | null>(null);
 
   const refreshAuthState = async () => {
     const authState = await getAuthState();
@@ -223,6 +224,21 @@ export default function App() {
     void refreshAuthState();
   }, []);
 
+  const highlightBlockedTab = (
+    tabName: "New Post" | "ProfileStack" | "Feed",
+    navigation: any
+  ) => {
+    setBlockedTab(tabName);
+
+    setTimeout(() => {
+      navigation.navigate('Feed', {
+        screen: 'LoginStack',
+        params: { screen: 'LogIn' },
+      });
+    }, 120);
+
+  };
+
   return (
     <SafeAreaProvider>
       <NavigationContainer onStateChange={() => void refreshAuthState()}>
@@ -230,23 +246,33 @@ export default function App() {
           initialRouteName="Feed"
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
-              let iconName;
+              let iconName: React.ComponentProps<typeof Ionicons>["name"] = 'ellipse-outline';
+              const isBlockedTab = blockedTab === route.name;
+              const isVisuallyActive = blockedTab ? isBlockedTab : focused;
 
               if(route.name === 'Feed'){
-                iconName = focused
+                iconName = isVisuallyActive
                   ? 'beer'
                   : 'beer-outline';
               } else if(route.name === 'New Post'){
-                iconName = focused 
+                iconName = isVisuallyActive
                   ? 'add-circle'
                   : 'add-circle-outline';
               } else if(route.name === 'ProfileStack'){
-                iconName = focused  
+                iconName = isVisuallyActive
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
               // This error is fine, everything works as it should (14.3.2026)
-              return <Ionicons name={iconName} size={24} color="#EDE9C7"/>
+              return (
+                <View style={[styles.tabIconWrap, isVisuallyActive && styles.tabIconWrapActive]}>
+                  <Ionicons
+                    name={iconName}
+                    size={24}
+                    color={isVisuallyActive ? '#EFC06D' : '#EDE9C7'}
+                  />
+                </View>
+              );
             },
 
             header: ({ route }) => {
@@ -259,11 +285,9 @@ export default function App() {
               }
             },
 
-            tabBarStyle: {
-              backgroundColor: '#28200C'
-            },
+            tabBarStyle: styles.bottomTabBar,
             tabBarInactiveTintColor: '#EDE9C7',
-            tabBarActiveTintColor: '#EFC06D'
+            tabBarActiveTintColor: blockedTab ? '#EDE9C7' : '#EFC06D'
           })}  
         >
           <Tabs.Screen
@@ -271,6 +295,7 @@ export default function App() {
             component={FeedNav}
             listeners={({ navigation }) => ({
               tabPress: () => {
+                setBlockedTab(null);
                 navigation.navigate('Feed', {
                   screen: 'LoginStack',
                   params: { screen: 'HomeFeed' },
@@ -290,12 +315,11 @@ export default function App() {
                 const loggedIn = await isAuthenticated();
 
                 if (!loggedIn) {
-                  navigation.navigate('Feed', {
-                    screen: 'LoginStack',
-                    params: { screen: 'LogIn' },
-                  });
+                  highlightBlockedTab('New Post', navigation);
                   return;
                 }
+
+                setBlockedTab(null);
 
                 navigation.navigate('New Post', {
                   screen: 'NewPostMenu',
@@ -314,12 +338,12 @@ export default function App() {
                 const loggedIn = await isAuthenticated();
 
                 if (!loggedIn) {
-                  navigation.navigate('Feed', {
-                    screen: 'LoginStack',
-                    params: { screen: 'LogIn' },
-                  });
+                  highlightBlockedTab('ProfileStack', navigation);
                   return;
                 }
+
+                setBlockedTab(null);
+
                 navigation.navigate('ProfileStack', {
                   screen: 'Profile',
                 });
@@ -333,6 +357,28 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  topTabBar: {
+    backgroundColor: '#28200C',
+  },
+  topTabLabel: {
+    color: '#EDE9C7',
+  },
+  topTabIndicator: {
+    backgroundColor: '#E39914',
+  },
+  bottomTabBar: {
+    backgroundColor: '#28200C',
+  },
+  tabIconWrap: {
+    width: 48,
+    alignItems: 'center',
+    paddingTop: 5,
+    borderTopWidth: 2,
+    borderTopColor: 'transparent',
+  },
+  tabIconWrapActive: {
+    borderTopColor: '#EFC06D',
+  },
   beerHeader: {
     alignItems: 'center',
     justifyContent: 'center',
