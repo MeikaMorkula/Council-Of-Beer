@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   useFocusEffect,
   useNavigation,
@@ -11,21 +11,25 @@ import {
   Image,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
+import { Beer, search } from "../services/SearchService";
 
-function ProductComponent() {
-  const navigation = useNavigation();
+function ProductComponent( { beer }: { beer: Beer } ) {
+  const navigation = useNavigation<any>();
   return (
     <TouchableOpacity
       style={styles.productCont}
-      onPress={() => navigation.navigate("ProductPage")}
+      onPress={() => navigation.navigate("ProductPage", { beerName : beer.name })}
       activeOpacity={0.8}
     >
-      <Image style={styles.productIcon} />
+      <Image style={styles.productIcon} 
+        source={beer.imageUrl ? { uri: beer.imageUrl } : undefined}
+      />
       <View style={styles.productInfo}>
-        <Text style={styles.productText}>Beer, 6,6%</Text>
-        <Text style={styles.productText}>Brewery, Country</Text>
+        <Text style={styles.productText}>{beer.name}, {beer.alcPrecentage}%</Text>
+        <Text style={styles.productText}>{beer.brewery}, {beer.country}</Text>
         <StarRatingDisplay
           rating={3.5}
           starSize={24}
@@ -39,6 +43,9 @@ function ProductComponent() {
 export default function Leaderboard() {
   const navigation = useNavigation();
   const scrollRef = useRef<ScrollView>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [beers, setBeers] = useState<Beer[]>([]);
 
   const scrollToTop = useCallback((animated = true) => {
     scrollRef.current?.scrollTo({ y: 0, animated });
@@ -64,19 +71,53 @@ export default function Leaderboard() {
     return unsubscribe;
   }, [navigation, scrollToTop]);
 
+  const loadBeers = useCallback(async () => {
+    try{
+      setIsLoading(true);
+      setErrorMessage("");
+      const res = await search();
+      setBeers(res);
+    } catch (err){
+      if (err instanceof Error) {
+        setErrorMessage(err.message);
+      } else {
+        setErrorMessage("Failed to load beers")
+      }
+    } finally {
+      setIsLoading(false)
+    }
+  }, []);
+
+  useFocusEffect(
+      useCallback(() => {
+        scrollToTop(false);
+      }, [scrollToTop]),
+    );
+  
+  useEffect(() => {
+    loadBeers();
+  }, [loadBeers]);
+
   return (
     <ScrollView ref={scrollRef} style={styles.container}>
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
-      <ProductComponent />
+      {isLoading ? (
+        <View>
+          <ActivityIndicator color="#EDE9C7" size="large"/>
+        </View>
+      ) : null}
+
+      {!isLoading && errorMessage ? (
+        <Text>{errorMessage}</Text>
+      ) : null}
+
+      {!isLoading && !errorMessage
+          ? beers.map((beer, index) => (
+              <ProductComponent
+                key={`${beer.name || "beer"}-${beer.imageUrl || "no-image"}-${index}`}
+                beer={beer}
+              />
+            ))
+          : null}
     </ScrollView>
   );
 }
