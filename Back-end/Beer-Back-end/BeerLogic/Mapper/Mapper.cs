@@ -26,8 +26,6 @@ namespace BeerLogic.Mapper
             };
         }
 
-<<<<<<< HEAD
-        // PostMapper
         public Post PostDTOToEntity(PostDTO postDTO)
         {
             return new Post()
@@ -47,8 +45,6 @@ namespace BeerLogic.Mapper
                 Bar = post.Bar
             };
         }
-=======
->>>>>>> 20303e13bdb9669573e089d4b788bc7516bd4d3b
 
 
         // BeerMapper
