@@ -27,11 +27,6 @@ namespace BeerAPI.Controllers
                 return BadRequest("Image is required.");
             }
 
-            if (request.beername == null)
-            {
-                return BadRequest("BeerId is invalid.");
-            }
-
             var allowedTypes = new[] { "image/jpeg", "image/png", "image/webp" };
             if (!allowedTypes.Contains(request.Image.ContentType?.ToLower()))
             {

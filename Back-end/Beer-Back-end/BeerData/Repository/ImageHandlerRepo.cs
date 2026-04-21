@@ -49,10 +49,7 @@ namespace BeerData.Repository
 
                 using var command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@userName", post.username);
-                command.Parameters.AddWithValue("@beerName", post.beername);
                 command.Parameters.AddWithValue("@description", (object?)post.Description ?? DBNull.Value);
-                command.Parameters.AddWithValue("@bar", (object?)post.Bar ?? DBNull.Value);
-                command.Parameters.AddWithValue("@city", (object?)post.City ?? DBNull.Value);
                 command.Parameters.AddWithValue("@image_url", (object?)uploadResult.ImageUrl ?? DBNull.Value);
                 command.Parameters.AddWithValue("@image_public_id", (object?)uploadResult.PublicId ?? DBNull.Value);
 
@@ -63,16 +60,12 @@ namespace BeerData.Repository
                     return new CreatePostResponse
                     {
                         Username = reader["username"]?.ToString(),
-                        userImg = reader["userimg"]?.ToString(),
-                        Beername = reader["beername"]?.ToString(),
                         Description = reader["description"]?.ToString(),
-                        Bar = reader["bar"]?.ToString(),
-                        City = reader["city"]?.ToString(),
                         ImageUrl = reader["image_url"]?.ToString()
                     };
                 }
 
-                throw new Exception($"Post could not be created. No matching user or beer found. userName='{post.username}', beerName='{post.beername}'");
+                throw new Exception($"Post could not be created. No matching user or beer found. userName='{post.username}'");
             }
             catch (Exception ex)
             {
