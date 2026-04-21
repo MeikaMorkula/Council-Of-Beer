@@ -104,7 +104,11 @@ export default function ProductPage() {
 
       <View style={styles.postBeerInfoCont}>
         <View style={styles.infoRow}>
-          <Text style={styles.mainInfoText}>{beer.name}, </Text>
+          <Text style={styles.mainInfoText}>{beer.name},{" "}
+            <Text style={styles.alcText}>{beer.alcPrecentage}%</Text>
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
           <StarRatingDisplay
             rating={4}
             starSize={22}
@@ -112,10 +116,7 @@ export default function ProductPage() {
           />
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.subInfoText}>{beer.alcPrecentage}%, </Text>
-          <Text style={styles.subInfoText}>{beer.brewery}</Text>
-        </View>
-        <View style={styles.infoRow}>
+          <Text style={styles.subInfoText}>{beer.brewery}, </Text>
           <Text style={styles.subInfoText}>{beer.country}</Text>
         </View>
       </View>
@@ -204,6 +205,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   mainInfoText: {
+    color: "#EDE9C7",
+    fontSize: 24,
+  },
+  alcText: {
     color: "#EDE9C7",
     fontSize: 24,
   },
