@@ -26,16 +26,7 @@ namespace BeerLogic.Service
 
             CreatePostResponse createdPost = await _imageHandlerRepo.CreatePostAsync(request, uploadResult);
 
-            return new CreatePostResponse
-            {
-                Username = createdPost.Username,
-                userImg = createdPost.userImg,
-                Beername = createdPost.Beername,
-                Description = createdPost.Description,
-                Bar = createdPost.Bar,
-                City = createdPost.City,
-                ImageUrl = createdPost.ImageUrl,
-            };
+            return createdPost;
         }
     }
 }

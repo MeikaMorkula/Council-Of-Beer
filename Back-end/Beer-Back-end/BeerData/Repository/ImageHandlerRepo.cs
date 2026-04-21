@@ -26,20 +26,37 @@ namespace BeerData.Repository
                 await connection.OpenAsync();
 
                 string query = @"
-                    INSERT INTO post (user_id, beer_id, description, image_url, image_public_id)
-                    SELECT u.id, b.id, @description, @image_url, @image_public_id
-                    FROM users u
-                    JOIN beer b ON b.name = @beerName
-                    WHERE u.name = @userName
-                    RETURNING id, user_id, beer_id, description, image_url, image_public_id;
+                    WITH inserted_post AS (
+                        INSERT INTO post (userid, beerid, description, bar, city, createdat, image_url, image_public_id)
+                        SELECT u.id, b.id, @description, @bar, @city, @createdat, @image_url, @image_public_id
+                        FROM users u
+                        JOIN beer b ON b.name = @beerName
+                        WHERE u.name = @userName
+                        RETURNING id, userid, beerid, description, bar, city, image_url, image_public_id
+                    )
+                    SELECT 
+                        u.name AS username,
+                        u.image_url AS userimg,
+                        b.name AS beername,
+                        p.description,
+                        p.bar,
+                        p.city,
+                        p.createdat,
+                        p.image_url
+                    FROM inserted_post p
+                    JOIN users u ON u.id = p.userid
+                    JOIN beer b ON b.id = p.beerid;
                 ";
 
                 using var command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("@beerName", post.beername );
-                command.Parameters.AddWithValue("@description", post.Description ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@image_url", uploadResult.ImageUrl);
-                command.Parameters.AddWithValue("@image_public_id", uploadResult.PublicId);
                 command.Parameters.AddWithValue("@userName", post.username);
+                command.Parameters.AddWithValue("@beerName", post.beername);
+                command.Parameters.AddWithValue("@description", (object?)post.Description ?? DBNull.Value);
+                command.Parameters.AddWithValue("@createdat", DateTime.UtcNow);
+                command.Parameters.AddWithValue("@bar", (object?)post.Bar ?? DBNull.Value);
+                command.Parameters.AddWithValue("@city", (object?)post.City ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_url", (object?)uploadResult.ImageUrl ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_public_id", (object?)uploadResult.PublicId ?? DBNull.Value);
 
                 using var reader = await command.ExecuteReaderAsync();
 
@@ -47,15 +64,17 @@ namespace BeerData.Repository
                 {
                     return new CreatePostResponse
                     {
-                        Username = reader.GetInt32(reader.GetOrdinal("userName")),
-                        Beername = reader.GetInt32(reader.GetOrdinal("beer_id")),
+                        Username = reader["username"]?.ToString(),
+                        userImg = reader["userimg"]?.ToString(),
+                        Beername = reader["beername"]?.ToString(),
                         Description = reader["description"]?.ToString(),
-                        ImageUrl = reader["image_url"].ToString(),
-                        PublicId = reader["image_public_id"].ToString()
+                        Bar = reader["bar"]?.ToString(),
+                        City = reader["city"]?.ToString(),
+                        ImageUrl = reader["image_url"]?.ToString()
                     };
                 }
 
-                throw new Exception("Post could not be created.");
+                throw new Exception($"Post could not be created. No matching user or beer found. userName='{post.username}', beerName='{post.beername}'");
             }
             catch (Exception ex)
             {

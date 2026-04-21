@@ -162,7 +162,7 @@ namespace BeerData.Repository
 
                 string sql = @"
                     WITH new_beer AS (
-                        INSERT INTO beer (name, alcohol_percentage, brewery, country, barcode, image_url, image_public_id)
+                        INSERT INTO beer (name, alcoholpercentage, brewery, country, barcode, image_url, image_public_id)
                         VALUES (@name, @alcohol_percentage, @brewery, @country, @barcode, @image_url, @image_public_id)
                         RETURNING id ),
                     ins_labels AS (
