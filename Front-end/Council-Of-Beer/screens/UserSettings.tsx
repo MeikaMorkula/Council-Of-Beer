@@ -6,6 +6,7 @@ import {
   View,
   Image,
   TextInput,
+  ScrollView,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
@@ -14,7 +15,7 @@ import {
   ChangePassWord,
 } from "../services/UserSettingsService";
 import { getUserName } from "../utils/AsyncStorage";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
 
 export default function UserSettings() {
   const [username, setUsername] = useState("");
@@ -85,133 +86,133 @@ export default function UserSettings() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+      <TouchableOpacity
+        onPress={() => navigation.pop()}
+        style={{ position: "absolute", top: 8 }}
+      >
         <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
       </TouchableOpacity>
-      <View style={styles.changePfCont}>
-        <Image style={styles.downloadPfPic} />
-        <View style={styles.downloadPfCont}>
-          <Text style={[{ fontSize: 18, color: "#EDE9C7" }]}>
-            {t("usersettings.titles.changepfp")}
-          </Text>
-          <TouchableOpacity style={styles.downloadPfBtn}>
-            <Ionicons name="download-outline" size={24} color="#E06F24" />
-            <Text style={styles.downloadBtnTxt}>
-              {t("usersettings.btn.download")}
+      <ScrollView>
+        <View style={styles.changePfCont}>
+          <Image style={styles.downloadPfPic} />
+          <View style={styles.downloadPfCont}>
+            <Text style={[{ fontSize: 18, color: "#EDE9C7" }]}>
+              {t("usersettings.titles.changepfp")}
+            </Text>
+            <TextInput
+              style={styles.usrNameField}
+              editable={false}
+              placeholder={username}
+              placeholderTextColor={"#EDE9C7"}
+            />
+            <View style={styles.changeUsrFieldCont}>
+              <TextInput
+                style={[styles.usrNameField, { width: "95%" }]}
+                placeholder={t("usersettings.placeholders.enterusername")}
+                placeholderTextColor={"#EDE9C7"}
+                value={newUsername}
+                onChangeText={setNewUsername}
+              />
+              <TouchableOpacity onPress={() => setNewUsername("")}>
+                <Ionicons
+                  style={styles.changeUsrIcon}
+                  name="close-circle-outline"
+                  size={24}
+                  color="#EDE9C7"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.changeUsrBtn}
+              onPress={handleUsernameSubmit}
+            >
+              <Text style={{ fontSize: 16, color: "#E06F24" }}>
+                {t("usersettings.btn.changeusername")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.changePswdCont}>
+            <Text style={[{ fontSize: 18, color: "#EDE9C7" }]}>
+              {t("usersettings.titles.changepassword")}
+            </Text>
+            <View style={styles.changeUsrFieldCont}>
+              <TextInput
+                style={[styles.usrNameField, { width: "95%" }]}
+                placeholder={t(
+                  "usersettings.placeholders.entercurrentpassword",
+                )}
+                secureTextEntry={true}
+                placeholderTextColor={"#EDE9C7"}
+                value={currentPswd}
+                onChangeText={setCurrentPswd}
+              />
+              <TouchableOpacity onPress={() => setCurrentPswd("")}>
+                <Ionicons
+                  style={styles.changeUsrIcon}
+                  name="close-circle-outline"
+                  size={24}
+                  color="#EDE9C7"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.changeUsrFieldCont}>
+              <TextInput
+                style={[styles.usrNameField, { width: "95%" }]}
+                placeholder={t("usersettings.placeholders.enternewpassword")}
+                secureTextEntry={true}
+                placeholderTextColor={"#EDE9C7"}
+                value={newPswd}
+                onChangeText={setNewPswd}
+              />
+              <TouchableOpacity onPress={() => setNewPswd("")}>
+                <Ionicons
+                  style={styles.changeUsrIcon}
+                  name="close-circle-outline"
+                  size={24}
+                  color="#EDE9C7"
+                />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.changeUsrFieldCont}>
+              <TextInput
+                style={[styles.usrNameField, { width: "95%" }]}
+                placeholder={t(
+                  "usersettings.placeholders.enternewpasswordagain",
+                )}
+                secureTextEntry={true}
+                placeholderTextColor={"#EDE9C7"}
+                value={newPswdAgain}
+                onChangeText={setNewPswdAgain}
+              />
+              <TouchableOpacity onPress={() => setNewPswdAgain("")}>
+                <Ionicons
+                  style={styles.changeUsrIcon}
+                  name="close-circle-outline"
+                  size={24}
+                  color="#EDE9C7"
+                />
+              </TouchableOpacity>
+            </View>
+            <TouchableOpacity
+              style={styles.changeUsrBtn}
+              onPress={handlePassWordchange}
+            >
+              <Text style={{ fontSize: 16, color: "#E06F24" }}>
+                {t("usersettings.btn.changepassword")}
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {!!error && <Text style={styles.error}>{error}</Text>}
+
+          <TouchableOpacity style={styles.deleteAccBtn}>
+            <Text
+              style={{ fontSize: 16, color: "#e02424", fontWeight: "bold" }}
+            >
+              {t("usersettings.btn.deleteaccount")}
             </Text>
           </TouchableOpacity>
         </View>
-      </View>
-      <View style={styles.changeUsrCont}>
-        <Text style={{ fontSize: 18, color: "#EDE9C7" }}>
-          {t("usersettings.titles.changeusername")}
-        </Text>
-        <TextInput
-          style={styles.usrNameField}
-          editable={false}
-          placeholder={username}
-          placeholderTextColor={"#EDE9C7"}
-        />
-        <View style={styles.changeUsrFieldCont}>
-          <TextInput
-            style={[styles.usrNameField, { width: "95%" }]}
-            placeholder={t("usersettings.placeholders.enterusername")}
-            placeholderTextColor={"#EDE9C7"}
-            value={newUsername}
-            onChangeText={setNewUsername}
-          />
-          <TouchableOpacity onPress={() => setNewUsername("")}>
-            <Ionicons
-              style={styles.changeUsrIcon}
-              name="close-circle-outline"
-              size={24}
-              color="#EDE9C7"
-            />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.changeUsrBtn}
-          onPress={handleUsernameSubmit}
-        >
-          <Text style={{ fontSize: 16, color: "#E06F24" }}>
-            {t("usersettings.btn.changeusername")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.changePswdCont}>
-        <Text style={[{ fontSize: 18, color: "#EDE9C7" }]}>
-          {t("usersettings.titles.changepassword")}
-        </Text>
-        <View style={styles.changeUsrFieldCont}>
-          <TextInput
-            style={[styles.usrNameField, { width: "95%" }]}
-            placeholder={t("usersettings.placeholders.entercurrentpassword")}
-            secureTextEntry={true}
-            placeholderTextColor={"#EDE9C7"}
-            value={currentPswd}
-            onChangeText={setCurrentPswd}
-          />
-          <TouchableOpacity onPress={() => setCurrentPswd("")}>
-            <Ionicons
-              style={styles.changeUsrIcon}
-              name="close-circle-outline"
-              size={24}
-              color="#EDE9C7"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.changeUsrFieldCont}>
-          <TextInput
-            style={[styles.usrNameField, { width: "95%" }]}
-            placeholder={t("usersettings.placeholders.enternewpassword")}
-            secureTextEntry={true}
-            placeholderTextColor={"#EDE9C7"}
-            value={newPswd}
-            onChangeText={setNewPswd}
-          />
-          <TouchableOpacity onPress={() => setNewPswd("")}>
-            <Ionicons
-              style={styles.changeUsrIcon}
-              name="close-circle-outline"
-              size={24}
-              color="#EDE9C7"
-            />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.changeUsrFieldCont}>
-          <TextInput
-            style={[styles.usrNameField, { width: "95%" }]}
-            placeholder={t("usersettings.placeholders.enternewpasswordagain")}
-            secureTextEntry={true}
-            placeholderTextColor={"#EDE9C7"}
-            value={newPswdAgain}
-            onChangeText={setNewPswdAgain}
-          />
-          <TouchableOpacity onPress={() => setNewPswdAgain("")}>
-            <Ionicons
-              style={styles.changeUsrIcon}
-              name="close-circle-outline"
-              size={24}
-              color="#EDE9C7"
-            />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          style={styles.changeUsrBtn}
-          onPress={handlePassWordchange}
-        >
-          <Text style={{ fontSize: 16, color: "#E06F24" }}>
-            {t("usersettings.btn.changepassword")}
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {!!error && <Text style={styles.error}>{error}</Text>}
-
-      <TouchableOpacity style={styles.deleteAccBtn}>
-        <Text style={{ fontSize: 16, color: "#e02424", fontWeight: "bold" }}>
-          {t("usersettings.btn.deleteaccount")}
-        </Text>
-      </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
   changePfCont: {
     flexDirection: "row",
     paddingBottom: 20,
-    paddingTop: 20
+    paddingTop: 20,
   },
   downloadPfCont: {
     paddingLeft: 10,
