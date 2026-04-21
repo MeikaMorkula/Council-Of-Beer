@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './screens/Profile';
 import Home from './screens/Home';
@@ -22,6 +22,7 @@ import BarcodeScanner from "./components/BarcodeScanner";
 import NewPostMenu from './screens/NewPostMenu'
 import Collection from './screens/Collection';
 import Post from './screens/Post';
+import { getAuthState, isAuthenticated } from './utils/Auth';
 
 
 const NewPostStack = createNativeStackNavigator();
@@ -58,13 +59,30 @@ function FeedNav(){
 }
 
 // WORKS 30.3.2026
-function MainHeader() {
+function MainHeader({ isLoggedIn }: {isLoggedIn: boolean }) {
   const navigation = useNavigation();
+
+  const handlePress = () => {
+    if (isLoggedIn) {
+      navigation.navigate('ProfileStack', { screen: 'Profile' });
+      return;
+    }
+
+    navigation.navigate('Feed', {
+      screen: 'LoginStack',
+      params: { screen: 'LogIn'},
+    });
+  };
+
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Feed', {screen: 'LoginStack', params: {screen: 'LogIn'}})}>
-        <Ionicons name='log-in' size={32} color='#EDE9C7'/>
+      <TouchableOpacity style={styles.settingsBtn} onPress={handlePress}>
+        <Ionicons
+          name={isLoggedIn ? 'person-circle' : 'log-in'}
+          size={32}
+          color='#EDE9C7'
+        />
       </TouchableOpacity>
     </View>
   );
@@ -193,11 +211,21 @@ function SearchStack() {
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
-   const { t } = useTranslation();
+  const { t } = useTranslation();
+  const {isLoggedIn, setIsLoggedIn} = useState(false);
+
+  const refreshAuthState = async () => {
+    const authState = await getAuthState();
+    setIsLoggedIn(authState.isLoggedIn);
+  };
+
+  useEffect(() => {
+    void refreshAuthState();
+  }, []);
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
+      <NavigationContainer onStateChange={() => void refreshAuthState()}>
         <Tabs.Navigator 
           initialRouteName="Feed"
           screenOptions={({ route }) => ({
@@ -223,7 +251,7 @@ export default function App() {
 
             header: ({ route }) => {
               if(route.name === 'Feed'){
-                return <MainHeader/>
+                return <MainHeader isLoggedIn={isLoggedIn}/>
               } else if (route.name === 'New Post'){
                 return <PostHeader/>
               } else if(route.name === 'ProfileStack'){
@@ -251,9 +279,52 @@ export default function App() {
             })}
             options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPostStackScreen} options={{ tabBarLabel: t("footer.newPost") }}
+          <Tabs.Screen
+            name="New Post"
+            component={NewPostStackScreen}
+            options={{ tabBarLabel: t("footer.newPost") }}
+            listeners={({ navigation }) => ({
+              tabPress: async (event) => {
+                event.preventDefault();
+
+                const loggedIn = await isAuthenticated();
+
+                if (!loggedIn) {
+                  navigation.navigate('Feed', {
+                    screen: 'LoginStack',
+                    params: { screen: 'LogIn' },
+                  });
+                  return;
+                }
+
+                navigation.navigate('New Post', {
+                  screen: 'NewPostMenu',
+                });
+              },
+            })}
           />
-          <Tabs.Screen name="ProfileStack" component={ProfileStack} options={{ tabBarLabel: t("footer.profile") }}
+          <Tabs.Screen
+            name="ProfileStack"
+            component={ProfileStack}
+            options={{ tabBarLabel: t("footer.profile") }}
+            listeners={({ navigation }) => ({
+              tabPress: async (event) => {
+                event.preventDefault();
+
+                const loggedIn = await isAuthenticated();
+
+                if (!loggedIn) {
+                  navigation.navigate('Feed', {
+                    screen: 'LoginStack',
+                    params: { screen: 'LogIn' },
+                  });
+                  return;
+                }
+                navigation.navigate('ProfileStack', {
+                  screen: 'Profile',
+                });
+              },
+            })}
           />
         </Tabs.Navigator>
       </NavigationContainer>
