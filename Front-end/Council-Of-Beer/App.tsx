@@ -225,7 +225,7 @@ export default function App() {
   }, []);
 
   const highlightBlockedTab = (
-    tabName: "New Post" | "ProfileStack" | "Feed",
+    tabName: "New Post" | "ProfileStack",
     navigation: any
   ) => {
     setBlockedTab(tabName);
@@ -372,7 +372,6 @@ const styles = StyleSheet.create({
   tabIconWrap: {
     width: 48,
     alignItems: 'center',
-    paddingTop: 5,
     borderTopWidth: 2,
     borderTopColor: 'transparent',
   },
