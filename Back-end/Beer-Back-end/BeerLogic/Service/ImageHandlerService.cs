@@ -28,12 +28,13 @@ namespace BeerLogic.Service
 
             return new CreatePostResponse
             {
-                UserId = createdPost.UserId,
-                PostId = createdPost.PostId,
-                BeerId = createdPost.BeerId,
+                Username = createdPost.Username,
+                userImg = createdPost.userImg,
+                Beername = createdPost.Beername,
                 Description = createdPost.Description,
+                Bar = createdPost.Bar,
+                City = createdPost.City,
                 ImageUrl = createdPost.ImageUrl,
-                PublicId = createdPost.PublicId
             };
         }
     }
