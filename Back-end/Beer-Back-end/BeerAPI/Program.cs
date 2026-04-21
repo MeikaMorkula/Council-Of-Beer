@@ -7,6 +7,8 @@ using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using System.Data;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -58,6 +60,8 @@ if (string.IsNullOrWhiteSpace(connectionString))
 {
     throw new InvalidOperationException("DefaultConnection is missing or empty.");
 }
+
+builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(connectionString));
 
 builder.Services.AddAuthentication(options =>
 {
