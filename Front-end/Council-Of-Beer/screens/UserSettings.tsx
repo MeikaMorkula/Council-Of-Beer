@@ -13,9 +13,11 @@ import { useTranslation } from "react-i18next";
 import {
   ChangeUserName,
   ChangePassWord,
+  deleteAccount,
 } from "../services/UserSettingsService";
 import { getUserName } from "../utils/AsyncStorage";
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from "@react-navigation/native";
+import { Alert } from "react-native";
 
 export default function UserSettings() {
   const [username, setUsername] = useState("");
@@ -28,10 +30,6 @@ export default function UserSettings() {
 
   const { t } = useTranslation();
 
-  const displayUserName = async () => {
-    const curUserName = await getUserName().toString();
-    return curUserName;
-  };
   const handleUsernameSubmit = async () => {
     const curUserName = await getUserName().toString();
     if (
@@ -52,6 +50,24 @@ export default function UserSettings() {
     }
   };
 
+  const handleDeleteAccount = () => {
+    Alert.alert(
+      t("userSettings.popup.delete.title"),
+      t("userSettings.popup.delete.areyousure"),
+      [
+        {
+          text: t("userSettings.popup.delete.cancel"),
+          style: "cancel",
+        },
+        {
+          text: t("userSettings.popup.delete.delete"),
+          style: "destructive",
+          onPress: () => executeDeleteRequest(),
+        },
+      ],
+    );
+  };
+
   useEffect(() => {
     const loadUsername = async () => {
       const data = await getUserName();
@@ -61,6 +77,10 @@ export default function UserSettings() {
     };
     loadUsername();
   }, []);
+
+  const executeDeleteRequest = async () => {
+    await deleteAccount();
+  };
 
   const handlePassWordchange = async () => {
     const curUserName = await getUserName();
@@ -86,7 +106,10 @@ export default function UserSettings() {
 
   return (
     <View style={styles.container}>
-       <TouchableOpacity onPress={() => navigation.pop()} style={{position: 'absolute', top: 8}} >
+      <TouchableOpacity
+        onPress={() => navigation.pop()}
+        style={{ position: "absolute", top: 8 }}
+      >
         <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
       </TouchableOpacity>
       <ScrollView>
@@ -209,7 +232,7 @@ export default function UserSettings() {
         </View>
         {!!error && <Text style={styles.error}>{error}</Text>}
 
-        <TouchableOpacity style={styles.deleteAccBtn}>
+        <TouchableOpacity style={styles.deleteAccBtn} onPress={handleDeleteAccount}>
           <Text style={{ fontSize: 16, color: "#e02424", fontWeight: "bold" }}>
             {t("usersettings.btn.deleteaccount")}
           </Text>
@@ -228,7 +251,7 @@ const styles = StyleSheet.create({
   changePfCont: {
     flexDirection: "row",
     paddingBottom: 20,
-    paddingTop: 20
+    paddingTop: 20,
   },
   downloadPfCont: {
     paddingLeft: 10,

@@ -95,3 +95,37 @@ export const ChangePassWord = async ({
     throw error;
   }
 };
+
+export const deleteAccount = async () => {
+  try {
+    const isHealthy = await checkHealth();
+
+    if (!isHealthy) {
+      throw new Error("SERVER_UNAVAILABLE");
+    }
+    const token = await GetAccessToken();
+
+    const res = await fetch(`${BASE_URL}/User/Terminate`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      const e = await res.text();
+      throw new Error(e || "failed to delete account");
+    }
+
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await res.json();
+    } else {
+      return await res.text();
+    }
+  } catch (error) {
+    console.error("something went wrong:", error);
+    throw error;
+  }
+};
