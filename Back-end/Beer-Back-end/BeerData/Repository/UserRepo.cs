@@ -22,7 +22,7 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-                    INSERT INTO users (name, passwordhash, birthday)
+                    INSERT INTO users (name, password_hash, birthday)
                     VALUES (@name, @passwordhash, @birthday)";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
@@ -97,7 +97,7 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-                    SELECT passwordhash
+                    SELECT password_hash
                     FROM users
                     WHERE name = @name";
 
@@ -106,7 +106,7 @@ namespace BeerData.Repository
                 using var reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    var PasswordHash = reader.GetString(reader.GetOrdinal("passwordhash"));
+                    var PasswordHash = reader.GetString(reader.GetOrdinal("password_hash"));
                     return PasswordHash;
                 }
 
@@ -159,7 +159,7 @@ namespace BeerData.Repository
 
                 string query = @"
                     UPDATE users
-                    SET passwordhash = @new_password
+                    SET password_hash = @new_password
                     WHERE name = @username";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
