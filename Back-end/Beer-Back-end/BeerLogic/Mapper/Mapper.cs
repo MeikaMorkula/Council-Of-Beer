@@ -33,7 +33,6 @@ namespace BeerLogic.Mapper
             {
                 Id = postDTO.Id,
                 ImgUrl = postDTO.ImgUrl,
-                Review = postDTO.Review,
                 Bar = postDTO.Bar
             };
         }
@@ -44,7 +43,6 @@ namespace BeerLogic.Mapper
             {
                 Id = post.Id,
                 ImgUrl = post.ImgUrl,
-                Review = post.Review,
                 Bar = post.Bar
             };
         }

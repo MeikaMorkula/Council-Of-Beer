@@ -1,4 +1,5 @@
-﻿using BeerLogic.Entities;
+﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Interface;
 using BeerLogic.Utility;
 
@@ -53,5 +54,10 @@ namespace BeerLogic.Service
             return _userRepo.DeleteAccount(request.username);
         }
 
+        public RetrieveUserResponse ViewAccount(RetrieveUserRequest request)
+        {
+            RetrieveUserResponse response = _userRepo.RetrieveUser(request.name);
+            return response;
+        }
     }
 }

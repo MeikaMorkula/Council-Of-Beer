@@ -1,4 +1,5 @@
-﻿using BeerLogic.Entities;
+﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -103,6 +104,19 @@ namespace BeerAPI.Controllers
             }
 
             return BadRequest(result);
+        }
+
+        [HttpGet("GetAccount")]
+        public IActionResult ViewAccount(RetrieveUserRequest request)
+        {
+            RetrieveUserResponse response = _userService.ViewAccount(request);
+
+            if (response.Result == "succes")
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
     }
 }
