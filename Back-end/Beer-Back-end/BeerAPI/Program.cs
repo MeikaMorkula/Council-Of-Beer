@@ -53,6 +53,7 @@ builder.Services.AddSingleton(sp =>
 });
 
 builder.Services.AddScoped<CloudinaryHandlerService>();
+builder.Services.AddScoped<ImageHandlerService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -99,6 +100,7 @@ builder.Services.AddAuthorization(options =>
 builder.Services.AddScoped<IUserRepo>(_ => new UserRepo(connectionString));
 builder.Services.AddScoped<IBeerRepo>(_ => new BeerRepo(connectionString));
 builder.Services.AddScoped<ISocialRepo>(_ => new SocialRepo(connectionString));
+builder.Services.AddScoped<IImageHandlerRepo>(_ => new ImageHandlerRepo(connectionString));
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
 builder.Services.AddScoped<UserService>();

@@ -18,7 +18,7 @@ namespace BeerData.Repository
         {
             _connectionString = connectionString;
         }
-        public async Task<CreatePostResponse> CreatePostAsync(PostDTO post, CloudinaryUploadResultDTO uploadResult)
+        public async Task<CreatePostResponse> CreatePostAsync(CreatePostRequest post, CloudinaryUploadResultDTO uploadResult)
         {
             try
             {
@@ -26,17 +26,35 @@ namespace BeerData.Repository
                 await connection.OpenAsync();
 
                 string query = @"
-                    INSERT INTO post (user_id, beer_id, description, image_url, image_public_id)
-                    VALUES (@user_id, @beerId, @description, @image_url, @image_public_id)
-                    RETURNING id, user_id, beer_id, description, image_url, image_public_id;
+                    WITH inserted_post AS (
+                        INSERT INTO post (user_id, beer_id, description, bar, city, image_url, image_public_id)
+                        SELECT u.id, b.id, @description, @bar, @city, @image_url, @image_public_id
+                        FROM users u
+                        JOIN beer b ON b.name = @beerName
+                        WHERE u.name = @userName
+                        RETURNING id, user_id, beer_id, description, bar, city, image_url, image_public_id
+                    )
+                    SELECT 
+                        u.name AS username,
+                        u.image_url AS userimg,
+                        b.name AS beername,
+                        p.description,
+                        p.bar,
+                        p.city,
+                        p.image_url
+                    FROM inserted_post p
+                    JOIN users u ON u.id = p.user_id
+                    JOIN beer b ON b.id = p.beer_id;
                 ";
 
                 using var command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("@beerId", post.BeerId );
-                command.Parameters.AddWithValue("@description", post.Description ?? (object)DBNull.Value);
-                command.Parameters.AddWithValue("@image_url", uploadResult.ImageUrl);
-                command.Parameters.AddWithValue("@image_public_id", uploadResult.PublicId);
-                command.Parameters.AddWithValue("@user_id", post.UserId);
+                command.Parameters.AddWithValue("@userName", post.username);
+                command.Parameters.AddWithValue("@beerName", post.beername);
+                command.Parameters.AddWithValue("@description", (object?)post.Description ?? DBNull.Value);
+                command.Parameters.AddWithValue("@bar", (object?)post.Bar ?? DBNull.Value);
+                command.Parameters.AddWithValue("@city", (object?)post.City ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_url", (object?)uploadResult.ImageUrl ?? DBNull.Value);
+                command.Parameters.AddWithValue("@image_public_id", (object?)uploadResult.PublicId ?? DBNull.Value);
 
                 using var reader = await command.ExecuteReaderAsync();
 
@@ -44,16 +62,17 @@ namespace BeerData.Repository
                 {
                     return new CreatePostResponse
                     {
-                        UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
-                        PostId = reader.GetInt32(reader.GetOrdinal("id")),
-                        BeerId = reader.GetInt32(reader.GetOrdinal("beer_id")),
+                        Username = reader["username"]?.ToString(),
+                        userImg = reader["userimg"]?.ToString(),
+                        Beername = reader["beername"]?.ToString(),
                         Description = reader["description"]?.ToString(),
-                        ImageUrl = reader["image_url"].ToString(),
-                        PublicId = reader["image_public_id"].ToString()
+                        Bar = reader["bar"]?.ToString(),
+                        City = reader["city"]?.ToString(),
+                        ImageUrl = reader["image_url"]?.ToString()
                     };
                 }
 
-                throw new Exception("Post could not be created.");
+                throw new Exception($"Post could not be created. No matching user or beer found. userName='{post.username}', beerName='{post.beername}'");
             }
             catch (Exception ex)
             {
