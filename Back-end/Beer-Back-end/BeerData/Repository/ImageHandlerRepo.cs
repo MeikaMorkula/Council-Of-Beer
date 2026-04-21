@@ -27,16 +27,19 @@ namespace BeerData.Repository
 
                 string query = @"
                     INSERT INTO post (user_id, beer_id, description, image_url, image_public_id)
-                    VALUES (@user_id, @beerId, @description, @image_url, @image_public_id)
+                    SELECT u.id, b.id, @description, @image_url, @image_public_id
+                    FROM users u
+                    JOIN beer b ON b.name = @beerName
+                    WHERE u.name = @userName
                     RETURNING id, user_id, beer_id, description, image_url, image_public_id;
                 ";
 
                 using var command = new NpgsqlCommand(query, connection);
-                command.Parameters.AddWithValue("@beerId", post.BeerId );
+                command.Parameters.AddWithValue("@beerName", post.beername );
                 command.Parameters.AddWithValue("@description", post.Description ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue("@image_url", uploadResult.ImageUrl);
                 command.Parameters.AddWithValue("@image_public_id", uploadResult.PublicId);
-                command.Parameters.AddWithValue("@user_id", post.UserId);
+                command.Parameters.AddWithValue("@userName", post.username);
 
                 using var reader = await command.ExecuteReaderAsync();
 
@@ -44,9 +47,8 @@ namespace BeerData.Repository
                 {
                     return new CreatePostResponse
                     {
-                        UserId = reader.GetInt32(reader.GetOrdinal("user_id")),
-                        PostId = reader.GetInt32(reader.GetOrdinal("id")),
-                        BeerId = reader.GetInt32(reader.GetOrdinal("beer_id")),
+                        Username = reader.GetInt32(reader.GetOrdinal("userName")),
+                        Beername = reader.GetInt32(reader.GetOrdinal("beer_id")),
                         Description = reader["description"]?.ToString(),
                         ImageUrl = reader["image_url"].ToString(),
                         PublicId = reader["image_public_id"].ToString()
