@@ -19,7 +19,7 @@ export const ChangeUserName = async ({
   oldUser,
 }: ChangeUserNameRequest) => {
   try {
-    const token = GetAccessToken();
+    const token = await GetAccessToken();
     const isHealthy = await checkHealth();
 
     if (!isHealthy) {
@@ -41,7 +41,13 @@ export const ChangeUserName = async ({
       throw new Error(e || "failed to change username");
     }
 
-    return await res.json();
+    console.log("Jaykka");
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await res.json();
+    } else {
+      return await res.text();
+    }
   } catch (error) {
     console.error("something went wrong:", error);
     throw error;
@@ -59,7 +65,7 @@ export const ChangePassWord = async ({
     if (!isHealthy) {
       throw new Error("SERVER_UNAVAILABLE");
     }
-    const token = GetAccessToken();
+    const token = await GetAccessToken();
     const res = await fetch(`${BASE_URL}/User/Password`, {
       method: "PATCH",
       headers: {
@@ -78,7 +84,12 @@ export const ChangePassWord = async ({
       throw new Error(e || "failed to change password");
     }
 
-    return await res.json();
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await res.json();
+    } else {
+      return await res.text();
+    }
   } catch (error) {
     console.error("something went wrong:", error);
     throw error;
