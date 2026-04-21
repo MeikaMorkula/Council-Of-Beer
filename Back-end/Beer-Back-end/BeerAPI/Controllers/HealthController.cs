@@ -7,7 +7,6 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("health")]
-    [AllowAnonymous]
     public class HealthController : ControllerBase
     {
         private readonly IDbConnection _connection;
