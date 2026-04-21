@@ -93,8 +93,7 @@ export default function AddBeer() {
       if (err.message === "SERVER_UNAVAILABLE") {
         setError(t("addBeer.errors.serverUnavailable"));
       } else {
-        console.log(err);
-        setError(err);
+        setError(err.message || "An unexpected error occurred");
       }
     } finally {
       setLoading(false);
@@ -110,154 +109,157 @@ export default function AddBeer() {
       setFlexToggle(true);
     });
     return () => {
-      keyboardShowListener.remove()
-      keyboardHideListener.remove()
+      keyboardShowListener.remove();
+      keyboardHideListener.remove();
     };
   }, []);
 
-  const [flexToggle, setFlexToggle] = useState(false)
+  const [flexToggle, setFlexToggle] = useState(false);
 
   return (
     <KeyboardAvoidingView
       style={
         flexToggle
-        ? [{ flexGrow: 1}, styles.container]
-        : [{ flex: 1}, styles.container]
+          ? [{ flexGrow: 1 }, styles.container]
+          : [{ flex: 1 }, styles.container]
       }
       enabled={!flexToggle}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       keyboardVerticalOffset={Platform.OS === "ios" ? 128 : 0}
     >
-    <ScrollView
-      contentContainerStyle={styles.scrollContent}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={styles.BeerContent}>
-        <Text style={styles.title}>{t("addBeer.title")}</Text>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.BeerContent}>
+          <Text style={styles.title}>{t("addBeer.title")}</Text>
 
-        <CameraComponent image={image} onChange={setImage} />
+          <CameraComponent image={image} onChange={setImage} />
 
-        <Text style={styles.label}>{t("addBeer.name")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.name")}
-            placeholderTextColor={"#EDE9C7"}
-            value={beerName}
-            onChangeText={setBeerName}
-          />
-          {
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setBeerName("")}
-            >
-              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
-            </Pressable>
-          }
-        </View>
-        <Text style={styles.label}>ABV</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder="ABV (0.0%)"
-            placeholderTextColor={"#EDE9C7"}
-            value={abv}
-            onChangeText={setAbv}
-            keyboardType="decimal-pad"
-          />
-          {
-            <Pressable style={styles.clearButton} onPress={() => setAbv("")}>
-              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
-            </Pressable>
-          }
-        </View>
-        <Text style={styles.label}>{t("addBeer.brewery")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.brewery")}
-            placeholderTextColor={"#EDE9C7"}
-            value={brewery}
-            onChangeText={setBrewery}
-          />
-          {
-            <Pressable
-              style={styles.clearButton}
-              onPress={() => setBrewery("")}
-            >
-              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
-            </Pressable>
-          }
-        </View>
-        <Text style={styles.label}>{t("addBeer.country")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.country")}
-            placeholderTextColor={"#EDE9C7"}
-            value={country}
-            onChangeText={setCountry}
-          />
-          <Pressable style={styles.clearButton} onPress={() => setCountry("")}>
-            <Ionicons name="close-circle" size={27} color="#EDE9C7" />
-          </Pressable>
-        </View>
-        <View>
-          {/* järkevää laittaa tuo valinta tännekin */}
-          <LabelSelector
-            label={t("addBeer.labels")}
-            options={[
-              "Kalia",
-              "Stout",
-              "Lager",
-              "Sour",
-              "Hedelmäinen",
-              "Jäykkä",
-              "Juustoinen",
-              "Pirskahteleva",
-            ]}
-            selected={labels}
-            onChange={setLabels}
-            buttonText={t("addBeer.selectLabels")}
-            buttonTextWithCount={(count) => `${count} selected`}
-          />
-        </View>
-
-        <Text style={styles.label}>{t("addBeer.barcode")}</Text>
-        <View style={styles.field}>
-          <TextInput
-            style={styles.input}
-            placeholder={t("addBeer.barcodePlaceholder")}
-            value={barcode}
-            editable={false}
-          />
-
-          <Pressable
-            onPress={() =>
-              navigation.navigate("BarcodeScanner", {
-                onScan: (code: string) => setBarcode(code),
-              })
+          <Text style={styles.label}>{t("addBeer.name")}</Text>
+          <View style={styles.field}>
+            <TextInput
+              style={styles.input}
+              placeholder={t("addBeer.name")}
+              placeholderTextColor={"#EDE9C7"}
+              value={beerName}
+              onChangeText={setBeerName}
+            />
+            {
+              <Pressable
+                style={styles.clearButton}
+                onPress={() => setBeerName("")}
+              >
+                <Ionicons name="close-circle" size={27} color="#EDE9C7" />
+              </Pressable>
             }
-          >
-            <Ionicons name="barcode-outline" size={26} color="#6750a4" />
-          </Pressable>
-        </View>
+          </View>
+          <Text style={styles.label}>ABV</Text>
+          <View style={styles.field}>
+            <TextInput
+              style={styles.input}
+              placeholder="ABV (0.0%)"
+              placeholderTextColor={"#EDE9C7"}
+              value={abv}
+              onChangeText={setAbv}
+              keyboardType="decimal-pad"
+            />
+            {
+              <Pressable style={styles.clearButton} onPress={() => setAbv("")}>
+                <Ionicons name="close-circle" size={27} color="#EDE9C7" />
+              </Pressable>
+            }
+          </View>
+          <Text style={styles.label}>{t("addBeer.brewery")}</Text>
+          <View style={styles.field}>
+            <TextInput
+              style={styles.input}
+              placeholder={t("addBeer.brewery")}
+              placeholderTextColor={"#EDE9C7"}
+              value={brewery}
+              onChangeText={setBrewery}
+            />
+            {
+              <Pressable
+                style={styles.clearButton}
+                onPress={() => setBrewery("")}
+              >
+                <Ionicons name="close-circle" size={27} color="#EDE9C7" />
+              </Pressable>
+            }
+          </View>
+          <Text style={styles.label}>{t("addBeer.country")}</Text>
+          <View style={styles.field}>
+            <TextInput
+              style={styles.input}
+              placeholder={t("addBeer.country")}
+              placeholderTextColor={"#EDE9C7"}
+              value={country}
+              onChangeText={setCountry}
+            />
+            <Pressable
+              style={styles.clearButton}
+              onPress={() => setCountry("")}
+            >
+              <Ionicons name="close-circle" size={27} color="#EDE9C7" />
+            </Pressable>
+          </View>
+          <View>
+            {/* järkevää laittaa tuo valinta tännekin */}
+            <LabelSelector
+              label={t("addBeer.labels")}
+              options={[
+                "Kalia",
+                "Stout",
+                "Lager",
+                "Sour",
+                "Hedelmäinen",
+                "Jäykkä",
+                "Juustoinen",
+                "Pirskahteleva",
+              ]}
+              selected={labels}
+              onChange={setLabels}
+              buttonText={t("addBeer.selectLabels")}
+              buttonTextWithCount={(count) => `${count} selected`}
+            />
+          </View>
 
-        {!!error && <Text style={styles.error}>{error}</Text>}
+          <Text style={styles.label}>{t("addBeer.barcode")}</Text>
+          <View style={styles.field}>
+            <TextInput
+              style={styles.input}
+              placeholder={t("addBeer.barcodePlaceholder")}
+              value={barcode}
+              editable={false}
+            />
 
-        <View style={styles.buttonRow}>
-          <Pressable
-            style={[styles.button, loading && styles.buttonDisabled]}
-            onPress={handleSubmit}
-            disabled={loading || !validateFom()}
-          >
-            {loading ? (
-              <ActivityIndicator color="#fff" />
-            ) : (
-              <Text style={styles.buttonText}>{t("addBeer.addtodb")}</Text>
-            )}
-          </Pressable>
+            <Pressable
+              onPress={() =>
+                navigation.navigate("BarcodeScanner", {
+                  onScan: (code: string) => setBarcode(code),
+                })
+              }
+            >
+              <Ionicons name="barcode-outline" size={26} color="#6750a4" />
+            </Pressable>
+          </View>
+
+          {!!error && <Text style={styles.error}>{error}</Text>}
+
+          <View style={styles.buttonRow}>
+            <Pressable
+              style={[styles.button, loading && styles.buttonDisabled]}
+              onPress={handleSubmit}
+              disabled={loading || !validateFom()}
+            >
+              {loading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.buttonText}>{t("addBeer.addtodb")}</Text>
+              )}
+            </Pressable>
           </View>
         </View>
       </ScrollView>

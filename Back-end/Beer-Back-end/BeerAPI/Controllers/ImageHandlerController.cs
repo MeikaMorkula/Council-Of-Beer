@@ -8,6 +8,7 @@ namespace BeerAPI.Controllers
 {
     [Route("api/")]
     [ApiController]
+    [Authorize]
     public class ImageHandlerController : ControllerBase
     {
         private readonly ImageHandlerService _imageHandlerService;
@@ -26,7 +27,7 @@ namespace BeerAPI.Controllers
                 return BadRequest("Image is required.");
             }
 
-            if (request.BeerId <= 0)
+            if (request.beername == null)
             {
                 return BadRequest("BeerId is invalid.");
             }
@@ -41,11 +42,7 @@ namespace BeerAPI.Controllers
             {
                 return BadRequest("Image size cannot be larger than 5MB.");
             }
-
-            // Example if you want user id from JWT later:
-            // var userIdClaim = User.FindFirst("id")?.Value;
-            // if (userIdClaim == null) return Unauthorized();
-            // int userId = int.Parse(userIdClaim);
+            
 
             var result = await _imageHandlerService.CreatePostAsync(request);
 

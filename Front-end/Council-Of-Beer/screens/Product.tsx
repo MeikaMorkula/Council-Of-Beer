@@ -12,6 +12,7 @@ import { useRoute } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 import { StarRatingDisplay } from "react-native-star-rating-widget";
 import { Beer, getBeerByName } from "../services/ProductService";
+import { useNavigation } from '@react-navigation/native';
 
 type Review = {
   id: string;
@@ -36,6 +37,7 @@ export default function ProductPage() {
   const [beer, setBeer] = useState<Beer | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const navigation = useNavigation<any>();
 
   const loadBeer = useCallback(async () => {
     if (!beerName) {
@@ -84,6 +86,14 @@ export default function ProductPage() {
 
   return (
     <ScrollView style={styles.container}>
+
+      <View style={styles.postHeader}>
+        <TouchableOpacity onPress={() => navigation.pop()} style={{paddingTop: 8, paddingBottom: 8}}>
+          <Ionicons name="chevron-back" size={32} color="#EDE9C7" />
+        </TouchableOpacity>
+      </View>
+
+
       <View style={styles.postImgCont}>
         <Image
           style={styles.postImg}
@@ -94,7 +104,11 @@ export default function ProductPage() {
 
       <View style={styles.postBeerInfoCont}>
         <View style={styles.infoRow}>
-          <Text style={styles.mainInfoText}>{beer.name}, </Text>
+          <Text style={styles.mainInfoText}>{beer.name},{" "}
+            <Text style={styles.alcText}>{beer.alcPrecentage}%</Text>
+          </Text>
+        </View>
+        <View style={styles.infoRow}>
           <StarRatingDisplay
             rating={4}
             starSize={22}
@@ -102,10 +116,7 @@ export default function ProductPage() {
           />
         </View>
         <View style={styles.infoRow}>
-          <Text style={styles.subInfoText}>{beer.alcPrecentage}%, </Text>
-          <Text style={styles.subInfoText}>{beer.brewery}</Text>
-        </View>
-        <View style={styles.infoRow}>
+          <Text style={styles.subInfoText}>{beer.brewery}, </Text>
           <Text style={styles.subInfoText}>{beer.country}</Text>
         </View>
       </View>
@@ -194,6 +205,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   mainInfoText: {
+    color: "#EDE9C7",
+    fontSize: 24,
+  },
+  alcText: {
     color: "#EDE9C7",
     fontSize: 24,
   },

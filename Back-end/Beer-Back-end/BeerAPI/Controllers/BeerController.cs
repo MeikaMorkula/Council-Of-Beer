@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BeerLogic.Service;
 using BeerLogic.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeerAPI.Controllers
 {
@@ -16,24 +17,28 @@ namespace BeerAPI.Controllers
         }
 
         [HttpGet("GetAllBeer")]
+        [AllowAnonymous]
         public List<CreateBeerResponse> GetAllBeer()
         {
            return _beerService.GetAllBeer();
         }
 
         [HttpGet("GetBeerNames")]
+        [AllowAnonymous]
         public List<string> GetBeerNames()
         {
             return _beerService.GetBeerNames();
         }
 
         [HttpGet("GetInfoByBeerName")]
+        [AllowAnonymous]
         public CreateBeerResponse GetInfoByBeerName(string beername)
         {
             return _beerService.GetInfoByBeerName(beername);
         }
 
         [HttpPost("AddBeer")]
+        [Authorize]
         public async Task<CreateBeerResponse> AddBeer([FromForm] CreateBeerRequest BeerDTO)
         {
             return await _beerService.AddBeer(BeerDTO);

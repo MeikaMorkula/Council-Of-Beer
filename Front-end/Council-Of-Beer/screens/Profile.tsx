@@ -1,5 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useTranslation } from "react-i18next";
+import { getAuthState } from "../utils/Auth";
 
 function CollectionObj() {
   const navigation = useNavigation();
@@ -38,9 +39,21 @@ function PostObj() {
 }
 
 export default function Profile() {
-  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
+  const [currentUserName, setCurrentUserName] = useState<string>("ilovebeer");
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
   const { t } = useTranslation();
+
+  useEffect(() => {
+    const loadAuthState = async () => {
+      const authState = await getAuthState();
+
+      setIsLoggedIn(authState.isLoggedIn);
+      setCurrentUserName(authState.userName ?? "beerlover");
+    };
+
+    void loadAuthState();
+  }, []);
 
   return (
     <>
@@ -53,10 +66,16 @@ export default function Profile() {
         </View>
         <View style={styles.pftextcont}>
           <View style={styles.usernamebtn}>
-            <Text style={styles.username}>@ilovebeer</Text>
-            <TouchableOpacity style={styles.followbtn}>
-              <Text>{t("profile.btn.follow")}</Text>
-            </TouchableOpacity>
+            <Text style={styles.username}>@{currentUserName}</Text>
+            {isLoggedIn ? (
+              <View style={styles.profileBadge}>
+                <Text style={styles.profileBadgeText}>Your Profile</Text>
+              </View>
+            ) : (
+              <TouchableOpacity style={styles.followbtn}>
+                <Text>Guest</Text>
+              </TouchableOpacity>
+            )}
           </View>
           <View style={styles.pfstatscont}>
             <View style={styles.stats}>
@@ -309,5 +328,22 @@ const styles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "#EDE9C7",
     borderRadius: 4,
+  },
+  profileBadge: {
+    alignItems: "center",
+    borderRadius: 4,
+    backgroundColor: "#E39914",
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    minWidth: 96,
+  },
+  profileBadgeText: {
+    color: "#28200C",
+    fontWeight: "600",
+  },
+  loggedInText: {
+    color: "#EFC06D",
+    marginTop: 8,
+    fontSize: 14,
   },
 });

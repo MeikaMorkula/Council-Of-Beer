@@ -26,6 +26,7 @@ namespace BeerLogic.Mapper
             };
         }
 
+<<<<<<< HEAD
         // PostMapper
         public Post PostDTOToEntity(PostDTO postDTO)
         {
@@ -46,33 +47,9 @@ namespace BeerLogic.Mapper
                 Bar = post.Bar
             };
         }
+=======
+>>>>>>> 20303e13bdb9669573e089d4b788bc7516bd4d3b
 
-        // ReviewMapper
-        public Review ReviewDTOToEntity(ReviewDTO reviewDTO)
-        {
-            return new Review()
-            {
-                Id = reviewDTO.Id,
-                BeerId = reviewDTO.BeerId,
-                UserId = reviewDTO.UserId,
-                Score = reviewDTO.Score,
-                Description = reviewDTO.Description,
-                Created = reviewDTO.Created
-            };
-        }
-
-        public ReviewDTO ReviewEntityToDTO(Review review)
-        {
-            return new ReviewDTO()
-            {
-                Id = review.Id,
-                BeerId = review.BeerId,
-                UserId = review.UserId,
-                Score = review.Score,
-                Description = review.Description,
-                Created = review.Created
-            };
-        }
 
         // BeerMapper
         public Beer BeerRequestToEntity (CreateBeerRequest beerDTO)

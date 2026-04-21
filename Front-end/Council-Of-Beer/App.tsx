@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Profile from './screens/Profile';
 import Home from './screens/Home';
@@ -22,6 +22,7 @@ import BarcodeScanner from "./components/BarcodeScanner";
 import NewPostMenu from './screens/NewPostMenu'
 import Collection from './screens/Collection';
 import Post from './screens/Post';
+import { getAuthState, isAuthenticated } from './utils/Auth';
 
 
 const NewPostStack = createNativeStackNavigator();
@@ -45,9 +46,9 @@ function FeedNav(){
   return(
     <HomeTabs.Navigator
       screenOptions={{
-        tabBarStyle: { backgroundColor: '#28200C' },
-        tabBarLabelStyle: { color: '#EDE9C7' },
-        tabBarIndicatorStyle: { backgroundColor: '#E39914' }
+        tabBarStyle: styles.topTabBar,
+        tabBarLabelStyle: styles.topTabLabel,
+        tabBarIndicatorStyle: styles.topTabIndicator,
       }}
     >
       <HomeTabs.Screen name="LoginStack" component={LoginStack}  options={{ tabBarLabel: t("tabs.home") }}/>
@@ -58,13 +59,30 @@ function FeedNav(){
 }
 
 // WORKS 30.3.2026
-function MainHeader() {
+function MainHeader({ isLoggedIn }: {isLoggedIn: boolean }) {
   const navigation = useNavigation();
+
+  const handlePress = () => {
+    if (isLoggedIn) {
+      navigation.navigate('ProfileStack', { screen: 'Profile' });
+      return;
+    }
+
+    navigation.navigate('Feed', {
+      screen: 'LoginStack',
+      params: { screen: 'LogIn'},
+    });
+  };
+
   return(
     <View style={styles.beerHeader}>
       <Text style={styles.headerText}>Council of Beer</Text>
-      <TouchableOpacity style={styles.settingsBtn} onPress={() => navigation.navigate('Feed', {screen: 'LoginStack', params: {screen: 'LogIn'}})}>
-        <Ionicons name='log-in' size={32} color='#EDE9C7'/>
+      <TouchableOpacity style={styles.settingsBtn} onPress={handlePress}>
+        <Ionicons
+          name={isLoggedIn ? 'person-circle' : 'log-in'}
+          size={32}
+          color='#EDE9C7'
+        />
       </TouchableOpacity>
     </View>
   );
@@ -193,37 +211,73 @@ function SearchStack() {
 
 export default function App() {
   const Tabs = createBottomTabNavigator();
-   const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [blockedTab, setBlockedTab] = useState<"New Post" | "ProfileStack" | null>(null);
+
+  const refreshAuthState = async () => {
+    const authState = await getAuthState();
+    setIsLoggedIn(authState.isLoggedIn);
+  };
+
+  useEffect(() => {
+    void refreshAuthState();
+  }, []);
+
+  const highlightBlockedTab = (
+    tabName: "New Post" | "ProfileStack",
+    navigation: any
+  ) => {
+    setBlockedTab(tabName);
+
+    setTimeout(() => {
+      navigation.navigate('Feed', {
+        screen: 'LoginStack',
+        params: { screen: 'LogIn' },
+      });
+    }, 120);
+
+  };
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
+      <NavigationContainer onStateChange={() => void refreshAuthState()}>
         <Tabs.Navigator 
           initialRouteName="Feed"
           screenOptions={({ route }) => ({
             tabBarIcon: ({ focused }) => {
-              let iconName;
+              let iconName: React.ComponentProps<typeof Ionicons>["name"] = 'ellipse-outline';
+              const isBlockedTab = blockedTab === route.name;
+              const isVisuallyActive = blockedTab ? isBlockedTab : focused;
 
               if(route.name === 'Feed'){
-                iconName = focused
+                iconName = isVisuallyActive
                   ? 'beer'
                   : 'beer-outline';
               } else if(route.name === 'New Post'){
-                iconName = focused 
+                iconName = isVisuallyActive
                   ? 'add-circle'
                   : 'add-circle-outline';
               } else if(route.name === 'ProfileStack'){
-                iconName = focused  
+                iconName = isVisuallyActive
                   ? 'person-circle'
                   : 'person-circle-outline';
               }
               // This error is fine, everything works as it should (14.3.2026)
-              return <Ionicons name={iconName} size={24} color="#EDE9C7"/>
+              return (
+                <View style={[styles.tabIconWrap, isVisuallyActive && styles.tabIconWrapActive]}>
+                  <Ionicons
+                    name={iconName}
+                    size={24}
+                    color={isVisuallyActive ? '#EFC06D' : '#EDE9C7'}
+                  />
+                </View>
+              );
             },
 
             header: ({ route }) => {
               if(route.name === 'Feed'){
-                return <MainHeader/>
+                return <MainHeader isLoggedIn={isLoggedIn}/>
               } else if (route.name === 'New Post'){
                 return <PostHeader/>
               } else if(route.name === 'ProfileStack'){
@@ -231,11 +285,9 @@ export default function App() {
               }
             },
 
-            tabBarStyle: {
-              backgroundColor: '#28200C'
-            },
+            tabBarStyle: styles.bottomTabBar,
             tabBarInactiveTintColor: '#EDE9C7',
-            tabBarActiveTintColor: '#EFC06D'
+            tabBarActiveTintColor: blockedTab ? '#EDE9C7' : '#EFC06D'
           })}  
         >
           <Tabs.Screen
@@ -243,6 +295,7 @@ export default function App() {
             component={FeedNav}
             listeners={({ navigation }) => ({
               tabPress: () => {
+                setBlockedTab(null);
                 navigation.navigate('Feed', {
                   screen: 'LoginStack',
                   params: { screen: 'HomeFeed' },
@@ -251,9 +304,51 @@ export default function App() {
             })}
             options={{ tabBarLabel: t("footer.feed") }}
           />
-          <Tabs.Screen name="New Post" component={NewPostStackScreen} options={{ tabBarLabel: t("footer.newPost") }}
+          <Tabs.Screen
+            name="New Post"
+            component={NewPostStackScreen}
+            options={{ tabBarLabel: t("footer.newPost") }}
+            listeners={({ navigation }) => ({
+              tabPress: async (event) => {
+                event.preventDefault();
+
+                const loggedIn = await isAuthenticated();
+
+                if (!loggedIn) {
+                  highlightBlockedTab('New Post', navigation);
+                  return;
+                }
+
+                setBlockedTab(null);
+
+                navigation.navigate('New Post', {
+                  screen: 'NewPostMenu',
+                });
+              },
+            })}
           />
-          <Tabs.Screen name="ProfileStack" component={ProfileStack} options={{ tabBarLabel: t("footer.profile") }}
+          <Tabs.Screen
+            name="ProfileStack"
+            component={ProfileStack}
+            options={{ tabBarLabel: t("footer.profile") }}
+            listeners={({ navigation }) => ({
+              tabPress: async (event) => {
+                event.preventDefault();
+
+                const loggedIn = await isAuthenticated();
+
+                if (!loggedIn) {
+                  highlightBlockedTab('ProfileStack', navigation);
+                  return;
+                }
+
+                setBlockedTab(null);
+
+                navigation.navigate('ProfileStack', {
+                  screen: 'Profile',
+                });
+              },
+            })}
           />
         </Tabs.Navigator>
       </NavigationContainer>
@@ -262,6 +357,27 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  topTabBar: {
+    backgroundColor: '#28200C',
+  },
+  topTabLabel: {
+    color: '#EDE9C7',
+  },
+  topTabIndicator: {
+    backgroundColor: '#E39914',
+  },
+  bottomTabBar: {
+    backgroundColor: '#28200C',
+  },
+  tabIconWrap: {
+    width: 48,
+    alignItems: 'center',
+    borderTopWidth: 2,
+    borderTopColor: 'transparent',
+  },
+  tabIconWrapActive: {
+    borderTopColor: '#EFC06D',
+  },
   beerHeader: {
     alignItems: 'center',
     justifyContent: 'center',

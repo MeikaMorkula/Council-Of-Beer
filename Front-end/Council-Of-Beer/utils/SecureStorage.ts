@@ -11,7 +11,12 @@ export async function StoreTokens(accessToken: string, refreshToken: string) {
 }
 
 export async function GetAccessToken() {
-  return await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+  const accesstoken =  await SecureStore.getItemAsync(ACCESS_TOKEN_KEY);
+  if(accesstoken=== null || accesstoken === '')
+  {
+    return null;
+  }
+  return accesstoken
 }
 
 export async function GetRefreshToken() {

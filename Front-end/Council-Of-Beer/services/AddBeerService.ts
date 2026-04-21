@@ -1,3 +1,5 @@
+import { GetAccessToken } from "../utils/SecureStorage";
+
 export type AddBeerContent = {
   Name: string;
   AlcPrecentage: number;
@@ -17,6 +19,8 @@ const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 export const addBeer = async (content: AddBeerContent) => {
   try {
     const formData = new FormData();
+    const token = await GetAccessToken();
+
 
     formData.append("Name", content.Name);
     formData.append("AlcPrecentage", content.AlcPrecentage.toString());
@@ -38,6 +42,9 @@ export const addBeer = async (content: AddBeerContent) => {
 
     const res = await fetch(`${BASE_URL}/Beer/AddBeer`, {
       method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       body: formData,
     });
     if (!res.ok) {

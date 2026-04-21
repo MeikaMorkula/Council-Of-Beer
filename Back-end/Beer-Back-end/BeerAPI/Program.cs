@@ -2,11 +2,14 @@ using BeerData.Repository;
 using BeerLogic.Interface;
 using BeerLogic.Mapper;
 using BeerLogic.Service;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 using BeerLogic.Utility;
 using CloudinaryDotNet;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.IdentityModel.Tokens;
+using Npgsql;
+using System.Data;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +53,7 @@ builder.Services.AddSingleton(sp =>
 });
 
 builder.Services.AddScoped<CloudinaryHandlerService>();
+builder.Services.AddScoped<ImageHandlerService>();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
@@ -58,14 +62,17 @@ if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException("DefaultConnection is missing or empty.");
 }
 
+builder.Services.AddScoped<IDbConnection>(_ => new NpgsqlConnection(connectionString));
+
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+})
+.AddJwtBearer(options =>
 {
-    options.RequireHttpsMetadata = true;
+    options.RequireHttpsMetadata = false; // change to true later if you are fully on HTTPS
     options.SaveToken = true;
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -77,16 +84,23 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true
+        ValidateIssuerSigningKey = true,
+        ClockSkew = TimeSpan.Zero
     };
 });
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.FallbackPolicy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+});
 
 // Repos / services
 builder.Services.AddScoped<IUserRepo>(_ => new UserRepo(connectionString));
 builder.Services.AddScoped<IBeerRepo>(_ => new BeerRepo(connectionString));
 builder.Services.AddScoped<ISocialRepo>(_ => new SocialRepo(connectionString));
+builder.Services.AddScoped<IImageHandlerRepo>(_ => new ImageHandlerRepo(connectionString));
 builder.Services.AddScoped<Mapper>();
 builder.Services.AddScoped<BeerService>();
 builder.Services.AddScoped<UserService>();
@@ -101,9 +115,9 @@ var app = builder.Build();
 app.MapGet("/", () => Results.Content(
     "<h1>BackEnd is running!</h1><a href='/health'>Check health</a>",
     "text/html"
-));
+)).AllowAnonymous();
 
-app.MapHealthChecks("/health");
+app.MapHealthChecks("/health").AllowAnonymous();
 
 if (app.Environment.IsDevelopment())
 {
@@ -117,6 +131,7 @@ app.UseCors("AllowFrontend");
 
 app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
 
 app.Run();
