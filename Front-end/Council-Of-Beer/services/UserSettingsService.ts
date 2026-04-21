@@ -1,3 +1,6 @@
+import { GetAccessToken } from "../utils/SecureStorage";
+import { checkHealth } from "./HealthService";
+
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
 
 export type ChangeUserNameRequest = {
@@ -16,10 +19,17 @@ export const ChangeUserName = async ({
   oldUser,
 }: ChangeUserNameRequest) => {
   try {
+    const token = GetAccessToken();
+    const isHealthy = await checkHealth();
+
+    if (!isHealthy) {
+      throw new Error("SERVER_UNAVAILABLE");
+    }
     const res = await fetch(`${BASE_URL}/User/Username`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         newUser,
@@ -44,10 +54,17 @@ export const ChangePassWord = async ({
   username,
 }: ChangePassWordRequest) => {
   try {
+    const isHealthy = await checkHealth();
+
+    if (!isHealthy) {
+      throw new Error("SERVER_UNAVAILABLE");
+    }
+    const token = GetAccessToken();
     const res = await fetch(`${BASE_URL}/User/Password`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
         newPass,
