@@ -106,10 +106,12 @@ namespace BeerAPI.Controllers
             return BadRequest(result);
         }
 
+        [Authorize]
         [HttpGet("GetAccount")]
-        public IActionResult ViewAccount(RetrieveUserRequest request)
+        public IActionResult GetAccount()
         {
-            RetrieveUserResponse response = _userService.ViewAccount(request);
+            string username = User.FindFirst("name")?.Value;
+            RetrieveUserResponse response = _userService.ViewAccount(username);
 
             if (response.Result == "succes")
             {

@@ -54,9 +54,9 @@ namespace BeerLogic.Service
             return _userRepo.DeleteAccount(request.username);
         }
 
-        public RetrieveUserResponse ViewAccount(RetrieveUserRequest request)
+        public RetrieveUserResponse ViewAccount(string username)
         {
-            RetrieveUserResponse response = _userRepo.RetrieveUser(request.name);
+            RetrieveUserResponse response = _userRepo.RetrieveUser(username);
             return response;
         }
     }
