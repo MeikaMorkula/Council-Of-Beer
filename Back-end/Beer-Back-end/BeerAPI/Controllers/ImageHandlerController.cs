@@ -8,6 +8,7 @@ namespace BeerAPI.Controllers
 {
     [Route("api/")]
     [ApiController]
+    [Authorize]
     public class ImageHandlerController : ControllerBase
     {
         private readonly ImageHandlerService _imageHandlerService;

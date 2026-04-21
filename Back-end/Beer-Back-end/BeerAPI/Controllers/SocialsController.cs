@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BeerLogic.Service;
 using BeerLogic.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BeerAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class SocialsController : Controller
     {
         private readonly SocialService _socialService;
