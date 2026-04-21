@@ -1,4 +1,5 @@
-﻿using BeerLogic.Entities;
+﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Interface;
 using BeerLogic.Utility;
 
@@ -41,17 +42,15 @@ namespace BeerLogic.Service
             return _userRepo.ChangePassword(hashPass, request.username);
         }
 
-        public string DeleteAccount(DeleteAccountRequest request)
+        public string DeleteAccount(string username)
         {
-            string hashPassword = Bcrypt.HashPassword(request.password);
-
-            if(!Bcrypt.VerifyPassword(request.password, hashPassword))
-            {
-                return "Password is incorrect";
-            }
-
-            return _userRepo.DeleteAccount(request.username);
+            return _userRepo.DeleteAccount(username);
         }
 
+        public RetrieveUserResponse ViewAccount(string username)
+        {
+            RetrieveUserResponse response = _userRepo.RetrieveUser(username);
+            return response;
+        }
     }
 }

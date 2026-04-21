@@ -1,8 +1,10 @@
-﻿using BeerLogic.DTOs;
+﻿using Azure;
+using BeerLogic.DTOs;
 using BeerLogic.Entities;
+using BeerLogic.Interface;
 using Npgsql;
 using System.Data;
-using BeerLogic.Interface;
+using System.Data.Common;
 namespace BeerData.Repository
 {
     public class UserRepo : IUserRepo
@@ -213,5 +215,122 @@ namespace BeerData.Repository
                 throw new Exception($"DeleteAccount failed: {ex.Message}", ex);
             }
         }
+
+        public RetrieveUserResponse RetrieveUser(string username)
+        {
+                try
+                {
+                    if (string.IsNullOrWhiteSpace(username))
+                    {
+                        return null;
+                    }
+
+                    using var connection = new NpgsqlConnection(_connectionString);
+                    connection.Open();
+
+                    string userQuery = @"
+            SELECT
+                u.name AS username,
+                u.image_url AS imageurl,
+                COALESCE(followers.followers_amount, 0) AS followersamount,
+                COALESCE(following.following_amount, 0) AS followingamount,
+                COALESCE(posts.posts_amount, 0) AS postsamount
+            FROM public.users u
+            LEFT JOIN (
+                SELECT following_id, COUNT(*) AS followers_amount
+                FROM public.user_follow
+                WHERE status = 'Accepted'
+                GROUP BY following_id
+            ) followers ON followers.following_id = u.id
+            LEFT JOIN (
+                SELECT follower_id, COUNT(*) AS following_amount
+                FROM public.user_follow
+                WHERE status = 'Accepted'
+                GROUP BY follower_id
+            ) following ON following.follower_id = u.id
+            LEFT JOIN (
+                SELECT user_id, COUNT(*) AS posts_amount
+                FROM public.post
+                GROUP BY user_id
+            ) posts ON posts.user_id = u.id
+            WHERE LOWER(u.name) = LOWER(@username);";
+
+                    RetrieveUserResponse? user = null;
+
+                    using (var userCommand = new NpgsqlCommand(userQuery, connection))
+                    {
+                        userCommand.Parameters.AddWithValue("@username", username);
+
+                        using var reader = userCommand.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            user = new RetrieveUserResponse
+                            {
+                                name = reader["username"]?.ToString(),
+                                imageURL = reader["imageurl"] == DBNull.Value ? null : reader["imageurl"].ToString(),
+                                FollowersAmnt = Convert.ToInt32(reader["followersamount"]),
+                                FollowingAmnt = Convert.ToInt32(reader["followingamount"]),
+                                PostAmounts = Convert.ToInt32(reader["postsamount"]),
+                                Posts = new List<PostDTO>()
+                            };
+                        }
+                    }
+
+                    if (user == null)
+                    {
+                        return null;
+                    }
+
+                    string postsQuery = @"
+            SELECT
+                p.id AS postid,
+                p.description AS description,
+                p.bar AS bar,
+                p.city AS city,
+                p.created_at AS createdat,
+                p.image_url AS postimageurl,
+                b.id AS beerid,
+                b.name AS beername,
+                b.image_url AS beerimageurl
+            FROM public.post p
+            INNER JOIN public.beer b ON b.id = p.beer_id
+            INNER JOIN public.users u ON u.id = p.user_id
+            WHERE LOWER(u.name) = LOWER(@username)
+            ORDER BY p.created_at DESC NULLS LAST, p.id DESC;";
+
+                    using (var postsCommand = new NpgsqlCommand(postsQuery, connection))
+                    {
+                        postsCommand.Parameters.AddWithValue("@username", username);
+
+                        using var reader = postsCommand.ExecuteReader();
+
+                        while (reader.Read())
+                        {
+                            user.Posts.Add(new PostDTO
+                            {
+                                Id = Convert.ToInt32(reader["postid"]),
+                                Description = reader["description"] == DBNull.Value ? null : reader["description"].ToString(),
+                                Bar = reader["bar"] == DBNull.Value ? null : reader["bar"].ToString(),
+                                City = reader["city"] == DBNull.Value ? null : reader["city"].ToString(),
+                                CreatedAt = reader["createdat"] == DBNull.Value
+                                    ? (DateTime?)null
+                                    : Convert.ToDateTime(reader["createdat"]),
+                                ImgUrl = reader["postimageurl"] == DBNull.Value ? null : reader["postimageurl"].ToString(),
+                                BeerId = Convert.ToInt32(reader["beerid"]),
+                                BeerName = reader["beername"]?.ToString(),
+                            });
+                        }
+                    }
+
+                    return user;
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"RetrieveUser failed: {ex.Message}", ex);
+                }
+            }
+        }
     }
-}
+
+

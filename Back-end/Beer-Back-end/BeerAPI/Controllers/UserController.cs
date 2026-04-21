@@ -1,4 +1,5 @@
-﻿using BeerLogic.Entities;
+﻿using BeerLogic.DTOs;
+using BeerLogic.Entities;
 using BeerLogic.Service;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -99,7 +100,8 @@ namespace BeerAPI.Controllers
         [Authorize]
         public IActionResult DeleteAccount(DeleteAccountRequest request)
         {
-            string result = _userService.DeleteAccount(request);
+            string username = User.FindFirst("name")?.Value;
+            string result = _userService.DeleteAccount(username);
 
             if (result == "Account deleted")
             {
@@ -107,6 +109,21 @@ namespace BeerAPI.Controllers
             }
 
             return BadRequest(result);
+        }
+
+        [Authorize]
+        [HttpGet("GetAccount")]
+        public IActionResult GetAccount()
+        {
+            string username = User.FindFirst("name")?.Value;
+            RetrieveUserResponse response = _userService.ViewAccount(username);
+
+            if (response.Result == "succes")
+            {
+                return Ok(response);
+            }
+
+            return BadRequest(response);
         }
     }
 }

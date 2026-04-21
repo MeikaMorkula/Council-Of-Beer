@@ -26,6 +26,29 @@ namespace BeerLogic.Mapper
             };
         }
 
+<<<<<<< HEAD
+        // PostMapper
+        public Post PostDTOToEntity(PostDTO postDTO)
+        {
+            return new Post()
+            {
+                Id = postDTO.Id,
+                ImgUrl = postDTO.ImgUrl,
+                Bar = postDTO.Bar
+            };
+        }
+        
+        public PostDTO PostEntityToDTO(Post post)
+        {
+            return new PostDTO()
+            {
+                Id = post.Id,
+                ImgUrl = post.ImgUrl,
+                Bar = post.Bar
+            };
+        }
+=======
+>>>>>>> 20303e13bdb9669573e089d4b788bc7516bd4d3b
 
 
         // BeerMapper
