@@ -43,7 +43,9 @@ export default function NewPost() {
   const handleSubmit = async () => {
     setError("");
     setLoading(true);
+
     const user = await getUserName();
+    
     if (validateForm()) {
       try {
 
