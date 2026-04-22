@@ -24,12 +24,12 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-                    INSERT INTO users (name, password_hash, birthday)
-                    VALUES (@name, @passwordhash, @birthday)";
+                    INSERT INTO users (name, passwordhash, birthday)
+                    VALUES (@name, @password_hash, @birthday)";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
                 command.Parameters.AddWithValue("@name", user.Name);
-                command.Parameters.AddWithValue("@passwordhash", user.PasswordHash);
+                command.Parameters.AddWithValue("@password_hash", user.PasswordHash);
                 command.Parameters.AddWithValue("@birthday", user.Birthday);
                 command.ExecuteNonQuery();
                 return "Ok";
@@ -267,8 +267,8 @@ namespace BeerData.Repository
                         {
                             user = new RetrieveUserResponse
                             {
-                                name = reader["username"]?.ToString(),
-                                imageURL = reader["imageurl"] == DBNull.Value ? null : reader["imageurl"].ToString(),
+                                name = reader["name"]?.ToString(),
+                                imageURL = reader["image_url"] == DBNull.Value ? null : reader["image_url"].ToString(),
                                 FollowersAmnt = Convert.ToInt32(reader["followersamount"]),
                                 FollowingAmnt = Convert.ToInt32(reader["followingamount"]),
                                 PostAmounts = Convert.ToInt32(reader["postsamount"]),
