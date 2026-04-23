@@ -6,8 +6,6 @@ export type NewPostContent = {
   username: string;
   beername: string;
   Description: string;
-  Bar: string;
-  City: string;
   Image: {
     uri: string;
     name: string;
@@ -23,8 +21,7 @@ export const createNewPost = async (newpost: NewPostContent) => {
     formData.append("username", newpost.username);
     formData.append("beername", newpost.beername);
     formData.append("Description", newpost.Description);
-    formData.append("Bar", newpost.Bar);
-    formData.append("City", newpost.City);
+
 
     if (newpost.Image) {
       formData.append("Image", {
