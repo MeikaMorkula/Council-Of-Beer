@@ -30,7 +30,7 @@ function PostObj() {
   const navgiation = useNavigation();
   return (
     <TouchableOpacity
-      style={{ width: 140 }}
+      style={{ width: '33%' }}
       onPress={() => navgiation.navigate("Post")}
     >
       <Image style={styles.feedImg} />
@@ -215,14 +215,14 @@ const styles = StyleSheet.create({
   },
   pftextcont: {
     flexDirection: "column",
-    paddingLeft: 20,
+    paddingLeft: 40,
   },
   usernamebtn: {
     flexDirection: "row",
     columnGap: 10,
   },
   username: {
-    fontSize: 24,
+    fontSize: 22,
     fontWeight: "bold",
     color: "#EDE9C7",
   },
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     rowGap: 5,
   },
   numstat: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#EDE9C7",
   },
@@ -280,7 +280,7 @@ const styles = StyleSheet.create({
     flex: 0.33,
     flexDirection: "row",
     flexWrap: "wrap",
-    width: "101%",
+    width: "100%",
     paddingTop: 10,
   },
   modalCont: {
