@@ -24,7 +24,7 @@ namespace BeerData.Repository
                 connection.Open();
 
                 string query = @"
-                    INSERT INTO users (name, passwordhash, birthday)
+                    INSERT INTO users (name, password_hash, birthday)
                     VALUES (@name, @password_hash, @birthday)";
 
                 using NpgsqlCommand command = new NpgsqlCommand(query, connection);
